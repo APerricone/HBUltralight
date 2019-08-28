@@ -17,9 +17,14 @@ OBJDATA ultralight_window;
     //METHOD DeviceToPixels(nVal)
     //METHOD PixelsToDevice(nVal)
 */
+HB_SIZE ptr_bOnClose = 0;
+HB_SIZE ptr_bOnResize = 0;
+
+void hbOnCloseCallback(void* user_data);
+void hbOnResizeCallback(void* user_data, int width, int height);
 
 HB_FUNC( ULTRALIGHT_WINDOW_CREATE ) {
-	PHB_ITEM pSelf;
+	PHB_ITEM pSelf, pTemp = hb_itemNew(0);
 	ULMonitor mon = PARAM_MONITOR(1);
 	ULWindow win = ulCreateWindow(
         mon, hb_parni(2), hb_parni(3), 
@@ -28,6 +33,13 @@ HB_FUNC( ULTRALIGHT_WINDOW_CREATE ) {
     hb_clsAssociate(  ultralight_window.classId );
     pSelf = hb_stackReturnItem();
     hb_itemArrayPut(pSelf, ultralight_window.ptrObj, hb_itemPutPtr(0, win)); 
+    if(ptr_bOnClose==0) {
+        ptr_bOnClose      = hb_clsGetVarIndex(ultralight_window.classId,hb_dynsymGet("bOnClose"));
+        ptr_bOnResize     = hb_clsGetVarIndex(ultralight_window.classId,hb_dynsymGet("bOnResize"));
+    }
+    hb_itemCopy(pTemp,pSelf);
+    ulWindowSetCloseCallback(win,hbOnCloseCallback,pTemp);
+    ulWindowSetResizeCallback(win,hbOnResizeCallback,pTemp);
 }
 
 HB_FUNC( ULTRALIGHT_WINDOW_WIDTH ) {
@@ -43,3 +55,15 @@ HB_FUNC( ULTRALIGHT_WINDOW_SETTILE ) {
     hb_ret();
 }
 
+
+void hbOnCloseCallback(void* user_data) {
+    PHB_ITEM pCallback = hb_itemArrayGet((PHB_ITEM)user_data, ptr_bOnClose);
+    if(HB_ITEM_TYPE( pCallback ) != HB_IT_BLOCK) return;
+    hb_evalBlock(pCallback, (PHB_ITEM)user_data, NULL );
+}
+
+void hbOnResizeCallback(void* user_data, int width, int height) {
+    PHB_ITEM pCallback = hb_itemArrayGet((PHB_ITEM)user_data, ptr_bOnResize);
+    if(HB_ITEM_TYPE( pCallback ) != HB_IT_BLOCK) return;
+    hb_evalBlock(pCallback, (PHB_ITEM)user_data, hb_itemPutNI(0,width),hb_itemPutNI(0,height), NULL );
+}

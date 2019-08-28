@@ -11,7 +11,7 @@ OBJDATA ultralight_overlay;
     //METHOD hidden() SETGET
     //METHOD focus() SETGET
     //METHOD moveTo(x,y)
-    //METHOD Resize(width,height)  
+    METHOD Resize(width,height)  
 */
 
 HB_FUNC( ULTRALIGHT_OVERLAY_CREATE ) {
@@ -34,4 +34,9 @@ HB_FUNC( ULTRALIGHT_OVERLAY_VIEW ) {
     hb_clsAssociate(  ultralight_view.classId );
     pRet = hb_stackReturnItem();
     SetupView(pRet,view);
+}
+
+HB_FUNC( ULTRALIGHT_OVERLAY_RESIZE ) {
+    ulOverlayResize(SELF_OVERLAY(),hb_parni(1),hb_parni(2));
+    hb_ret();
 }

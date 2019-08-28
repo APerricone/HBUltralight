@@ -79,11 +79,11 @@ endclass
 class ultralight_window
     DATA pObj
     /// Called when the Window is closed.
-    //DATA bOnClose
+    DATA bOnClose
     /// Called when the Window is resized.
     /// @param  width   The new width (in device coordinates).
     /// @param  height  The new height (in device coordinates).
-    // DATA OnResize
+    DATA bOnResize
 
     /// Create a new Window.
     ///
@@ -161,7 +161,7 @@ class ultralight_overlay
     //METHOD moveTo(x,y)
     /// Resize the overlay (and underlying View), dimensions should be
     /// specified in device coordinates.
-    //METHOD Resize(width,height)  
+    METHOD Resize(width,height)  
 endclass
 
 /// A View is similar to a tab in a browser-- you load web content into
