@@ -2,11 +2,6 @@
 
 class ultralight_app
     DATA pObj
-    /// Called whenever the App updates. You should update all app logic here.
-    ///
-    /// @note  This event is fired right before the run loop calls
-    ///        Renderer::Update and Renderer::Render.
-    DATA bOnUpdate
     /// Create the App singleton.
     CONSTRUCTOR Create()
     /// Get the App singleton.
@@ -20,8 +15,54 @@ class ultralight_app
     /// Get the underlying Renderer instance.
     //METHOD renderer()
     /// Run the main loop.
+    /// *NOTE* it calls hb_idle.
     METHOD run()
     //METHOD quit()
+endclass
+
+class ultralight_renderer
+    DATA pObj
+    ///
+    /// Create the Renderer singleton. You should set up all your Platform config,
+    /// file-system, and drivers before calling this function. @see Platform
+    ///
+    /// @note  You should only create one Renderer per application lifetime.
+    CONSTRUCTOR Create()
+
+    ///
+    /// Create a new View.
+    ///
+    /// @param  width   The initial width, in device coordinates.
+    /// 
+    /// @param  height  The initial height, in device coordinates.
+    ///
+    /// @param  transparent  Whether or not the view background is transparent.
+    ///
+    /// @note  The device coordinates are scaled to pixels by multiplying them
+    ///        with the current DPI scale (@see Config::device_scale_hint) and
+    ///        rounding to the nearest integer value.
+    ///
+    METHOD CreateView(nWidth,nHeight,lransparent)
+
+    ///
+    /// Update timers and dispatch internal callbacks. You should call this often
+    /// from your main application loop.
+    ///
+    METHOD Update()
+
+    ///
+    /// Render all active views to display lists and dispatch calls to GPUDriver.
+    ///
+    /// @note  If you're using the default, offscreen GL driver, this updates the
+    ///        internal bitmap of each View (@see View::bitmap).
+    ///
+    METHOD Render()
+
+    ///
+    /// Attempt to release as much memory as possible. Don't call this from any
+    /// callbacks or driver code.
+    ///
+    //METHOD PurgeMemory()
 endclass
 
 class ultralight_monitor
@@ -178,7 +219,7 @@ class ultralight_View
     /// Check if bitmap is dirty (has changed since last call to View::bitmap)
     //METHOD is_bitmap_dirty()
     /// Get the bitmap for the View (calling this resets the dirty state).
-    //METHOD bitmap()
+    METHOD bitmap()
     /// Load a raw string of HTML, the View will navigate to it as a new page.
     METHOD LoadHTML(cHTML)
     /// Load a URL, the View will navigate to it as a new page.
@@ -217,4 +258,17 @@ class ultralight_View
     /// Set or get whether or not this View should be repainted during the next
     /// call to Renderer::Render
     //METHOD needs_paint() SETGET
+endclass
+
+class ultralight_Bitmap
+    DATA pObj
+
+  ///
+  /// Write this Bitmap out to a PNG image. (mainly used for Debug)
+  ///
+  /// @param  path  The filepath to write to (opened with fopen())
+  ///
+  /// @return  Whether or not the operation succeeded.
+  ///
+  METHOD WritePNG(cPath)
 endclass

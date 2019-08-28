@@ -4,3 +4,6 @@ ultralight/**
 *.exe
 *.pdb
 *.ilk
+hb_out.log
+.vs
+

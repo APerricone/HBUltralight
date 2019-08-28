@@ -7,12 +7,24 @@
         {
             "type": "harbour-dbg",
             "request": "launch",
+            "name": "Sample1",
+            "program": "${workspaceFolder}/sample1",
+            "workingDir": "${workspaceFolder}/",
+            "sourcePaths": [
+                "${workspaceFolder}"
+            ],
+            "terminalType": "integrated"
+        },
+        {
+            "type": "harbour-dbg",
+            "request": "launch",
             "name": "Sample2",
             "program": "${workspaceFolder}/sample2",
             "workingDir": "${workspaceFolder}/",
             "sourcePaths": [
                 "${workspaceFolder}"
-            ]
+            ],
+            "terminalType": "integrated"
         }
     ]
 }

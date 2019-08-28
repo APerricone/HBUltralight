@@ -4,11 +4,18 @@
     "version": "2.0.0",
     "tasks": [
         {
+            "label": "Sample1",
+            "group": "build",
+            "type": "shell",
+            "command": "build sample1\\sample1.hbp",
+            "problemMatcher": ["$harbour","$msCompile"]
+        },
+        {
             "label": "Sample2",
             "group": "build",
             "type": "shell",
             "command": "build sample2\\sample2.hbp",
-            "problemMatcher":"$harbour"
+            "problemMatcher": ["$harbour","$msCompile"]
         }
     ]
 }

@@ -12,8 +12,6 @@ OBJDATA ultralight_app;
     //METHOD quit()
 */
 
-HB_SIZE ptr_bOnUpdate = 0;
-
 void setupOBJDATA(const char* className,OBJDATA* dest)
 {
 	if(dest->classId == 0)
@@ -38,16 +36,12 @@ HB_FUNC( ULTRALIGHT_APP_CREATE ) {
     hb_clsAssociate( ultralight_app.classId );
    	pSelf = hb_stackReturnItem();
     hb_itemArrayPut(pSelf, ultralight_app.ptrObj, hb_itemPutPtr(0, app)); 
-    if(ptr_bOnUpdate==0) {
-        ptr_bOnUpdate      = hb_clsGetVarIndex(ultralight_app.classId,hb_dynsymGet("bOnUpdate"));
-    }
-    ulAppSetUpdateCallback(app,hbOnUpdate,pSelf);
+    ulAppSetUpdateCallback(app,hbOnUpdate,0);
 }
 
-void hbOnUpdate (void* pItem) {
-    PHB_ITEM pCallback = hb_itemArrayGet(pItem, ptr_bOnUpdate);
-    if(HB_ITEM_TYPE( pCallback ) != HB_IT_BLOCK) return;
-    hb_evalBlock(pCallback, pItem, NULL );
+void hbOnUpdate (void* user) {
+    (user);
+    hb_idleState();
 }
 
 HB_FUNC_EXTERN( ULTRALIGHT_MONITOR );

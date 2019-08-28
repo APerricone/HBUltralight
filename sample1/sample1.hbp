@@ -1,4 +1,4 @@
-sample2.prg
+sample1.prg
 -workdir=obj
 
 -w3 
@@ -10,8 +10,10 @@ sample2.prg
 # Ultralight HB
 ../ultralight.prg
 ../ultralight_app.c
+../ultralight_bitmap.c
 ../ultralight_monitor.c
 ../ultralight_overlay.c
+../ultralight_renderer.c
 ../ultralight_view.c
 ../ultralight_window.c
 
