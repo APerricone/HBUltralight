@@ -1,0 +1,82 @@
+#include "ultralight_hb.h"
+OBJDATA ultralight_app;
+
+/*  CONSTRUCTOR Create()
+    //CONSTRUCTOR instance()
+    METHOD window() SETGET
+    //METHOD listener() SETGET
+    //METHOD is_running() 
+    METHOD main_monitor()
+    //METHOD renderer()
+    METHOD run()
+    //METHOD quit()
+*/
+
+HB_SIZE ptr_bOnUpdate = 0;
+
+void setupOBJDATA(const char* className,OBJDATA* dest)
+{
+	if(dest->classId == 0)
+   	{
+		dest->classId = hb_clsFindClass(className, NULL);
+		dest->ptrObj = hb_clsGetVarIndex(dest->classId,hb_dynsymGet("pObj"));
+   	}
+}
+
+void* hb_parvptr_obj(int n,int delta) {
+	PHB_ITEM pItem = hb_param(n, HB_IT_OBJECT);
+	if(pItem!=0)
+		return hb_itemGetPtr( hb_itemArrayGet(pItem,delta) );
+	return 0;
+}
+
+void hbOnUpdate(void* user_data);
+HB_FUNC( ULTRALIGHT_APP_CREATE ) {
+	PHB_ITEM pSelf;
+	ULApp app = ulCreateApp(ulCreateConfig());
+    setupOBJDATA("ULTRALIGHT_APP",&ultralight_app);
+    hb_clsAssociate( ultralight_app.classId );
+   	pSelf = hb_stackReturnItem();
+    hb_itemArrayPut(pSelf, ultralight_app.ptrObj, hb_itemPutPtr(0, app)); 
+    if(ptr_bOnUpdate==0) {
+        ptr_bOnUpdate      = hb_clsGetVarIndex(ultralight_app.classId,hb_dynsymGet("bOnUpdate"));
+    }
+    ulAppSetUpdateCallback(app,hbOnUpdate,pSelf);
+}
+
+void hbOnUpdate (void* pItem) {
+    PHB_ITEM pCallback = hb_itemArrayGet(pItem, ptr_bOnUpdate);
+    if(HB_ITEM_TYPE( pCallback ) != HB_IT_BLOCK) return;
+    hb_evalBlock(pCallback, pItem, NULL );
+}
+
+HB_FUNC_EXTERN( ULTRALIGHT_MONITOR );
+HB_FUNC( ULTRALIGHT_APP_MAIN_MONITOR ) {
+    PHB_ITEM pRet;
+    ULMonitor mon = ulAppGetMainMonitor(SELF_APP());
+    HB_FUNC_EXEC(ULTRALIGHT_MONITOR);
+    setupOBJDATA("ULTRALIGHT_MONITOR",&ultralight_monitor);
+    hb_clsAssociate(  ultralight_monitor.classId );
+    pRet = hb_stackReturnItem();
+    hb_itemArrayPut(pRet, ultralight_monitor.ptrObj, hb_itemPutPtr(0, mon)); 
+}
+
+HB_FUNC( ULTRALIGHT_APP_WINDOW ) {
+    ULApp app = SELF_APP();
+    ULWindow win;
+    PHB_ITEM pRet;
+    if(hb_pcount()>0) {
+        ulAppSetWindow(app,PARAM_WINDOW(1));
+        hb_ret();
+    } else {
+        win = ulAppGetWindow(app);
+        hb_clsAssociate(  ultralight_window.classId );
+        pRet = hb_stackReturnItem();
+        hb_itemArrayPut(pRet, ultralight_window.ptrObj, hb_itemPutPtr(0, win)); 
+    }
+}
+
+HB_FUNC( ULTRALIGHT_APP_RUN ) {
+    ulAppRun(SELF_APP());
+    hb_ret();
+}
