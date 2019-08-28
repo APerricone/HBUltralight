@@ -1,0 +1,6 @@
+ultralight/**
+**/obj/**
+*.dll
+*.exe
+*.pdb
+*.ilk

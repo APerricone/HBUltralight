@@ -1,0 +1,27 @@
+sample2.prg
+-workdir=obj
+
+-w3 
+-es2
+
+#-b
+#../code_dbg.prg
+
+# Ultralight HB
+../ultralight.prg
+../ultralight_app.c
+../ultralight_monitor.c
+../ultralight_overlay.c
+../ultralight_view.c
+../ultralight_window.c
+
+# Ultralight C
+-I../
+-I../Ultralight/include
+-L../Ultralight/lib/win/x86
+-lAppCore
+-lUltralight
+-inc
+
+-debug
+#-cflag=/Od

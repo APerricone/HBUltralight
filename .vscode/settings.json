@@ -1,0 +1,7 @@
+{
+    "harbour.extraIncludePaths": [
+        "c:\\harbour32\\include",
+        "ultralight\\include\\",
+        "."
+    ]
+}
