@@ -7,3 +7,5 @@ ultralight/**
 hb_out.log
 .vs
 result.png
+*.7z
+*.zip

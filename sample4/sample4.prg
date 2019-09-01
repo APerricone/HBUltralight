@@ -1,6 +1,5 @@
 #include "ultralight.ch"
 
-
 proc main()
     LOCAL app := ultralight_app():Create()
     LOCAL window := ultralight_window():Create(app:main_Monitor,300,300,.F.,ulWindowFlags_Titled)
@@ -10,7 +9,7 @@ proc main()
     overlay:=ultralight_overlay():Create(window,window:width(),window:height(),0,0)
     v := overlay:view()
     v:bOnDOMReady = {|caller| OnDOMReady(caller) }
-    #pragma __text | cHTML+=%s | v:LoadHTML(cHTML) | cHtml:=""
+    #pragma __text |    cHTML+=%s+e"\r\n" |    v:LoadHTML(cHTML) |    cHtml:=""
   <html>
     <head>
       <style type="text/css">

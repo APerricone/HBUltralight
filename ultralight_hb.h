@@ -3,6 +3,7 @@
 #include <hbapiitm.h>
 #include <hbstack.h>
 #include <hbapistr.h>
+#include <hbapierr.h>
 
 #include <windows.h>
 #include <ultralight/CAPI.h>
@@ -16,7 +17,6 @@ typedef struct _OBJDATA
 extern OBJDATA ultralight_app, ultralight_renderer, ultralight_window,ultralight_monitor, ultralight_overlay, ultralight_view, ultralight_bitmap;
 
 void setupOBJDATA(const char* className,OBJDATA* dest);
-
 void* hb_parvptr_obj(int n,int delta);
 
 #define SELF_APP()       (ULApp)    hb_itemGetPtr( hb_itemArrayGet(hb_stackSelfItem(),ultralight_app.ptrObj) )

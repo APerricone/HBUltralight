@@ -1,5 +1,6 @@
 sample4.prg
 -workdir=obj
+#-p
 
 -w3 
 -es2
@@ -29,5 +30,5 @@ sample4.prg
 -lWebCore
 -inc
 
--debug
--cflag=/Od
+#-debug
+#-cflag=/Od

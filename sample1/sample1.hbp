@@ -1,29 +1,21 @@
 sample1.prg
 -workdir=obj
+-inc
+
+-L../Ultralight/lib/win/x86
+-L..
+-lhbultralight
+-lAppCore
+-lUltralight
+-lWebCore
 
 -w3 
 -es2
 
+# Harbour debugger
 #-b
 #../code_dbg.prg
 
-# Ultralight HB
-../ultralight.prg
-../ultralight_app.c
-../ultralight_bitmap.c
-../ultralight_monitor.c
-../ultralight_overlay.c
-../ultralight_renderer.c
-../ultralight_view.c
-../ultralight_window.c
-
-# Ultralight C
--I../
--I../Ultralight/include
--L../Ultralight/lib/win/x86
--lAppCore
--lUltralight
--inc
-
+# VC debugger
 #-debug
 #-cflag=/Od
