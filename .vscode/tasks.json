@@ -2,34 +2,34 @@
     // See https://go.microsoft.com/fwlink/?LinkId=733558
     // for the documentation about the tasks.json format
     "version": "2.0.0",
+    "type": "shell",
+    "command": "build",
+    "problemMatcher": ["$harbour","$msCompile"],
     "tasks": [
+        {
+            "label": "Library",
+            "group": "build",
+            "args": ["hbUltralightLib.hbp"],
+        },
         {
             "label": "Sample1",
             "group": "build",
-            "type": "shell",
-            "command": "build sample1\\sample1.hbp",
-            "problemMatcher": ["$harbour","$msCompile"]
+            "args": ["sample1\\sample1.hbp"]
         },
         {
             "label": "Sample2",
             "group": "build",
-            "type": "shell",
-            "command": "build sample2\\sample2.hbp",
-            "problemMatcher": ["$harbour","$msCompile"]
+            "args": ["sample2\\sample2.hbp"]
         },
         {
             "label": "Sample3",
             "group": "build",
-            "type": "shell",
-            "command": "build sample3\\sample3.hbp",
-            "problemMatcher": ["$harbour","$msCompile"]
+            "args": ["sample3\\sample3.hbp"]
         },
         {
             "label": "Sample4",
             "group": "build",
-            "type": "shell",
-            "command": "build sample4\\sample4.hbp",
-            "problemMatcher": ["$harbour","$msCompile"]
+            "args": ["sample4\\sample4.hbp"]
         }
     ]
 }
