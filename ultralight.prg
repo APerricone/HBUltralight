@@ -1,7 +1,7 @@
 #include <hbclass.ch>
 
 class ultralight_app
-    DATA pObj
+    DATA pObj HIDDEN
     /// Create the App singleton.
     CONSTRUCTOR Create()
     /// Get the App singleton.
@@ -21,7 +21,7 @@ class ultralight_app
 endclass
 
 class ultralight_renderer
-    DATA pObj
+    DATA pObj HIDDEN
     ///
     /// Create the Renderer singleton. You should set up all your Platform config,
     /// file-system, and drivers before calling this function. @see Platform
@@ -66,7 +66,7 @@ class ultralight_renderer
 endclass
 
 class ultralight_monitor
-    DATA pObj
+    DATA pObj HIDDEN
     /// Get the DPI scale (1.0 = 100%)
     //ACCESS scale() 
     /// Get the width of the monitor.
@@ -77,7 +77,7 @@ endclass
 
 /// Window class, represents a platform window.
 class ultralight_window
-    DATA pObj
+    DATA pObj HIDDEN
     /// Called when the Window is closed.
     DATA bOnClose
     /// Called when the Window is resized.
@@ -119,7 +119,7 @@ class ultralight_window
 endclass
 
 class ultralight_overlay
-    DATA pObj
+    DATA pObj HIDDEN
     ///
     /// Create a new Overlay.
     ///
@@ -167,7 +167,7 @@ endclass
 /// A View is similar to a tab in a browser-- you load web content into
 ///	it and display it however you want. @see Renderer::CreateView
 class ultralight_View
-    DATA pObj
+    DATA pObj HIDDEN
 
     /// Called when the page title changes
     /// @param caller this ultralight_view
@@ -227,7 +227,7 @@ class ultralight_View
     /// Resize View to a certain size.
     //METHOD Resize(width,height)  
     /// Get the page's JSContext for use with the JavaScriptCore API
-    //METHOD js_context()  
+    METHOD js_context()  
     /// Evaluate a raw string of JavaScript and return results as a native
     /// JavaScriptCore JSValueRef (@see <JavaScriptCore/JSValueRef.h>)
     //METHOD EvaluateScript(cScript)
@@ -261,7 +261,7 @@ class ultralight_View
 endclass
 
 class ultralight_Bitmap
-    DATA pObj
+    DATA pObj HIDDEN
 
   ///
   /// Write this Bitmap out to a PNG image. (mainly used for Debug)

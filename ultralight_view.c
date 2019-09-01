@@ -92,10 +92,16 @@ HB_FUNC( ULTRALIGHT_VIEW_BITMAP ) {
     hb_itemArrayPut(pRet, ultralight_bitmap.ptrObj, hb_itemPutPtr(0, bitmap)); 
 }
 
+HB_FUNC( ULTRALIGHT_VIEW_JS_CONTEXT ) {
+	ULView view = SELF_VIEW();
+    JSContextRef ctx = ulViewGetJSContext(view);
+    hb_retptr(ctx);
+}
+
 void hbChangeTitleCallback (void* user_data, ULView caller, ULString title) {
     (caller);
     PHB_ITEM pCallback = hb_itemArrayGet((PHB_ITEM)user_data, ptr_bOnChangeTitle);
-    if(HB_ITEM_TYPE( pCallback ) != HB_IT_BLOCK) return;
+    if(!HB_IS_EVALITEM( pCallback )) return;
     hb_evalBlock(pCallback, (PHB_ITEM)user_data, 
         hb_itemPutStrLenU16( 0, HB_CDP_ENDIAN_NATIVE,ulStringGetData(title), ulStringGetLength(title) ), NULL );
 }
@@ -103,7 +109,7 @@ void hbChangeTitleCallback (void* user_data, ULView caller, ULString title) {
 void hbOnChangeURLCallback(void* user_data, ULView caller, ULString url) {
     (caller);
     PHB_ITEM pCallback = hb_itemArrayGet((PHB_ITEM)user_data, ptr_bOnChangeURL);
-    if(HB_ITEM_TYPE( pCallback ) != HB_IT_BLOCK) return;
+    if(!HB_IS_EVALITEM( pCallback )) return;
     hb_evalBlock(pCallback, (PHB_ITEM)user_data, 
         hb_itemPutStrLenU16( 0, HB_CDP_ENDIAN_NATIVE,ulStringGetData(url), ulStringGetLength(url) ), NULL );
 }
@@ -111,7 +117,7 @@ void hbOnChangeURLCallback(void* user_data, ULView caller, ULString url) {
 void hbOnChangeTooltipCallback(void* user_data, ULView caller, ULString tooltip) {
     (caller);
     PHB_ITEM pCallback = hb_itemArrayGet((PHB_ITEM)user_data, ptr_bOnChangeTooltip);
-    if(HB_ITEM_TYPE( pCallback ) != HB_IT_BLOCK) return;
+    if(!HB_IS_EVALITEM( pCallback )) return;
     hb_evalBlock(pCallback, (PHB_ITEM)user_data, 
         hb_itemPutStrLenU16( 0, HB_CDP_ENDIAN_NATIVE,ulStringGetData(tooltip), ulStringGetLength(tooltip) ), NULL );
 }
@@ -119,7 +125,7 @@ void hbOnChangeTooltipCallback(void* user_data, ULView caller, ULString tooltip)
 void hbOnChangeCursorCallback(void* user_data, ULView caller, ULCursor cursor) {
     (caller);
     PHB_ITEM pCallback = hb_itemArrayGet((PHB_ITEM)user_data, ptr_bOnChangeCursor);
-    if(HB_ITEM_TYPE( pCallback ) != HB_IT_BLOCK) return;
+    if(!HB_IS_EVALITEM( pCallback )) return;
     hb_evalBlock(pCallback, (PHB_ITEM)user_data, hb_itemPutNI(0, (int)cursor),  NULL );
 }
 
@@ -127,7 +133,7 @@ void hbOnAddConsoleMessageCallback(void* user_data, ULView caller, ULMessageSour
     ULString message, unsigned int line_number,unsigned int column_number,ULString source_id) {
     (caller);
     PHB_ITEM pCallback = hb_itemArrayGet((PHB_ITEM)user_data, ptr_bOnAddConsoleMessage);
-    if(HB_ITEM_TYPE( pCallback ) != HB_IT_BLOCK) return;
+    if(!HB_IS_EVALITEM( pCallback )) return;
     hb_evalBlock(pCallback, (PHB_ITEM)user_data, hb_itemPutNI(0, (int)source), hb_itemPutNI(0, (int)level), 
         hb_itemPutStrLenU16( 0, HB_CDP_ENDIAN_NATIVE,ulStringGetData(message), ulStringGetLength(message) ),
         hb_itemPutNI(0, (int)line_number), hb_itemPutNI(0, (int)column_number), 
@@ -137,27 +143,31 @@ void hbOnAddConsoleMessageCallback(void* user_data, ULView caller, ULMessageSour
 void hbOnBeginLoadingCallback(void* user_data, ULView caller) {
     (caller);
     PHB_ITEM pCallback = hb_itemArrayGet((PHB_ITEM)user_data, ptr_bOnBeginLoading);
-    if(HB_ITEM_TYPE( pCallback ) != HB_IT_BLOCK) return;
+    if(!HB_IS_EVALITEM( pCallback )) return;
     hb_evalBlock(pCallback, (PHB_ITEM)user_data, NULL );
 }
 
 void hbOnFinishLoadingCallback(void* user_data, ULView caller) {
     (caller);
     PHB_ITEM pCallback = hb_itemArrayGet((PHB_ITEM)user_data, ptr_bOnFinishLoading);
-    if(HB_ITEM_TYPE( pCallback ) != HB_IT_BLOCK) return;
+    if(!HB_IS_EVALITEM( pCallback )) return;
     hb_evalBlock(pCallback, (PHB_ITEM)user_data, NULL );
 }
 
 void hbOnUpdateHistoryCallback(void* user_data, ULView caller) {
     (caller);
     PHB_ITEM pCallback = hb_itemArrayGet((PHB_ITEM)user_data, ptr_bOnUpdateHistory);
-    if(HB_ITEM_TYPE( pCallback ) != HB_IT_BLOCK) return;
+    if(!HB_IS_EVALITEM( pCallback )) return;
     hb_evalBlock(pCallback, (PHB_ITEM)user_data, NULL );
 }
 
 void hbOnDOMReadyCallback(void* user_data, ULView caller) {
     (caller);
+	//int type = HB_ITEM_TYPE(user_data);
+	//int claId = hb_objGetClass(user_data);
     PHB_ITEM pCallback = hb_itemArrayGet((PHB_ITEM)user_data, ptr_bOnDOMReady);
-    if(HB_ITEM_TYPE( pCallback ) != HB_IT_BLOCK) return;
+	//type = HB_ITEM_TYPE(pCallback);
+
+    if(!HB_IS_EVALITEM( pCallback )) return;
     hb_evalBlock(pCallback, (PHB_ITEM)user_data, NULL );
 }

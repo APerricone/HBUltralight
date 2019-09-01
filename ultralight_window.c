@@ -58,12 +58,12 @@ HB_FUNC( ULTRALIGHT_WINDOW_SETTILE ) {
 
 void hbOnCloseCallback(void* user_data) {
     PHB_ITEM pCallback = hb_itemArrayGet((PHB_ITEM)user_data, ptr_bOnClose);
-    if(HB_ITEM_TYPE( pCallback ) != HB_IT_BLOCK) return;
+    if(!HB_IS_EVALITEM( pCallback )) return;
     hb_evalBlock(pCallback, (PHB_ITEM)user_data, NULL );
 }
 
 void hbOnResizeCallback(void* user_data, int width, int height) {
     PHB_ITEM pCallback = hb_itemArrayGet((PHB_ITEM)user_data, ptr_bOnResize);
-    if(HB_ITEM_TYPE( pCallback ) != HB_IT_BLOCK) return;
+    if(!HB_IS_EVALITEM( pCallback )) return;
     hb_evalBlock(pCallback, (PHB_ITEM)user_data, hb_itemPutNI(0,width),hb_itemPutNI(0,height), NULL );
 }

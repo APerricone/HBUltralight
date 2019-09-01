@@ -23,6 +23,13 @@
             "type": "shell",
             "command": "build sample3\\sample3.hbp",
             "problemMatcher": ["$harbour","$msCompile"]
+        },
+        {
+            "label": "Sample4",
+            "group": "build",
+            "type": "shell",
+            "command": "build sample4\\sample4.hbp",
+            "problemMatcher": ["$harbour","$msCompile"]
         }
     ]
 }

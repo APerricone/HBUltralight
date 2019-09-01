@@ -3,5 +3,8 @@
         "c:\\harbour32\\include",
         "ultralight\\include\\",
         "."
-    ]
+    ],
+    "files.associations": {
+        "*.h": "c"
+    }
 }
