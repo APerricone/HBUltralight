@@ -32,35 +32,6 @@ proc main()
 proc GetMessage(/*this,args*/)
     JSEval("document.getElementById('message').innerHTML='Ultralight rocks!';")
 
-proc Console(caller,nSource,nLevel,cMessage,nLine,nColumn,cSource)
-  HB_SYMBOL_UNUSED(caller)
-  switch nSource
-    case ulMessageSource_JS
-      ? "JS"
-      exit
-    otherwise
-      ? nSource
-  endswitch
-  ?? " "
-  switch nLevel
-    case ulMessageLevel_Log
-      ?? " Log"
-      exit
-    case ulMessageLevel_Warning
-      ?? " Warning"
-      exit
-    case ulMessageLevel_Error
-      ?? " Error"
-      exit
-    case ulMessageLevel_Debug
-      ?? " Debug"
-      exit    
-    case ulMessageLevel_Info
-      ?? " Info"
-      exit
-  endswitch
-  ?? ":"+cMessage+" - "+cSource+"("+alltrim(str(nLine))+":"+alltrim(str(nColumn))+")"  
-
 proc OnDOMReady(caller)
     LOCAL global
     ///
@@ -68,8 +39,6 @@ proc OnDOMReady(caller)
     ///
     SetJSContext(caller:js_context())
     global := JSGlobalObject()
-    // they are all ok
+    // they are both ok
     global["GetMessage"] := @GetMessage()
     //global["GetMessage"] := {|this,args| GetMessage(this,args)})
-    //
-    caller:bOnAddConsoleMessage = @Console()
