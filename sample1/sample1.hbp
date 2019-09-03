@@ -2,12 +2,12 @@ sample1.prg
 -workdir=obj
 -inc
 
--L../Ultralight/lib/win/x86
+../hbultralight.hbc
 -L..
--lhbultralight
--lAppCore
--lUltralight
--lWebCore
+#-lhbultralight
+#-lAppCore
+#-lUltralight
+#-lWebCore
 
 -w3 
 -es2

@@ -6,6 +6,7 @@
 -w3 
 -es2
 -cflag=/FC
+-hbx=hbultralight.hbx
 
 # Ultralight HB
 ultralight.prg

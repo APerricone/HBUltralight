@@ -1,0 +1,10 @@
+description=Ultralight binding
+
+incpaths=.
+
+libpaths=Ultralight/lib/${hb_plat}/${hb_cpu}
+
+libs=${_HB_DYNPREF}${hb_name}${_HB_DYNSUFF}
+libs=AppCore
+libs=Ultralight
+libs=WebCore

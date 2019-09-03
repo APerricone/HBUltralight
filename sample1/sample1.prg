@@ -1,5 +1,4 @@
 
-
 proc main()
     LOCAL renderer_ := ultralight_renderer():Create()
     LOCAL view_ := renderer_:CreateView(200, 200, .F.)
@@ -9,7 +8,6 @@ proc main()
     do while .not. done_
         renderer_:Update()
     enddo
-  
 
 proc OnFinishLoading(renderer_,view_)
     ///
