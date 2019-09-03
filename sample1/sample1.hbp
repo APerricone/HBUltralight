@@ -1,16 +1,12 @@
 sample1.prg
 -workdir=obj
+-w3 
+-es2
 -inc
+-cflag=/FC
 
 ../hbultralight.hbc
 -L..
-#-lhbultralight
-#-lAppCore
-#-lUltralight
-#-lWebCore
-
--w3 
--es2
 
 # Harbour debugger
 #-b
