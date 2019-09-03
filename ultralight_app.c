@@ -40,7 +40,7 @@ HB_FUNC( ULTRALIGHT_APP_CREATE ) {
 }
 
 void hbOnUpdate (void* user) {
-    (user);
+    HB_SYMBOL_UNUSED(user);
     hb_idleState();
 }
 

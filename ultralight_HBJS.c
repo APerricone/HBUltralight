@@ -268,12 +268,12 @@ void HB_FromJS_JSON(PHB_ITEM dest,JSValueRef src) {
 
 void hb_FromJSArray(PHB_ITEM dest,JSValueRef src) {
 	JSStringRef tmpStr = JSStringCreateWithUTF8CString("length");
-	int i, length = (int)JSValueToNumber(ctx,JSObjectGetProperty(ctx, src, tmpStr, 0),0);
+	int i, length = (int)JSValueToNumber(ctx,JSObjectGetProperty(ctx, (JSObjectRef)src, tmpStr, 0),0);
 	PHB_ITEM tmpEle,tmp = hb_itemArrayNew(length);
 	JSValueRef ele;
 	JSStringRelease(tmpStr);
 	for(i=0;i<length;i++) {
-		ele = JSObjectGetPropertyAtIndex(ctx, src, i, 0);
+		ele = JSObjectGetPropertyAtIndex(ctx, (JSObjectRef)src, i, 0);
 		tmpEle = hb_itemNew(0);
 		hb_FromJS(tmpEle,ele,0);
 		hb_itemArrayPut(tmp,i+1,tmpEle);
@@ -348,7 +348,8 @@ JSValueRef hb_functionCallback(JSContextRef ctx_, JSObjectRef function,
 	PHB_ITEM pCallback = JSObjectGetPrivate(function);
 	PHB_ITEM pThis, pArgs, tmp;
 	JSContextRef old_ctx = ctx;
-	int i;
+	unsigned int i;
+	HB_SYMBOL_UNUSED(exception);
 	if(!HB_IS_EVALITEM( pCallback )) return 0;
 	ctx = ctx_;
 	pArgs = hb_itemArrayNew(argumentCount);

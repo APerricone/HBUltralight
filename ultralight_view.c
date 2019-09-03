@@ -95,11 +95,11 @@ HB_FUNC( ULTRALIGHT_VIEW_BITMAP ) {
 HB_FUNC( ULTRALIGHT_VIEW_JS_CONTEXT ) {
 	ULView view = SELF_VIEW();
     JSContextRef ctx = ulViewGetJSContext(view);
-    hb_retptr(ctx);
+    hb_retptr((void*)ctx);
 }
 
 void hbChangeTitleCallback (void* user_data, ULView caller, ULString title) {
-    (caller);
+    HB_SYMBOL_UNUSED(caller);
     PHB_ITEM pCallback = hb_itemArrayGet((PHB_ITEM)user_data, ptr_bOnChangeTitle);
     if(!HB_IS_EVALITEM( pCallback )) return;
     hb_evalBlock(pCallback, (PHB_ITEM)user_data, 
@@ -107,7 +107,7 @@ void hbChangeTitleCallback (void* user_data, ULView caller, ULString title) {
 }
 
 void hbOnChangeURLCallback(void* user_data, ULView caller, ULString url) {
-    (caller);
+    HB_SYMBOL_UNUSED(caller);
     PHB_ITEM pCallback = hb_itemArrayGet((PHB_ITEM)user_data, ptr_bOnChangeURL);
     if(!HB_IS_EVALITEM( pCallback )) return;
     hb_evalBlock(pCallback, (PHB_ITEM)user_data, 
@@ -115,7 +115,7 @@ void hbOnChangeURLCallback(void* user_data, ULView caller, ULString url) {
 }
 
 void hbOnChangeTooltipCallback(void* user_data, ULView caller, ULString tooltip) {
-    (caller);
+    HB_SYMBOL_UNUSED(caller);
     PHB_ITEM pCallback = hb_itemArrayGet((PHB_ITEM)user_data, ptr_bOnChangeTooltip);
     if(!HB_IS_EVALITEM( pCallback )) return;
     hb_evalBlock(pCallback, (PHB_ITEM)user_data, 
@@ -123,7 +123,7 @@ void hbOnChangeTooltipCallback(void* user_data, ULView caller, ULString tooltip)
 }
 
 void hbOnChangeCursorCallback(void* user_data, ULView caller, ULCursor cursor) {
-    (caller);
+    HB_SYMBOL_UNUSED(caller);
     PHB_ITEM pCallback = hb_itemArrayGet((PHB_ITEM)user_data, ptr_bOnChangeCursor);
     if(!HB_IS_EVALITEM( pCallback )) return;
     hb_evalBlock(pCallback, (PHB_ITEM)user_data, hb_itemPutNI(0, (int)cursor),  NULL );
@@ -131,7 +131,7 @@ void hbOnChangeCursorCallback(void* user_data, ULView caller, ULCursor cursor) {
 
 void hbOnAddConsoleMessageCallback(void* user_data, ULView caller, ULMessageSource source, ULMessageLevel level,
     ULString message, unsigned int line_number,unsigned int column_number,ULString source_id) {
-    (caller);
+    HB_SYMBOL_UNUSED(caller);
     PHB_ITEM pCallback = hb_itemArrayGet((PHB_ITEM)user_data, ptr_bOnAddConsoleMessage);
     if(!HB_IS_EVALITEM( pCallback )) return;
     hb_evalBlock(pCallback, (PHB_ITEM)user_data, hb_itemPutNI(0, (int)source), hb_itemPutNI(0, (int)level), 
@@ -141,28 +141,28 @@ void hbOnAddConsoleMessageCallback(void* user_data, ULView caller, ULMessageSour
 }
 
 void hbOnBeginLoadingCallback(void* user_data, ULView caller) {
-    (caller);
+    HB_SYMBOL_UNUSED(caller);
     PHB_ITEM pCallback = hb_itemArrayGet((PHB_ITEM)user_data, ptr_bOnBeginLoading);
     if(!HB_IS_EVALITEM( pCallback )) return;
     hb_evalBlock(pCallback, (PHB_ITEM)user_data, NULL );
 }
 
 void hbOnFinishLoadingCallback(void* user_data, ULView caller) {
-    (caller);
+    HB_SYMBOL_UNUSED(caller);
     PHB_ITEM pCallback = hb_itemArrayGet((PHB_ITEM)user_data, ptr_bOnFinishLoading);
     if(!HB_IS_EVALITEM( pCallback )) return;
     hb_evalBlock(pCallback, (PHB_ITEM)user_data, NULL );
 }
 
 void hbOnUpdateHistoryCallback(void* user_data, ULView caller) {
-    (caller);
+    HB_SYMBOL_UNUSED(caller);
     PHB_ITEM pCallback = hb_itemArrayGet((PHB_ITEM)user_data, ptr_bOnUpdateHistory);
     if(!HB_IS_EVALITEM( pCallback )) return;
     hb_evalBlock(pCallback, (PHB_ITEM)user_data, NULL );
 }
 
 void hbOnDOMReadyCallback(void* user_data, ULView caller) {
-    (caller);
+    HB_SYMBOL_UNUSED(caller);
 	//int type = HB_ITEM_TYPE(user_data);
 	//int claId = hb_objGetClass(user_data);
     PHB_ITEM pCallback = hb_itemArrayGet((PHB_ITEM)user_data, ptr_bOnDOMReady);
