@@ -3,7 +3,7 @@ sample1.prg
 -w3 
 -es2
 -inc
--cflag=/FC
+#-cflag=/FC
 
 ../hbultralight.hbc
 -L..

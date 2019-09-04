@@ -250,8 +250,8 @@ JSValueRef HB_toJS(PHB_ITEM v) {
 JSStringRef HB_TOJSString(PHB_ITEM v) {
 	void * hStr;
 	HB_SIZE len;
-	const wchar_t* hb_str = hb_itemGetStrU16(v,HB_CDP_ENDIAN_NATIVE,&hStr,&len);
-	JSStringRef val = JSStringCreateWithCharacters(hb_str,len);
+	const HB_WCHAR* hb_str = hb_itemGetStrU16(v,HB_CDP_ENDIAN_NATIVE,&hStr,&len);
+	JSStringRef val = JSStringCreateWithCharacters((JSChar*)hb_str,len);
 	hb_strfree(hStr);
 	return val;
 }
@@ -307,8 +307,8 @@ void hb_FromJS(PHB_ITEM dest, JSValueRef src, int lObject) {
 			case kJSTypeString:
 			{
 				JSStringRef strValue = JSValueToStringCopy(ctx, src, 0);
-				const wchar_t *u16Str = JSStringGetCharactersPtr(strValue);
-				hb_itemPutStrU16(dest, HB_CDP_ENDIAN_NATIVE, u16Str);
+				const JSChar *u16Str = JSStringGetCharactersPtr(strValue);
+				hb_itemPutStrU16(dest, HB_CDP_ENDIAN_NATIVE, (HB_WCHAR*)u16Str);
 				JSStringRelease(strValue);
 				return;			
 			}

@@ -11,3 +11,5 @@ result.png
 *.zip
 *.lib
 *.hbx
+*.so
+*.a

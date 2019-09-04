@@ -1,9 +1,10 @@
 sample4.prg
+-osample4bin
 -workdir=obj
 -w3 
 -es2
 -inc 
--cflag=/FC
+#-cflag=/FC
 
 ../hbultralight.hbc
 -L..

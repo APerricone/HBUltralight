@@ -3,8 +3,12 @@
     // for the documentation about the tasks.json format
     "version": "2.0.0",
     "type": "shell",
-    "command": "build",
-    "problemMatcher": ["$harbour","$msCompile"],
+    "command": "hbmk2",
+    "problemMatcher": ["$harbour","$gcc"],
+    "windows": {
+        "command": "build",
+        "problemMatcher": ["$harbour","$msCompile"],
+    },    
     "tasks": [
         {
             "label": "Library",
@@ -14,22 +18,22 @@
         {
             "label": "Sample1",
             "group": "build",
-            "args": ["sample1\\sample1.hbp"]
+            "args": ["sample1/sample1.hbp"]
         },
         {
             "label": "Sample2",
             "group": "build",
-            "args": ["sample2\\sample2.hbp"]
+            "args": ["sample2/sample2.hbp"]
         },
         {
             "label": "Sample3",
             "group": "build",
-            "args": ["sample3\\sample3.hbp"]
+            "args": ["sample3/sample3.hbp"]
         },
         {
             "label": "Sample4",
             "group": "build",
-            "args": ["sample4\\sample4.hbp"]
+            "args": ["sample4/sample4.hbp"]
         }
     ]
 }

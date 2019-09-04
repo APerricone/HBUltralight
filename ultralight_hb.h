@@ -5,8 +5,10 @@
 #include <hbapistr.h>
 #include <hbapierr.h>
 
+#ifdef _WINDOWS_
 #include <windows.h>
-#include <ultralight/CAPI.h>
+#endif
+#include <Ultralight/CAPI.h>
 #include <AppCore/CAPI.h>
 
 typedef struct _OBJDATA

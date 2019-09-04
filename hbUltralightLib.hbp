@@ -5,7 +5,7 @@
 
 -w3 
 -es2
--cflag=/FC
+#-cflag=/FC
 -hbx=hbultralight.hbx
 
 # Ultralight HB
@@ -21,8 +21,7 @@ ultralight_view.c
 ultralight_window.c
 
 # Ultralight C
--I
--IUltralight/include
+-Iultralight/include
 -LUltralight/lib/win/x86
 -lAppCore
 -lUltralight
