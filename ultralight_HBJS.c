@@ -397,7 +397,7 @@ JSObjectRef HB_CreateJSCallback(PHB_ITEM src) {
 	//	name = JSStringCreateWithUTF8CString(sym->szName);
 	//}
 	//fnObj = JSObjectMakeFunctionWithCallback(ctx,name,hb_standardCallback);
-	fnObj = JSObjectMake(ctx, HB_FunctionClass(), src);
+	fnObj = JSObjectMake(ctx, HB_FunctionClass(), hb_itemNew(src));
 	//bool saved = JSObjectSetPrivate(fnObj,src);
 	//JSValueProtect(ctx, fnObj);
 	//if(name) JSStringRelease(name);
