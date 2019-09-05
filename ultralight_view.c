@@ -11,7 +11,7 @@ OBJDATA ultralight_view;
     METHOD LoadHTML(cHTML)
     //METHOD LoadURL(cURL)
     //METHOD Resize(width,height)  
-    //METHOD js_context()  
+    METHOD js_context()  
     //METHOD EvaluateScript(cScript)
     //METHOD CanGoBack()
     //METHOD CanGoForward()
@@ -76,7 +76,22 @@ void SetupView(PHB_ITEM pRet,ULView view) {
 
 HB_FUNC( ULTRALIGHT_VIEW_LOADHTML ) {
 	ULView view = SELF_VIEW();
-    ulViewLoadHTML(view,ulCreateString(hb_parc(1)));
+    ULString html = ulCreateString(hb_parc(1));
+    ulViewLoadHTML(view,html);
+    ulDestroyString(html);
+    hb_ret();
+}
+
+HB_FUNC( ULTRALIGHT_VIEW_LOADURL ) {
+	ULView view = SELF_VIEW();
+    ULString url = ulCreateString(hb_parc(1));
+    ulViewLoadURL(view,url);
+    ulDestroyString(url);
+    hb_ret();
+}
+
+HB_FUNC( ULTRALIGHT_VIEW_RESIZE ) {
+    ulViewResize(SELF_VIEW(),hb_parni(1),hb_parni(2));
     hb_ret();
 }
 

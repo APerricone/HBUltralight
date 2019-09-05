@@ -13,7 +13,7 @@
         {
             "label": "Library",
             "group": "build",
-            "args": ["hbUltralightLib.hbp"],
+            "args": ["hbUltralightLib.hbp"]
         },
         {
             "label": "Sample1",

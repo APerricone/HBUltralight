@@ -36,7 +36,37 @@ HB_FUNC( ULTRALIGHT_OVERLAY_VIEW ) {
     SetupView(pRet,view);
 }
 
+HB_FUNC( ULTRALIGHT_OVERLAY_WIDTH ) {
+    hb_retni(ulOverlayGetWidth(SELF_OVERLAY()));
+}
+HB_FUNC( ULTRALIGHT_OVERLAY_HEIGHT ) {
+    hb_retni(ulOverlayGetHeight(SELF_OVERLAY()));
+
+}
+HB_FUNC( ULTRALIGHT_OVERLAY_X ) {
+    hb_retni(ulOverlayGetX(SELF_OVERLAY()));
+}
+HB_FUNC( ULTRALIGHT_OVERLAY_Y ) {
+    hb_retni(ulOverlayGetY(SELF_OVERLAY()));
+}
+HB_FUNC( ULTRALIGHT_OVERLAY_HIDDEN ) {
+    if(hb_pcount()>0) {
+        if(hb_parl(1)) 
+            ulOverlayHide(SELF_OVERLAY());
+        else
+            ulOverlayShow(SELF_OVERLAY());
+        hb_retl(hb_parl(1));
+    } else {
+        hb_retl(ulOverlayIsHidden(SELF_OVERLAY()));
+    }
+}
+HB_FUNC( ULTRALIGHT_OVERLAY_MOVETO ) {
+    ulOverlayMoveTo(SELF_OVERLAY(),hb_parni(1),hb_parni(2));
+    hb_ret();
+}
+
 HB_FUNC( ULTRALIGHT_OVERLAY_RESIZE ) {
     ulOverlayResize(SELF_OVERLAY(),hb_parni(1),hb_parni(2));
     hb_ret();
 }
+

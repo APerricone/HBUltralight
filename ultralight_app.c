@@ -7,7 +7,7 @@ OBJDATA ultralight_app;
     //METHOD listener() SETGET
     //METHOD is_running() 
     METHOD main_monitor()
-    //METHOD renderer()
+    METHOD renderer()
     METHOD run()
     //METHOD quit()
 */
@@ -42,6 +42,17 @@ HB_FUNC( ULTRALIGHT_APP_CREATE ) {
 void hbOnUpdate (void* user) {
     HB_SYMBOL_UNUSED(user);
     hb_idleState();
+}
+
+HB_FUNC_EXTERN( ULTRALIGHT_RENDERER );
+HB_FUNC( ULTRALIGHT_APP_RENDERER ) {
+    PHB_ITEM pRet;
+    ULRenderer ren = ulAppGetRenderer(SELF_APP());
+    HB_FUNC_EXEC(ULTRALIGHT_RENDERER);
+    setupOBJDATA("ULTRALIGHT_RENDERER",&ultralight_renderer);
+    hb_clsAssociate(  ultralight_renderer.classId );
+    pRet = hb_stackReturnItem();
+    hb_itemArrayPut(pRet, ultralight_renderer.ptrObj, hb_itemPutPtr(0, ren)); 
 }
 
 HB_FUNC_EXTERN( ULTRALIGHT_MONITOR );

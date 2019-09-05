@@ -68,3 +68,12 @@
 #define ulCursor_Grab                       41
 #define ulCursor_Grabbing                   42
 #define ulCursor_Custom                     43
+
+///
+/// The various Bitmap formats.
+///
+
+/// Alpha-channel only, 8-bits per channel (8-bits in total per pixel)
+#define ulBitmapFormat_A8 0
+/// Red Green Blue Alpha, 8-bits per channel (32-bits in total per pixel)
+#define ulBitmapFormat_RGBA8 1

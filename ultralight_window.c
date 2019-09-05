@@ -7,11 +7,11 @@ OBJDATA ultralight_window;
 
     CONSTRUCTOR Create(monitor, width, height, fullscreen, window_flags)
     METHOD width()
-    METHOD height()
+    METHOD ù()
     //ACCESS is_fullscreen()
     //ACCESS scale()
     METHOD SetTile(cTile)
-    //METHOD SetCursor(oCursor)
+    METHOD SetCursor(nCursor)
     //METHOD Close()
 
     //METHOD DeviceToPixels(nVal)
@@ -50,10 +50,21 @@ HB_FUNC( ULTRALIGHT_WINDOW_HEIGHT ) {
     hb_retni(ulWindowGetHeight(SELF_WINDOW()));
 }
 
+HB_FUNC( ULTRALIGHT_WINDOW_SCALE ) {
+    hb_retnd(ulWindowGetScale(SELF_WINDOW()));
+}
+
 HB_FUNC( ULTRALIGHT_WINDOW_SETTILE ) {
     ulWindowSetTitle(SELF_WINDOW(),hb_parc(1));
     hb_ret();
 }
+
+HB_FUNC( ULTRALIGHT_WINDOW_SETCURSOR ) {
+    ulWindowSetCursor(SELF_WINDOW(),(ULCursor)hb_parni(1));
+    hb_ret();
+}
+
+
 
 
 void hbOnCloseCallback(void* user_data) {

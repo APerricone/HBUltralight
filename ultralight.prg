@@ -13,7 +13,7 @@ class ultralight_app
     /// Get the main monitor (this is never NULL).
     METHOD main_monitor()
     /// Get the underlying Renderer instance.
-    //METHOD renderer()
+    METHOD renderer()
     /// Run the main loop.
     /// *NOTE* it calls hb_idle.
     METHOD run()
@@ -68,11 +68,11 @@ endclass
 class ultralight_monitor
     DATA pObj HIDDEN
     /// Get the DPI scale (1.0 = 100%)
-    //ACCESS scale() 
+    ACCESS scale() 
     /// Get the width of the monitor.
-    //ACCESS width() 
+    ACCESS width() 
     /// Get the height of the monitor.
-    //ACCESS height() 
+    ACCESS height() 
 endclass
 
 /// Window class, represents a platform window.
@@ -98,17 +98,17 @@ class ultralight_window
     /// @param  window_flags  Various window flags. (ulWindowFlags_* on ultralight.ch)
     CONSTRUCTOR Create(monitor, width, height, fullscreen, window_flags)
     /// Get the window width (in device coordinates).
-    METHOD width()
+    ACCESS width()
     /// Get the window height (in device coordinates).
-    METHOD height()
+    ACCESS height()
     /// Whether or not the window is fullscreen.
     //ACCESS is_fullscreen()
     /// The DPI scale of the window.
-    //ACCESS scale()
+    ACCESS scale()
     /// Set the window title.
     METHOD SetTile(cTile)
     /// Set the cursor.
-    //METHOD SetCursor(oCursor)
+    METHOD SetCursor(nCursor)
     /// Close the window.
     //METHOD Close()
 
@@ -138,27 +138,27 @@ class ultralight_overlay
     ///    
     CONSTRUCTOR Create(window, width, height, x,y)
     /// Get the underlying View.
-    METHOD view()
+    ACCESS view()
     /// Get the width (in device coordinates).
-    //METHOD width() 
+    ACCESS width() 
     /// Get the height (in device coordinates).
-    //METHOD height()
+    ACCESS height()
     /// Get the x-position (offset from the left of the Window), in device
     /// coordinates.
-    //METHOD x()
+    ACCESS x()
     /// Get the y-position (offset from the top of the Window), in device
     /// coordinates.
-    //METHOD y()
+    ACCESS y()
     /// Whether or not the overlay is hidden (not drawn)
     /// Hide the overlay (will no longer be drawn)
     /// Show the overlay.
-    //METHOD hidden() SETGET
+    METHOD hidden() SETGET
     /// Whether or not this overlay has keyboard focus.
     /// Grant this overlay exclusive keyboard focus.
     /// Remove keyboard focus.  
     //METHOD focus() SETGET
     /// Move the overlay to a new position (in device coordinates).
-    //METHOD moveTo(x,y)
+    METHOD moveTo(x,y)
     /// Resize the overlay (and underlying View), dimensions should be
     /// specified in device coordinates.
     METHOD Resize(width,height)  
@@ -223,9 +223,9 @@ class ultralight_View
     /// Load a raw string of HTML, the View will navigate to it as a new page.
     METHOD LoadHTML(cHTML)
     /// Load a URL, the View will navigate to it as a new page.
-    //METHOD LoadURL(cURL)
+    METHOD LoadURL(cURL)
     /// Resize View to a certain size.
-    //METHOD Resize(width,height)  
+    METHOD Resize(width,height)  
     /// Get the page's JSContext for use with the JavaScriptCore API
     METHOD js_context()  
     /// Evaluate a raw string of JavaScript and return results as a native
@@ -251,10 +251,6 @@ class ultralight_View
     //METHOD FireMouseEvent(evt)
     /// Fire a scroll event
     //METHOD FireScrollEvent( evt)
-    /// Set or get a ViewListener to receive callbacks for View-related events.
-    //METHOD view_listener() SETGET
-    /// Set or get a LoadListener to receive callbacks for Load-related events.
-    //METHOD load_listener() SETGET
     /// Set or get whether or not this View should be repainted during the next
     /// call to Renderer::Render
     //METHOD needs_paint() SETGET
@@ -263,6 +259,124 @@ endclass
 class ultralight_Bitmap
     DATA pObj HIDDEN
 
+  ///
+  /// Create a Bitmap with existing pixels and configuration.
+  ///
+  /// @param  width        The width in pixels.
+  ///
+  /// @param  height       The height in pixels.
+  ///
+  /// @param  format       The pixel format to use.
+  ///
+  /// @param  row_bytes    The number of bytes between each row (note that this
+  ///                      value should be >= width * bytes_per_pixel).
+  ///
+  /// @param  pixels       Pointer to raw pixel buffer.
+  //CONSTRUCTOR Create(nWidth, nHeight, ulFormat, nRowBytes, cPixels)
+
+  ///
+  /// Create a bitmap from a deep copy of another Bitmap.
+  ///
+  //CONSTRUCTOR Create(oBitmap);
+
+  ///
+  /// Get the width in pixels.
+  ///
+  //ACCESS width() 
+
+  ///
+  /// Get the height in pixels.
+  ///
+  //ACCESS height()
+
+  ///
+  /// Get the bounds as an IntRect
+  ///
+  //ACCESS bounds() //=> {l,t,r,b}
+
+  ///
+  /// Get the pixel format.
+  ///
+  //ACCESS format()
+
+  ///
+  /// Get the number of bytes per pixel.
+  ///
+  //ACCESS bpp()
+
+  ///
+  /// Get the number of bytes between each row (this is always >= width * bpp)
+  ///
+  //ACCESS row_bytes()
+
+  ///
+  /// Get the size in bytes of the pixel buffer.
+  ///
+  //ACCESS size()
+
+  ///
+  /// Whether or not this Bitmap owns the pixel buffer and will destroy it
+  /// at the end of its lifetime.
+  ///
+  //ACCESS owns_pixels()
+
+  ///
+  /// Lock the pixel buffer for reading/writing. 
+  ///
+  /// @return  A pointer to the pixel buffer.
+  ///
+  //METHOD LockPixels()
+
+  ///
+  /// Unlock the pixel buffer.
+  ///
+  //METHOD UnlockPixels()
+
+  ///
+  /// Get the raw pixel buffer.
+  ///
+  /// @note  You should only call this if pixels are already locked.
+  ///
+  //virtual void* raw_pixels() = 0;
+
+  ///
+  /// Whether or not this Bitmap is empty (no pixels allocated).
+  ///
+  //ACCESS IsEmpty()
+
+  ///
+  /// Erase the Bitmap (set all pixels to 0).
+  ///
+  //METHOD Erase()
+
+  ///
+  /// Assign another bitmap to this one.
+  ///
+  /// @param  bitmap  The bitmap to copy from.
+  ///
+  //virtual void Set(Ref<Bitmap> bitmap) = 0;
+
+  ///
+  /// Draw another bitmap to this bitmap.
+  ///
+  /// @note  Formats do not need to match. Bitmap formats will be converted
+  ///        to one another automatically. Note that when converting from
+  ///        RGBA8 to A8, only the Red channel will be used.
+  ///
+  /// @param  src_rect    The source rectangle, relative to src bitmap.
+  ///
+  /// @param  dest_rect   The destination rectangle, relative to this bitmap.
+  /// 
+  /// @param  src         The source bitmap.
+  /// 
+  /// @param  pad_repeat  Whether or not we should pad the drawn bitmap by one
+  ///                     pixel of repeated edge pixels from the source bitmap.
+  ///
+  /// @return  Whether or not the operation succeeded (this can fail if the
+  ///          src_rect and/or dest_rect are invalid, or if their total
+  ///          dimensions do not match).
+  ///
+  //METHOD DrawBitmap(src_rect,dest_rect, src, pad_repeat)
   ///
   /// Write this Bitmap out to a PNG image. (mainly used for Debug)
   ///
