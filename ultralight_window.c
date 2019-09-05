@@ -24,7 +24,7 @@ void hbOnCloseCallback(void* user_data);
 void hbOnResizeCallback(void* user_data, int width, int height);
 
 HB_FUNC( ULTRALIGHT_WINDOW_CREATE ) {
-	PHB_ITEM pSelf, pTemp = hb_itemNew(0);
+	PHB_ITEM pSelf, pTemp;
 	ULMonitor mon = PARAM_MONITOR(1);
 	ULWindow win = ulCreateWindow(
         mon, hb_parni(2), hb_parni(3), 
@@ -37,7 +37,7 @@ HB_FUNC( ULTRALIGHT_WINDOW_CREATE ) {
         ptr_bOnClose      = hb_clsGetVarIndex(ultralight_window.classId,hb_dynsymGet("bOnClose"));
         ptr_bOnResize     = hb_clsGetVarIndex(ultralight_window.classId,hb_dynsymGet("bOnResize"));
     }
-    hb_itemCopy(pTemp,pSelf);
+    pTemp = hb_itemNew(pSelf);
     ulWindowSetCloseCallback(win,hbOnCloseCallback,pTemp);
     ulWindowSetResizeCallback(win,hbOnResizeCallback,pTemp);
 }

@@ -18,6 +18,7 @@ proc main()
     </head>
     <body>
       <button onclick="GetMessage();">Get the Secret Message!</button>
+      <button onclick="GetMessage2();">Get the OTHER secret message!</button>
       <div id="message"></div>
     </body>
   </html>
@@ -32,6 +33,9 @@ proc main()
 proc GetMessage(/*this,args*/)
     JSEval("document.getElementById('message').innerHTML='Ultralight rocks!';")
 
+proc GetMessage2(/*this,args*/)
+    JSEval("document.getElementById('message').innerHTML='Harbour rocks too!';")
+  
 proc OnDOMReady(caller)
     LOCAL global
     ///
@@ -42,3 +46,4 @@ proc OnDOMReady(caller)
     // they are both ok
     global["GetMessage"] := @GetMessage()
     //global["GetMessage"] := {|this,args| GetMessage(this,args)})
+    global["GetMessage2"] := @GetMessage2()
