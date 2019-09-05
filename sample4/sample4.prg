@@ -9,11 +9,13 @@ proc main()
     overlay:=ultralight_overlay():Create(window,window:width(),window:height(),0,0)
     v := overlay:view()
     v:bOnDOMReady = {|caller| OnDOMReady(caller) }
+    v:bOnChangeCursor := {|c,nCursor| HB_SYMBOL_UNUSED(c), window:SetCursor(nCursor) }
     #pragma __text |    cHTML+=%s+e"\r\n" |    v:LoadHTML(cHTML) |    cHtml:=""
   <html>
     <head>
       <style type="text/css">
         body { font-family: Arial; text-align: center; }
+        button {cursor: hand;}
       </style>
     </head>
     <body>
@@ -24,6 +26,7 @@ proc main()
   </html>
     #pragma __endtext
     app:Run()
+
 
 ///
 /// Our native JavaScript callback. This function will be called from

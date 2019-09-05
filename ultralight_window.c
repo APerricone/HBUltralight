@@ -60,6 +60,9 @@ HB_FUNC( ULTRALIGHT_WINDOW_SETTILE ) {
 }
 
 HB_FUNC( ULTRALIGHT_WINDOW_SETCURSOR ) {
+#ifdef _WIN32
+    ulWindowSetCursor(SELF_WINDOW(),(ULCursor)0);
+#endif
     ulWindowSetCursor(SELF_WINDOW(),(ULCursor)hb_parni(1));
     hb_ret();
 }

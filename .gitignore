@@ -13,3 +13,4 @@ result.png
 *.hbx
 *.so
 *.a
+*bin
