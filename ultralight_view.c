@@ -49,7 +49,7 @@ static void hbOnUpdateHistoryCallback(void* user_data, ULView caller);
 static void hbOnDOMReadyCallback(void* user_data, ULView caller);
 
 void SetupView(PHB_ITEM pRet,ULView view) {
-    PHB_ITEM pTemp = hb_itemNew(0);
+    PHB_ITEM pTemp;
     if(ptr_bOnChangeTitle==0) {
         ptr_bOnChangeTitle      = hb_clsGetVarIndex(ultralight_view.classId,hb_dynsymGet("bOnChangeTitle"));
         ptr_bOnChangeURL        = hb_clsGetVarIndex(ultralight_view.classId,hb_dynsymGet("bOnChangeURL"));
@@ -62,7 +62,7 @@ void SetupView(PHB_ITEM pRet,ULView view) {
         ptr_bOnDOMReady         = hb_clsGetVarIndex(ultralight_view.classId,hb_dynsymGet("bOnDOMReady"));
     }
     hb_itemArrayPut(pRet, ultralight_view.ptrObj, hb_itemPutPtr(0, view));
-    hb_itemCopy(pTemp,pRet);
+    pTemp = hb_itemNew(pRet);
     ulViewSetChangeTitleCallback(view,hbChangeTitleCallback,pTemp);
     ulViewSetChangeURLCallback(view,hbOnChangeURLCallback,pTemp);
     ulViewSetChangeTooltipCallback(view,hbOnChangeTooltipCallback,pTemp);
