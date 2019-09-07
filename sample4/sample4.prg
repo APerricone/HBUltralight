@@ -10,6 +10,7 @@ proc main()
     v := overlay:view()
     v:bOnDOMReady = {|caller| OnDOMReady(caller) }
     v:bOnChangeCursor := {|c,nCursor| HB_SYMBOL_UNUSED(c), window:SetCursor(nCursor) }
+    v:bOnAddConsoleMessage = @Console()
     #pragma __text |    cHTML+=%s+e"\r\n" |    v:LoadHTML(cHTML) |    cHtml:=""
   <html>
     <head>
@@ -18,6 +19,11 @@ proc main()
         button {cursor: hand;}
       </style>
     </head>
+    <script type="application/javascript">
+    function SendToHarbour(who) {
+        return who+" rocks too!";
+    }    
+    </script>
     <body>
       <button onclick="GetMessage();">Get the Secret Message!</button>
       <button onclick="GetMessage2();">Get the OTHER secret message!</button>
@@ -37,7 +43,10 @@ proc GetMessage(/*this,args*/)
     JSEval("document.getElementById('message').innerHTML='Ultralight rocks!';")
 
 proc GetMessage2(/*this,args*/)
-    JSEval("document.getElementById('message').innerHTML='Harbour rocks too!';")
+    LOCAL window := JSGlobalObject()
+    LOCAL fn := window["SendToHarbour"]
+    LOCAL tmp  := fn:CallNoThis("Harbour")
+    JSEval("document.getElementById('message').innerHTML='"+tmp+"';")
   
 proc OnDOMReady(caller)
     LOCAL global
@@ -50,3 +59,32 @@ proc OnDOMReady(caller)
     global["GetMessage"] := @GetMessage()
     //global["GetMessage"] := {|this,args| GetMessage(this,args)})
     global["GetMessage2"] := @GetMessage2()
+
+proc Console(caller,nSource,nLevel,cMessage,nLine,nColumn,cSource)
+    HB_SYMBOL_UNUSED(caller)
+    switch nSource
+        case ulMessageSource_JS
+        ? "JS"
+        exit
+        otherwise
+        ? nSource
+    endswitch
+    ?? " "
+    switch nLevel
+        case ulMessageLevel_Log
+        ?? " Log"
+        exit
+        case ulMessageLevel_Warning
+        ?? " Warning"
+        exit
+        case ulMessageLevel_Error
+        ?? " Error"
+        exit
+        case ulMessageLevel_Debug
+        ?? " Debug"
+        exit    
+        case ulMessageLevel_Info
+        ?? " Info"
+        exit
+    endswitch
+    ?? ":"+cMessage+" - "+cSource+"("+alltrim(str(nLine))+":"+alltrim(str(nColumn))+")"  

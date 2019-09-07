@@ -157,6 +157,38 @@ HB_FUNC( JSVALUE_DELETEPROPERTY ) {
 	JSStringRelease(cIndex);
 }
 
+void ValueCall(bool thisObjParam) {
+	JSObjectRef obj = SELF_OBJECT();
+    JSObjectRef thisObj;
+    JSValueRef result, *args;
+    int s=1,i;
+    if(!obj || !JSObjectIsFunction(ctx,obj)) {
+	    hb_errRT_BASE(EG_ARG, 15, "JSValue is not a function",  HB_ERR_FUNCNAME, 1);
+        return;
+    }
+
+    if(thisObjParam) {
+        thisObj = JSValueToObject(ctx,HB_toJS(hb_param(1,HB_IT_ANY)),0);
+        s=2;
+    } else
+        thisObj = JSContextGetGlobalObject(ctx);
+
+    args = (JSValueRef*)malloc(sizeof(JSValueRef)*(hb_pcount()-s+1));
+    for(i=s;i<=hb_pcount();i++) {
+        args[i-s] = HB_toJS(hb_param(i,HB_IT_ANY));
+    }
+    result = JSObjectCallAsFunction(ctx, obj, thisObj, hb_pcount()-s+1, args, 0);
+    for(i=s;i<=hb_pcount();i++) {
+        JSValueUnprotect(ctx,args[i-s]);
+    }
+
+    hb_FromJS(hb_stackReturnItem(), result,0);
+}
+
+HB_FUNC( JSVALUE_CALL ) { ValueCall(true); }
+HB_FUNC( JSVALUE_CALLNOTHIS ) { ValueCall(false); }
+
+
 HB_FUNC( JSEVAL ) {
 	JSStringRef script = HB_TOJSString(hb_param(1,HB_IT_STRING));
 	JSValueRef value = JSEvaluateScript(ctx,script,0,0,0,0);
@@ -314,16 +346,16 @@ void hb_FromJS(PHB_ITEM dest, JSValueRef src, int lObject) {
 			}
 			case kJSTypeObject:
 			{
-				JSObjectRef obj = JSValueToObject(ctx, src, 0);
 				if(JSValueIsArray(ctx,src)) {
 					hb_FromJSArray(dest,src);
 					//HB_FromJS_JSON(dest,src); //TODO better
 					return;
 				}
-				if(JSObjectIsFunction(ctx,obj)) {
-					hb_errRT_BASE(EG_ARG, 12, "Convert JS function to Symbol or CodeBlock", "hb_FromJS", 0);
-					return;
-				}
+				//JSObjectRef obj = JSValueToObject(ctx, src, 0);
+				//if(JSObjectIsFunction(ctx,obj)) {
+				//	//hb_errRT_BASE(EG_ARG, 12, "Convert JS function to Symbol or CodeBlock", "hb_FromJS", 0);
+				//	return;
+				//}
 				if(lObject==0) {
 					lObject=1;
 					break;
@@ -336,7 +368,8 @@ void hb_FromJS(PHB_ITEM dest, JSValueRef src, int lObject) {
 		}
 	}
 	if(lObject==1) {
-		hb_objSetClass(dest, "JSVALUE", NULL);
+        hb_arrayNew( dest, HB_JSValue_ValuePtr+1 );
+		hb_objSetClass(dest, "JSVALUE", "JSVALUE");
     	hb_itemArrayPut(dest, HB_JSValue_ValuePtr, hb_itemPutPtr(0, (void*)src)); 
 		JSValueProtect(ctx,src);
 	}

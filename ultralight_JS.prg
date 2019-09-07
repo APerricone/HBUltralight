@@ -31,6 +31,10 @@ class JSVALUE
     method DeleteProperty(cPropertyName) //=> L
 
     // ** end of methods valid for array and object **
+    
+    // valid only for function
+    Method CallNoThis()
+    Method Call(thisObj)
 
     DESTRUCTOR Destroy()
 endclass

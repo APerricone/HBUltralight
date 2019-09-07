@@ -17,3 +17,4 @@ sample4.prg
 # VC debugger
 #-debug
 #-cflag=/Od
+#-gc3

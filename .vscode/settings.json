@@ -6,5 +6,9 @@
     ],
     "files.associations": {
         "*.h": "c"
-    }
+    },
+    "editor.detectIndentation": false,
+    "editor.useTabStops": false,
+    "editor.tabSize": 4,
+    "editor.trimAutoWhitespace": true
 }
