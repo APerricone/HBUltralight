@@ -106,7 +106,7 @@ class ultralight_window
     /// The DPI scale of the window.
     ACCESS scale()
     /// Set the window title.
-    METHOD SetTile(cTile)
+    METHOD SetTitle(cTile)
     /// Set the cursor.
     METHOD SetCursor(nCursor)
     /// Close the window.

@@ -10,7 +10,7 @@ OBJDATA ultralight_window;
     METHOD ù()
     //ACCESS is_fullscreen()
     //ACCESS scale()
-    METHOD SetTile(cTile)
+    METHOD SetTitle(cTile)
     METHOD SetCursor(nCursor)
     //METHOD Close()
 
@@ -54,7 +54,7 @@ HB_FUNC( ULTRALIGHT_WINDOW_SCALE ) {
     hb_retnd(ulWindowGetScale(SELF_WINDOW()));
 }
 
-HB_FUNC( ULTRALIGHT_WINDOW_SETTILE ) {
+HB_FUNC( ULTRALIGHT_WINDOW_SETTITLE ) {
     ulWindowSetTitle(SELF_WINDOW(),hb_parc(1));
     hb_ret();
 }

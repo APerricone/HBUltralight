@@ -5,7 +5,7 @@ proc main()
     LOCAL window := ultralight_window():Create(app:main_Monitor,300,300,.F.,;
         hb_bitOr(ulWindowFlags_Titled,ulWindowFlags_Resizable))
     LOCAL overlay 
-    window:SetTile("Tutorial 3 - Resize Me!")
+    window:SetTitle("Tutorial 3 - Resize Me!")
     app:window := window
     overlay:=ultralight_overlay():Create(window,window:width(),window:height(),0,0)
     overlay:view():LoadHTML("<center>Hello World!</center>")

@@ -4,7 +4,7 @@ proc main()
     LOCAL app := ultralight_app():Create()
     LOCAL window := ultralight_window():Create(app:main_Monitor,300,300,.F.,ulWindowFlags_Titled)
     LOCAL overlay, cHTML, v
-    window:SetTile("Tutorial 4 - JavaScript")
+    window:SetTitle("Tutorial 4 - JavaScript")
     app:window := window
     overlay:=ultralight_overlay():Create(window,window:width(),window:height(),0,0)
     v := overlay:view()
