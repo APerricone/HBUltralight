@@ -340,7 +340,8 @@ void hb_FromJS(PHB_ITEM dest, JSValueRef src, int lObject) {
 			{
 				JSStringRef strValue = JSValueToStringCopy(ctx, src, 0);
 				const JSChar *u16Str = JSStringGetCharactersPtr(strValue);
-				hb_itemPutStrU16(dest, HB_CDP_ENDIAN_NATIVE, (HB_WCHAR*)u16Str);
+                size_t len = JSStringGetLength(strValue);
+				hb_itemPutStrLenU16(dest, HB_CDP_ENDIAN_NATIVE, (HB_WCHAR*)u16Str,len);
 				JSStringRelease(strValue);
 				return;			
 			}
@@ -393,8 +394,8 @@ JSValueRef hb_functionCallback(JSContextRef ctx_, JSObjectRef function,
 		hb_itemRelease(tmp);
 	}
 	pThis = hb_itemNew(0);
-	hb_FromJS(pThis, thisObject,0);
-	hb_evalBlock(pCallback, pCallback, pThis, pArgs, NULL );
+	hb_FromJS(pThis, thisObject,1);
+	hb_evalBlock(pCallback, pThis, pArgs, NULL );
 	hb_itemRelease(pThis);
 	hb_itemRelease(pArgs);
 	ctx = old_ctx;

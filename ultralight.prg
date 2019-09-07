@@ -5,11 +5,11 @@ class ultralight_app
     /// Create the App singleton.
     CONSTRUCTOR Create()
     /// Get the App singleton.
-    //CONSTRUCTOR instance()
+    CONSTRUCTOR instance()
     /// Set the main window. You must set this before calling Run.
     METHOD window() SETGET
-    //METHOD listener() SETGET
-    //METHOD is_running() 
+
+    //ACCESS is_running() 
     /// Get the main monitor (this is never NULL).
     METHOD main_monitor()
     /// Get the underlying Renderer instance.
@@ -153,10 +153,12 @@ class ultralight_overlay
     /// Hide the overlay (will no longer be drawn)
     /// Show the overlay.
     METHOD hidden() SETGET
+    METHOD Show() INLINE ::hidden := .F.
+    METHOD Hide() INLINE ::hidden := .T.
     /// Whether or not this overlay has keyboard focus.
     /// Grant this overlay exclusive keyboard focus.
     /// Remove keyboard focus.  
-    //METHOD focus() SETGET
+    METHOD focus() SETGET
     /// Move the overlay to a new position (in device coordinates).
     METHOD moveTo(x,y)
     /// Resize the overlay (and underlying View), dimensions should be
@@ -209,11 +211,11 @@ class ultralight_View
     DATA bOnDOMReady
 
     /// Get the URL of the current page loaded into this View, if any.
-    //METHOD url()
+    ACCESS url()
     /// Get the title of the current page loaded into this View, if any.
-    //METHOD title()
+    ACCESS title()
     /// Check if the main frame of the page is currently loading.
-    //ACCESS is_loading() 
+    ACCESS is_loading() 
     /// Get the RenderTarget for the View.
     //METHOD render_target()
     /// Check if bitmap is dirty (has changed since last call to View::bitmap)
@@ -232,19 +234,19 @@ class ultralight_View
     /// JavaScriptCore JSValueRef (@see <JavaScriptCore/JSValueRef.h>)
     //METHOD EvaluateScript(cScript)
     /// Whether or not we can navigate backwards in history
-    //METHOD CanGoBack()
+    METHOD CanGoBack()
     /// Whether or not we can navigate forwards in history
-    //METHOD CanGoForward()
+    METHOD CanGoForward()
     /// Navigate backwards in history
-    //METHOD GoBack()
+    METHOD GoBack()
     /// Navigate forwards in history
-    //METHOD GoForward()
+    METHOD GoForward()
     /// Navigate to an arbitrary offset in history
     //METHOD GoToHistoryOffset(offset)
     /// Reload current page
-    //METHOD Reload()
+    METHOD Reload()
     /// Stop all page loads
-    //METHOD Stop()
+    METHOD Stop()
     /// Fire a keyboard event
     //METHOD FireKeyEvent(evt)
     /// Fire a mouse event

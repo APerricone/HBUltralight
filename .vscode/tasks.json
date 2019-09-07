@@ -34,6 +34,11 @@
             "label": "Sample4",
             "group": "build",
             "args": ["sample4/sample4.hbp"]
+        },
+        {
+            "label": "SampleBrowser",
+            "group": "build",
+            "args": ["SampleBrowser/browser.hbp"]
         }
     ]
 }

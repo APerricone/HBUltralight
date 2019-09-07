@@ -1,0 +1,21 @@
+browser.prg
+ui.prg
+tab.prg
+-obrowser
+-workdir=obj
+-w3 
+-es2
+-inc 
+#-cflag=/FC
+
+../hbultralight.hbc
+-L..
+
+# Harbour debugger
+#-b
+#../code_dbg.prg
+
+# VC debugger
+-debug
+-cflag=/Od
+-gc3

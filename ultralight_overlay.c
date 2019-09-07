@@ -49,6 +49,7 @@ HB_FUNC( ULTRALIGHT_OVERLAY_X ) {
 HB_FUNC( ULTRALIGHT_OVERLAY_Y ) {
     hb_retni(ulOverlayGetY(SELF_OVERLAY()));
 }
+
 HB_FUNC( ULTRALIGHT_OVERLAY_HIDDEN ) {
     if(hb_pcount()>0) {
         if(hb_parl(1)) 
@@ -60,6 +61,18 @@ HB_FUNC( ULTRALIGHT_OVERLAY_HIDDEN ) {
         hb_retl(ulOverlayIsHidden(SELF_OVERLAY()));
     }
 }
+HB_FUNC( ULTRALIGHT_OVERLAY_FOCUS ) {
+    if(hb_pcount()>0) {
+        if(hb_parl(1)) 
+            ulOverlayFocus(SELF_OVERLAY());
+        else
+            ulOverlayUnfocus(SELF_OVERLAY());
+        hb_retl(hb_parl(1));
+    } else {
+        hb_retl(ulOverlayHasFocus(SELF_OVERLAY()));
+    }
+}
+
 HB_FUNC( ULTRALIGHT_OVERLAY_MOVETO ) {
     ulOverlayMoveTo(SELF_OVERLAY(),hb_parni(1),hb_parni(2));
     hb_ret();

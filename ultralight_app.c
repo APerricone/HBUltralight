@@ -2,7 +2,7 @@
 OBJDATA ultralight_app;
 
 /*  CONSTRUCTOR Create()
-    //CONSTRUCTOR instance()
+    CONSTRUCTOR instance()
     METHOD window() SETGET
     //METHOD listener() SETGET
     //METHOD is_running() 
@@ -29,6 +29,7 @@ void* hb_parvptr_obj(int n,int delta) {
 }
 
 void hbOnUpdate(void* user_data);
+PHB_ITEM appInstance;
 HB_FUNC( ULTRALIGHT_APP_CREATE ) {
 	PHB_ITEM pSelf;
 	ULApp app = ulCreateApp(ulCreateConfig());
@@ -37,6 +38,11 @@ HB_FUNC( ULTRALIGHT_APP_CREATE ) {
    	pSelf = hb_stackReturnItem();
     hb_itemArrayPut(pSelf, ultralight_app.ptrObj, hb_itemPutPtr(0, app)); 
     ulAppSetUpdateCallback(app,hbOnUpdate,0);
+    appInstance = hb_itemNew(pSelf);
+}
+
+HB_FUNC( ULTRALIGHT_APP_INSTANCE ) {
+    hb_itemCopy(hb_stackReturnItem(), appInstance);
 }
 
 void hbOnUpdate (void* user) {

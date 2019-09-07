@@ -14,3 +14,4 @@ result.png
 *.so
 *.a
 *bin
+sampleBrowser/cookies.dat

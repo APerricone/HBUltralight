@@ -4,22 +4,22 @@ OBJDATA ultralight_view;
 /*
     //METHOD url()
     //METHOD title()
-    //ACCESS is_loading() 
+    ACCESS is_loading() 
     //METHOD render_target()
     //METHOD is_bitmap_dirty()
     METHOD bitmap()
     METHOD LoadHTML(cHTML)
-    //METHOD LoadURL(cURL)
+    METHOD LoadURL(cURL)
     //METHOD Resize(width,height)  
     METHOD js_context()  
     //METHOD EvaluateScript(cScript)
-    //METHOD CanGoBack()
-    //METHOD CanGoForward()
-    //METHOD GoBack()
-    //METHOD GoForward()
+    METHOD CanGoBack()
+    METHOD CanGoForward()
+    METHOD GoBack()
+    METHOD GoForward()
     //METHOD GoToHistoryOffset(offset)
-    //METHOD Reload()
-    //METHOD Stop()
+    METHOD Reload()
+    METHOD Stop()
     //METHOD FireKeyEvent(evt)
     //METHOD FireMouseEvent(evt)
     //METHOD FireScrollEvent( evt)
@@ -112,6 +112,57 @@ HB_FUNC( ULTRALIGHT_VIEW_JS_CONTEXT ) {
     JSContextRef ctx = ulViewGetJSContext(view);
     hb_retptr((void*)ctx);
 }
+
+HB_FUNC( ULTRALIGHT_VIEW_URL ) {
+	ULView view = SELF_VIEW();
+    /// @note Don't destroy the returned string, it is owned by the View.
+    ULString url = ulViewGetURL(view);
+    hb_itemPutStrLenU16(hb_stackReturnItem(),HB_CDP_ENDIAN_NATIVE,
+        ulStringGetData(url), ulStringGetLength(url) );
+}
+HB_FUNC( ULTRALIGHT_VIEW_TITLE ) {
+	ULView view = SELF_VIEW();
+    /// @note Don't destroy the returned string, it is owned by the View.
+    ULString title = ulViewGetTitle(view);
+    hb_itemPutStrLenU16(hb_stackReturnItem(),HB_CDP_ENDIAN_NATIVE,
+        ulStringGetData(title), ulStringGetLength(title) );
+}
+
+HB_FUNC( ULTRALIGHT_VIEW_IS_LOADING ) {
+	ULView view = SELF_VIEW();
+    hb_retl(ulViewIsLoading(view));
+}
+HB_FUNC( ULTRALIGHT_VIEW_CANGOBACK ) {
+	ULView view = SELF_VIEW();
+    hb_retl(ulViewCanGoBack(view));
+}
+HB_FUNC( ULTRALIGHT_VIEW_CANGOFORWARD ) {
+	ULView view = SELF_VIEW();
+    hb_retl(ulViewCanGoForward(view));
+}
+
+HB_FUNC( ULTRALIGHT_VIEW_GOBACK ) {
+	ULView view = SELF_VIEW();
+    ulViewGoBack(view);
+    hb_ret();
+}
+
+HB_FUNC( ULTRALIGHT_VIEW_GOFORWARD ) {
+	ULView view = SELF_VIEW();
+    ulViewGoForward(view);
+    hb_ret();
+}
+HB_FUNC( ULTRALIGHT_VIEW_RELOAD ) {
+	ULView view = SELF_VIEW();
+    ulViewReload(view);
+    hb_ret();
+}
+HB_FUNC( ULTRALIGHT_VIEW_STOP ) {
+	ULView view = SELF_VIEW();
+    ulViewStop(view);
+    hb_ret();
+}
+
 
 void hbChangeTitleCallback (void* user_data, ULView caller, ULString title) {
     HB_SYMBOL_UNUSED(caller);
