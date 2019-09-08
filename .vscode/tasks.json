@@ -7,7 +7,7 @@
     "problemMatcher": ["$harbour","$gcc"],
     "windows": {
         "command": "build",
-        "problemMatcher": ["$harbour","$msCompile"],
+        "problemMatcher": ["$harbour","$msCompile"]
     },    
     "tasks": [
         {

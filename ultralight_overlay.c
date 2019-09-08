@@ -25,15 +25,8 @@ HB_FUNC( ULTRALIGHT_OVERLAY_CREATE ) {
     hb_itemArrayPut(pSelf, ultralight_overlay.ptrObj, hb_itemPutPtr(0, overlay)); 
 }
 
-HB_FUNC_EXTERN( ULTRALIGHT_VIEW );
 HB_FUNC( ULTRALIGHT_OVERLAY_VIEW ) {
-    PHB_ITEM pRet;
-    ULView view = ulOverlayGetView(SELF_OVERLAY());
-    HB_FUNC_EXEC(ULTRALIGHT_VIEW);
-    setupOBJDATA("ULTRALIGHT_VIEW", &ultralight_view);
-    hb_clsAssociate(  ultralight_view.classId );
-    pRet = hb_stackReturnItem();
-    SetupView(pRet,view);
+    hb_retView(ulOverlayGetView(SELF_OVERLAY()));
 }
 
 HB_FUNC( ULTRALIGHT_OVERLAY_WIDTH ) {

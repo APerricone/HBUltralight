@@ -19,7 +19,7 @@ class UI
     ACCESS active_tab() INLINE iif(!Empty(::tabs) .and. hb_HHasKey(::tabs,::active_tab_id),::tabs[::active_tab_id],nil)
 
     METHOD CreateNewTab() 
-    METHOD UpdateTabTitle(id, cTitle) INLINE ::updateTab:CallNoThis(id, ctitle, "") 
+    METHOD UpdateTabTitle(id, cTitle) INLINE ::updateTab:CallNoThis(id, ctitle, "")
     METHOD UpdateTabURL(id, cUrl) inline IIF(id=::active_tab_id,::SetUrl(cUrl),) 
     METHOD UpdateTabNavigation(id,is_loading,can_go_back,can_go_forward) 
 
@@ -95,7 +95,10 @@ METHOD OnRequestTabClose(obj,args) CLASS UI
     LOCAL id
     HB_SYMBOL_UNUSED(obj)
     if len(args) > 0
-        id := args[0]
+        id := args[1]
+        IF valtype(id)=="C"
+             id:=val(id)
+        endif
         if .not. hb_HHasKey(::tabs,id)
             return nil
         endif
@@ -117,7 +120,10 @@ METHOD OnActiveTabChange(obj, args)
     LOCAL id, tab, tab_view
     HB_SYMBOL_UNUSED(obj)
     if len(args) >0
-        id := val(args[1])
+        id := args[1]
+        IF valtype(id)=="C"
+             id:=val(id)
+        endif
         if (id = ::active_tab_id)
             return nil
         endif
@@ -143,7 +149,7 @@ METHOD OnActiveTabChange(obj, args)
         tab_view := tab:view()
         ::SetLoading(tab_view:is_loading())
         ::SetCanGoBack(tab_view:CanGoBack())
-        ::SetCanGoForward(tab_view:CanGoBack())
+        ::SetCanGoForward(tab_view:CanGoForward())
         ::SetURL(tab_view:url)
     endif
 return nil
@@ -167,6 +173,10 @@ METHOD CreateNewTab() CLASS UI
 return nil  
 
 METHOD UpdateTabNavigation(id,is_loading,can_go_back,can_go_forward) CLASS UI
+    ? "UpdateTabNavigation", id,is_loading,can_go_back,can_go_forward
+    IF valtype(id)=="C"
+         id:=val(id)
+    endif
     if id == ::active_tab_id
         ::SetLoading(is_loading)
         ::SetCanGoBack(can_go_back)

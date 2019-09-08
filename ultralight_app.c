@@ -74,16 +74,11 @@ HB_FUNC( ULTRALIGHT_APP_MAIN_MONITOR ) {
 
 HB_FUNC( ULTRALIGHT_APP_WINDOW ) {
     ULApp app = SELF_APP();
-    ULWindow win;
-    PHB_ITEM pRet;
     if(hb_pcount()>0) {
         ulAppSetWindow(app,PARAM_WINDOW(1));
         hb_ret();
     } else {
-        win = ulAppGetWindow(app);
-        hb_clsAssociate(  ultralight_window.classId );
-        pRet = hb_stackReturnItem();
-        hb_itemArrayPut(pRet, ultralight_window.ptrObj, hb_itemPutPtr(0, win)); 
+        hb_retWindow(ulAppGetWindow(app));
     }
 }
 

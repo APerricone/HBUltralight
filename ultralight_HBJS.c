@@ -369,8 +369,16 @@ void hb_FromJS(PHB_ITEM dest, JSValueRef src, int lObject) {
 		}
 	}
 	if(lObject==1) {
-        hb_arrayNew( dest, HB_JSValue_ValuePtr+1 );
-		hb_objSetClass(dest, "JSVALUE", "JSVALUE");
+        if(dest==hb_stackReturnItem()) {
+            hb_clsAssociate( HB_JSValueClassId );    
+        } else
+        {
+            PHB_ITEM pTemp = hb_itemNew(hb_stackReturnItem());
+            hb_clsAssociate( HB_JSValueClassId );
+            hb_itemCopy(dest, hb_stackReturnItem());
+            hb_itemCopy(hb_stackReturnItem(), pTemp);
+			hb_itemRelease(pTemp);
+        }
     	hb_itemArrayPut(dest, HB_JSValue_ValuePtr, hb_itemPutPtr(0, (void*)src)); 
 		JSValueProtect(ctx,src);
 	}
