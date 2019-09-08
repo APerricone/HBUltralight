@@ -52,17 +52,15 @@ METHOD New(window) CLASS UI
     v:=::overlay:view
     v:LoadURL("file:///ui.html")
     v:bOnDOMReady := {|caller| ::OnDOMReady(caller)}
-    window:bOnResize := {|width, height| ::OnResize(width,height) }
+    window:bOnResize := {|caller, width, height| HB_SYMBOL_UNUSED(caller), ::OnResize(width,height) }
     v:bOnAddConsoleMessage = @Console()
     ::tabs := {=>}
 return self
 
 METHOD OnResize(width, height) CLASS UI
-    LOCAL tab, tab_height := height - UI_HEIGHT
+    LOCAL tab_height := height - UI_HEIGHT
     ::overlay:Resize(width, UI_HEIGHT)
-    for each tab in ::tabs
-        tab:resize(width, tab_height)
-    next
+    aEval(hb_HValues(::tabs), {|tab| tab:resize(width, tab_height) })
 return nil  
 
 METHOD OnDOMReady(caller) CLASS UI

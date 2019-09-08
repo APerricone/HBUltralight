@@ -1,5 +1,5 @@
 sample4.prg
--o../sample4bin
+-osample4
 -workdir=obj
 -w3 
 -es2
