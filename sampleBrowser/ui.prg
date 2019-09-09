@@ -154,7 +154,7 @@ METHOD OnRequestChangeURL(obj, args)
     LOCAL url
     HB_SYMBOL_UNUSED(obj)
     if len(args) == 1 .and. !empty(::tabs)
-        url := args[0]
+        url := args[1]
         ::active_tab:view:LoadURL(url)
     endif
 return nil
