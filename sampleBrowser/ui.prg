@@ -8,9 +8,7 @@ class UI
     DATA overlay
     DATA active_tab_id, tabs
     DATA tab_id_counter INIT 1
-    DATA ui_height, tab_height, scale
-    DATA cur_cursor
-    
+    DATA ui_height, tab_height, scale    
 
     CONSTRUCTOR NEW(window)
     //~UI();
@@ -163,7 +161,7 @@ return nil
 
 METHOD CreateNewTab() CLASS UI
     LOCAL id := ::tab_id_counter++
-    ::tabs[id] := Tab():New(Self, Len(::tabs), ::window:width, ::window:height - UI_HEIGHT, 0, UI_HEIGHT)
+    ::tabs[id] := Tab():New(Self, id, ::window:width, ::window:height - UI_HEIGHT, 0, UI_HEIGHT)
     ::tabs[id]:view:LoadURL("file:///new_tab_page.html")
     ::active_tab_id := id
   
@@ -171,7 +169,6 @@ METHOD CreateNewTab() CLASS UI
 return nil  
 
 METHOD UpdateTabNavigation(id,is_loading,can_go_back,can_go_forward) CLASS UI
-    ? "UpdateTabNavigation", id,is_loading,can_go_back,can_go_forward
     IF valtype(id)=="C"
          id:=val(id)
     endif
