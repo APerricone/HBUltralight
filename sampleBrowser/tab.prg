@@ -20,7 +20,7 @@ METHOD new(ui,id,width,height,x,y) CLASS Tab
     view := ::overlay:view
     view:bOnChangeTitle := {|c,title| HB_SYMBOL_UNUSED(c), ui:UpdateTabTitle(::id,title) }
     view:bOnChangeURL := {|c,url| HB_SYMBOL_UNUSED(c), ui:UpdateTabURL(::id,url) }
-    view:bOnChangeCursor := {|c,cur| HB_SYMBOL_UNUSED(c), iif(id==ui:active_tab_id,ui:SetCursor(::id,cur),) }
+    view:bOnChangeCursor := {|c,cur| HB_SYMBOL_UNUSED(c), iif(id==ui:active_tab_id,ui:SetCursor(cur),) }
     commonBlock := {|caller| ui:UpdateTabNavigation(id, caller:is_loading(), caller:CanGoBack(), caller:CanGoForward()) }
     view:bOnBeginLoading := commonBlock
     view:bOnFinishLoading := commonBlock

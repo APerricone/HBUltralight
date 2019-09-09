@@ -16,6 +16,6 @@ tab.prg
 #../code_dbg.prg
 
 # VC debugger
--debug
--cflag=/Od
--gc3
+#-debug
+#-cflag=/Od
+#-gc3

@@ -1,4 +1,5 @@
 sample2.prg
+-osample2
 -workdir=obj
 -w3 
 -es2
@@ -15,3 +16,4 @@ sample2.prg
 # VC debugger
 #-debug
 #-cflag=/Od
+#-gc3

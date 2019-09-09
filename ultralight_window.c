@@ -65,6 +65,7 @@ void hb_retWindow(ULWindow window) {
     PHB_ITEM ptrItem = hb_itemPutPtr(0,window);
     PHB_ITEM dest = hb_itemNew(hb_stackReturnItem());
     hb_hashAdd(windowHash,ptrItem,dest);
+    hb_itemRelease(ptrItem);
     hb_itemRelease(dest);
 }
 
@@ -95,10 +96,11 @@ HB_FUNC( ULTRALIGHT_WINDOW_SETTITLE ) {
 }
 
 HB_FUNC( ULTRALIGHT_WINDOW_SETCURSOR ) {
+    ULCursor newCursor = (ULCursor)hb_parni(1);
 #ifdef _WIN32
     ulWindowSetCursor(SELF_WINDOW(),(ULCursor)0);
 #endif
-    ulWindowSetCursor(SELF_WINDOW(),(ULCursor)hb_parni(1));
+    ulWindowSetCursor(SELF_WINDOW(),newCursor);
     hb_ret();
 }
 

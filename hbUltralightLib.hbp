@@ -32,5 +32,5 @@ ultralight_window.c
 #../code_dbg.prg
 
 # VC debugger
--debug
--cflag=/Od
+#-debug
+#-cflag=/Od
