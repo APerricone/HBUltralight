@@ -4,6 +4,7 @@
 #include <hbstack.h>
 #include <hbapistr.h>
 #include <hbapierr.h>
+#include <hbvm.h>
 
 #ifdef _WINDOWS_
 #include <windows.h>
@@ -37,3 +38,6 @@ void* hb_parvptr_obj(int n,int delta);
 
 void hb_retView(ULView);
 void hb_retWindow(ULWindow);
+
+HB_FUNC_EXTERN( ULTRALIGHT_GETHB );
+HB_FUNC_EXTERN( ULTRALIGHT_SETHB );

@@ -7,6 +7,16 @@
         {
             "type": "harbour-dbg",
             "request": "launch",
+            "name": "Avvia browser",
+            "program": "${workspaceFolder}/sampleBrowser/browser",
+            "workingDir": "${workspaceFolder}/sampleBrowser",
+            "sourcePaths": ["${workspaceFolder}"],
+            "stopOnEntry": true,
+            "terminalType": "integrated"
+        },
+        {
+            "type": "harbour-dbg",
+            "request": "launch",
             "name": "Sample1",
             "program": "${workspaceFolder}/sample1",
             "workingDir": "${workspaceFolder}/",

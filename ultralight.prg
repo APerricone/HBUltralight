@@ -1,4 +1,5 @@
 #include <hbclass.ch>
+static ULHash := {=>}
 
 class ultralight_app
     DATA pObj HIDDEN
@@ -388,3 +389,13 @@ class ultralight_Bitmap
   ///
   METHOD WritePNG(cPath)
 endclass
+
+func ultralight_getHB(ptr)
+    if hb_HHasKey(ULHash,ptr)
+        return ULHash[ptr]
+    endif
+retur nil
+
+func ultralight_setHB(ptr,val) 
+    hb_HSet(ULHash,ptr,val)
+return val

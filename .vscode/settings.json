@@ -5,7 +5,10 @@
         "."
     ],
     "files.associations": {
-        "*.h": "c"
+        "*.h": "c",
+        "array": "cpp",
+        "vector": "cpp",
+        "xstring": "cpp"
     },
     "editor.detectIndentation": false,
     "editor.useTabStops": false,

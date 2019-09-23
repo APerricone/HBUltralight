@@ -83,28 +83,30 @@ static void SetupView(ULView view) {
 
 PHB_ITEM viewHash;
 PHB_ITEM itemFromView(ULView view) {
-    HB_SIZE pos;
-    if(!viewHash) viewHash = hb_hashNew(0);
-    PHB_ITEM ptrItem = hb_itemPutPtr(0,view);
-    if(hb_hashScan(viewHash, ptrItem, &pos)) {
-        hb_itemRelease(ptrItem);
-        return hb_hashGetValueAt(viewHash,pos);
-    }
-    hb_itemRelease(ptrItem);
-    return 0;
+    hb_vmPushSymbol( hb_dynsymFindSymbol("ULTRALIGHT_GETHB") );
+    hb_vmPushNil();
+    hb_vmPushPointer(view);
+    hb_vmDo( 1 );
+    //HB_FUNC_EXEC(ULTRALIGHT_GETHB);
+    return hb_stackReturnItem();
 }
 
 void hb_retView(ULView view) {
-    PHB_ITEM pItem = itemFromView(view);
-    if(pItem) {
-        hb_itemCopy(hb_stackReturnItem(), pItem);
+    hb_vmPushSymbol( hb_dynsymFindSymbol("ULTRALIGHT_GETHB") );
+    hb_vmPushNil();
+    hb_vmPushPointer(view);
+    hb_vmDo( 1 );
+    //HB_FUNC_EXEC(ULTRALIGHT_GETHB);
+    if( hb_itemType(hb_stackReturnItem())!=HB_IT_NIL ) {
         return;
     }
-    SetupView(view); //it is called only here, but it is so big!
-    PHB_ITEM ptrItem = hb_itemPutPtr(0,view);
-    PHB_ITEM dest = hb_itemNew(hb_stackReturnItem());
-    hb_hashAdd(viewHash,ptrItem,dest);
-    hb_itemRelease(dest);
+    SetupView(view);
+    hb_vmPushSymbol( hb_dynsymFindSymbol("ULTRALIGHT_SETHB") );
+    hb_vmPushNil();
+    hb_vmPushPointer(view);
+    hb_vmPush(hb_stackReturnItem());
+    ///hb_vmPushPointer(view);
+    hb_vmDo( 2 );
 }
 
 

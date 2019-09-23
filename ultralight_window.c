@@ -42,33 +42,34 @@ static void SetupWindow(ULWindow window) {
     ulWindowSetResizeCallback(window,hbOnResizeCallback,window);
 }
 
-PHB_ITEM windowHash;
 PHB_ITEM itemFromWindow(ULWindow window) {
-    HB_SIZE pos;
-    if(!windowHash) windowHash = hb_hashNew(0);
-    PHB_ITEM ptrItem = hb_itemPutPtr(0,window);
-    if(hb_hashScan(windowHash, ptrItem, &pos)) {
-        hb_itemRelease(ptrItem);
-        return hb_hashGetValueAt(windowHash,pos);
-    }
-    hb_itemRelease(ptrItem);
-    return 0;
+    hb_vmPushSymbol( hb_dynsymFindSymbol("ULTRALIGHT_GETHB") );
+    hb_vmPushNil();
+    hb_vmPushPointer(window);
+    hb_vmDo( 1 );
+    //HB_FUNC_EXEC(ULTRALIGHT_GETHB);
+    return hb_stackReturnItem();
 }
 
 void hb_retWindow(ULWindow window) {
-    PHB_ITEM pItem = itemFromWindow(window);
-    if(pItem) {
-        hb_itemCopy(hb_stackReturnItem(), pItem);
+    hb_vmPushSymbol( hb_dynsymFindSymbol("ULTRALIGHT_GETHB") );
+    hb_vmPushNil();
+    hb_vmPushPointer(window);
+    hb_vmDo( 1 );
+    //HB_FUNC_EXEC(ULTRALIGHT_GETHB);
+    if( hb_itemType(hb_stackReturnItem())!=HB_IT_NIL ) {
         return;
     }
     SetupWindow(window);
-    PHB_ITEM ptrItem = hb_itemPutPtr(0,window);
-    PHB_ITEM dest = hb_itemNew(hb_stackReturnItem());
-    hb_hashAdd(windowHash,ptrItem,dest);
-    hb_itemRelease(ptrItem);
-    hb_itemRelease(dest);
-}
+    hb_vmPushSymbol( hb_dynsymFindSymbol("ULTRALIGHT_SETHB") );
+    hb_vmPushNil();
+    hb_vmPushPointer(window);
+    hb_vmPush(hb_stackReturnItem());
+    ///hb_vmPushPointer(window);
+    hb_vmDo( 2 );
 
+    //HB_FUNC_EXEC(ULTRALIGHT_SETHB);
+}
 
 HB_FUNC( ULTRALIGHT_WINDOW_CREATE ) {
 	ULMonitor mon = PARAM_MONITOR(1);
