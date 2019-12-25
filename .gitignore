@@ -15,3 +15,5 @@ result.png
 *.a
 *bin
 sampleBrowser/cookies.dat
+TestCpp
+ultralight_old
