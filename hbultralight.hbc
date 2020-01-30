@@ -3,9 +3,9 @@ description=Ultralight binding
 incpaths=.
 
 # windows
-libpaths=ultralight/lib/${hb_plat}/${hb_cpu}
+libpaths=ultralight/lib
 # linux, mac
-libpaths=ultralight/bin/${hb_plat}
+libpaths=ultralight/bin
 
 libs=${_HB_DYNPREF}${hb_name}${_HB_DYNSUFF}
 libs=${_HB_DYNPREF}AppCore${_HB_DYNSUFF}

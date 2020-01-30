@@ -13,7 +13,7 @@ class JSVALUE
     METHOD IsArray()
     METHOD IsFunction()
 
-    //v can be nil, null, logic, number, character,  array or hash
+    //v can be nil, number, logic, character, array, hash, codeblock or symbol
     CONSTRUCTOR New(v)
     // return a value base on its type, in case of object return a hash, in case of function throw an error
     METHOD ToValue() 

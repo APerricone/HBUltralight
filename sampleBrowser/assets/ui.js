@@ -9,7 +9,7 @@ function updateForward(enable) {
     if (enable)
 		document.getElementById("forward").classList.remove("disabled");
 	else
-		document.getElementById("forward").classList.add("disabled");
+        document.getElementById("forward").classList.add("disabled");
 }
 
 function updateLoading(is_loading) {
