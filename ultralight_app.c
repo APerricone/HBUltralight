@@ -5,7 +5,7 @@ OBJDATA ultralight_app;
     CONSTRUCTOR instance()
     METHOD window() SETGET
     //METHOD listener() SETGET
-    //METHOD is_running() 
+    //METHOD is_running()
     METHOD main_monitor()
     METHOD renderer()
     METHOD run()
@@ -21,7 +21,7 @@ void setupOBJDATA(const char* className,OBJDATA* dest)
    	}
 }
 
-void* hb_parvptr_obj(int n,int delta) {
+void* hb_parvptr_obj(int n,HB_SIZE delta) {
 	PHB_ITEM pItem = hb_param(n, HB_IT_OBJECT);
 	if(pItem!=0)
 		return hb_itemGetPtr( hb_itemArrayGet(pItem,delta) );
@@ -32,11 +32,11 @@ void hbOnUpdate(void* user_data);
 PHB_ITEM appInstance;
 HB_FUNC( ULTRALIGHT_APP_CREATE ) {
 	PHB_ITEM pSelf;
-	ULApp app = ulCreateApp(ulCreateConfig());
+	ULApp app = ulCreateApp(NULL, NULL);
     setupOBJDATA("ULTRALIGHT_APP",&ultralight_app);
     hb_clsAssociate( ultralight_app.classId );
    	pSelf = hb_stackReturnItem();
-    hb_itemArrayPut(pSelf, ultralight_app.ptrObj, hb_itemPutPtr(0, app)); 
+    hb_itemArrayPut(pSelf, ultralight_app.ptrObj, hb_itemPutPtr(0, app));
     ulAppSetUpdateCallback(app,hbOnUpdate,0);
     appInstance = hb_itemNew(pSelf);
 }
@@ -58,7 +58,7 @@ HB_FUNC( ULTRALIGHT_APP_RENDERER ) {
     setupOBJDATA("ULTRALIGHT_RENDERER",&ultralight_renderer);
     hb_clsAssociate(  ultralight_renderer.classId );
     pRet = hb_stackReturnItem();
-    hb_itemArrayPut(pRet, ultralight_renderer.ptrObj, hb_itemPutPtr(0, ren)); 
+    hb_itemArrayPut(pRet, ultralight_renderer.ptrObj, hb_itemPutPtr(0, ren));
 }
 
 HB_FUNC_EXTERN( ULTRALIGHT_MONITOR );
@@ -69,7 +69,7 @@ HB_FUNC( ULTRALIGHT_APP_MAIN_MONITOR ) {
     setupOBJDATA("ULTRALIGHT_MONITOR",&ultralight_monitor);
     hb_clsAssociate(  ultralight_monitor.classId );
     pRet = hb_stackReturnItem();
-    hb_itemArrayPut(pRet, ultralight_monitor.ptrObj, hb_itemPutPtr(0, mon)); 
+    hb_itemArrayPut(pRet, ultralight_monitor.ptrObj, hb_itemPutPtr(0, mon));
 }
 
 HB_FUNC( ULTRALIGHT_APP_WINDOW ) {

@@ -20,7 +20,7 @@ typedef struct _OBJDATA
 extern OBJDATA ultralight_app, ultralight_renderer, ultralight_window,ultralight_monitor, ultralight_overlay, ultralight_view, ultralight_bitmap;
 
 void setupOBJDATA(const char* className,OBJDATA* dest);
-void* hb_parvptr_obj(int n,int delta);
+void* hb_parvptr_obj(int n,HB_SIZE delta);
 
 #define SELF_APP()       (ULApp)    hb_arrayGetPtr(hb_stackSelfItem(),ultralight_app.ptrObj)
 #define SELF_RENDERER()  (ULRenderer)hb_arrayGetPtr(hb_stackSelfItem(),ultralight_renderer.ptrObj)

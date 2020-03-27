@@ -5,10 +5,10 @@ IF %ERRORLEVEL% GTR 1000 goto setup
 goto :eof
 
 :setup
-set HB_INSTALL_PREFIX=C:\harbour32
+set HB_INSTALL_PREFIX=C:\harbour
 SET CD_SRC=%CD%
-call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars32.bat"
+call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat"
 cd %CD_SRC%
-set path=%PATH%;%HB_INSTALL_PREFIX%\bin;%HB_INSTALL_PREFIX%\bin\win\msvc
+set path=%PATH%;%HB_INSTALL_PREFIX%\bin;%HB_INSTALL_PREFIX%\bin\win\msvc64
 goto:start
 

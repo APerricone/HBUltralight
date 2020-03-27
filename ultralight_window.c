@@ -21,7 +21,7 @@ HB_SIZE ptr_bOnClose = 0;
 HB_SIZE ptr_bOnResize = 0;
 
 void hbOnCloseCallback(void* user_data);
-void hbOnResizeCallback(void* user_data, int width, int height);
+void hbOnResizeCallback(void* user_data, unsigned int width, unsigned int height);
 
 HB_FUNC_EXTERN( ULTRALIGHT_WINDOW );
 static void SetupWindow(ULWindow window) {
@@ -74,7 +74,7 @@ void hb_retWindow(ULWindow window) {
 HB_FUNC( ULTRALIGHT_WINDOW_CREATE ) {
 	ULMonitor mon = PARAM_MONITOR(1);
 	ULWindow win = ulCreateWindow(
-        mon, hb_parni(2), hb_parni(3), 
+        mon, hb_parni(2), hb_parni(3),
         hb_parldef(4,0)!=0,hb_parnidef(5,0));
     hb_retWindow(win);
 }
@@ -115,7 +115,7 @@ void hbOnCloseCallback(void* user_data) {
     hb_evalBlock(pCallback, pCaller, NULL );
 }
 
-void hbOnResizeCallback(void* user_data, int width, int height) {
+void hbOnResizeCallback(void* user_data, unsigned int width, unsigned int height) {
     PHB_ITEM pCaller = itemFromWindow((ULWindow)user_data);
     PHB_ITEM pCallback = hb_itemArrayGet(pCaller, ptr_bOnResize);
     if(!HB_IS_EVALITEM( pCallback )) return;

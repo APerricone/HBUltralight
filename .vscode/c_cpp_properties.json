@@ -5,7 +5,7 @@
             "includePath": [
                 "${workspaceFolder}/**",
                 "${workspaceFolder}/ultralight/include",
-                "c:\\harbour32\\include",
+                "c:\\harbour\\include",
                 "/usr/local/include/harbour"
             ],
             "windowsSdkVersion": "10.0.17763.0",

@@ -1,4 +1,5 @@
 ultralight/**
+!ultralight/readme.txt
 **/obj/**
 *.dll
 *.exe
@@ -15,3 +16,4 @@ result.png
 *.a
 *bin
 sampleBrowser/cookies.dat
+release/**
