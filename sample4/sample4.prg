@@ -22,7 +22,7 @@ proc main()
     <script type="application/javascript">
     function SendToHarbour(who) {
         return who+" rocks too!";
-    }    
+    }
     </script>
     <body>
       <button onclick="GetMessage();">Get the Secret Message!</button>
@@ -42,12 +42,13 @@ proc main()
 proc GetMessage(/*this,args*/)
     JSEval("document.getElementById('message').innerHTML='Ultralight rocks!';")
 
+/// another sample, the Javascript callback, get a Javascript function and call it
 proc GetMessage2(/*this,args*/)
     LOCAL window := JSGlobalObject()
     LOCAL fn := window["SendToHarbour"]
     LOCAL tmp  := fn:CallNoThis("Harbour")
     JSEval("document.getElementById('message').innerHTML='"+tmp+"';")
-  
+
 proc OnDOMReady(caller)
     LOCAL global
     ///
@@ -82,9 +83,9 @@ proc Console(caller,nSource,nLevel,cMessage,nLine,nColumn,cSource)
         exit
         case ulMessageLevel_Debug
         ?? " Debug"
-        exit    
+        exit
         case ulMessageLevel_Info
         ?? " Info"
         exit
     endswitch
-    ?? ":"+cMessage+" - "+cSource+"("+alltrim(str(nLine))+":"+alltrim(str(nColumn))+")"  
+    ?? ":"+cMessage+" - "+cSource+"("+alltrim(str(nLine))+":"+alltrim(str(nColumn))+")"

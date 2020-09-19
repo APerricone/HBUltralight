@@ -1,4 +1,5 @@
 ultralight/**
+!ultralight/readme.txt
 **/obj/**
 *.dll
 *.exe
@@ -17,3 +18,5 @@ result.png
 sampleBrowser/cookies.dat
 TestCpp
 ultralight_old
+release/**
+

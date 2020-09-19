@@ -1,13 +1,12 @@
 sample2.prg
 -osample2
 -workdir=obj
--w3 
+-w3
 -es2
--inc 
+-inc
 #-cflag=/FC
 
 ../hbultralight.hbc
--L..
 
 # Harbour debugger
 #-b

@@ -34,7 +34,7 @@ void hbOnUpdate(void* user_data);
 PHB_ITEM appInstance;
 HB_FUNC( ULTRALIGHT_APP_CREATE ) {
 	PHB_ITEM pSelf;
-	ULApp app = ulCreateApp(ulCreateSettings(),ulCreateConfig());
+	ULApp app = ulCreateApp(NULL, NULL);
     setupOBJDATA("ULTRALIGHT_APP",&ultralight_app);
     hb_clsAssociate( ultralight_app.classId );
    	pSelf = hb_stackReturnItem();

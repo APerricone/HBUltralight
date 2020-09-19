@@ -115,7 +115,7 @@ void hbOnCloseCallback(void* user_data) {
     hb_evalBlock(pCallback, pCaller, NULL );
 }
 
-void hbOnResizeCallback(void* user_data,unsigned int width,unsigned int height) {
+void hbOnResizeCallback(void* user_data, unsigned int width, unsigned int height) {
     PHB_ITEM pCaller = itemFromWindow((ULWindow)user_data);
     PHB_ITEM pCallback = hb_itemArrayGet(pCaller, ptr_bOnResize);
     if(!HB_IS_EVALITEM( pCallback )) return;
