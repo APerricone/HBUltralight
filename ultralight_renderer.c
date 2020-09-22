@@ -15,11 +15,11 @@ HB_FUNC( ULTRALIGHT_RENDERER_CREATE ) {
     setupOBJDATA("ULTRALIGHT_RENDERER",&ultralight_renderer);
     hb_clsAssociate( ultralight_renderer.classId );
    	pSelf = hb_stackReturnItem();
-    hb_itemArrayPut(pSelf, ultralight_renderer.ptrObj, hb_itemPutPtr(0, renderer)); 
+    hb_itemArrayPut(pSelf, ultralight_renderer.ptrObj, hb_itemPutPtr(0, renderer));
 }
 
 HB_FUNC( ULTRALIGHT_RENDERER_CREATEVIEW ) { //(nWidth,nHeight,lransparent)
-    ULView view = ulCreateView(SELF_RENDERER(), hb_parni(1), hb_parni(2), hb_parl(3));
+    ULView view = ulCreateView(SELF_RENDERER(), hb_parni(1), hb_parni(2), hb_parl(3), 0);
     hb_retView(view);
 }
 

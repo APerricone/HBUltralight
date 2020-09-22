@@ -10,7 +10,7 @@ class ultralight_app
     /// Set the main window. You must set this before calling Run.
     METHOD window() SETGET
 
-    //ACCESS is_running() 
+    //ACCESS is_running()
     /// Get the main monitor (this is never NULL).
     METHOD main_monitor()
     /// Get the underlying Renderer instance.
@@ -34,7 +34,7 @@ class ultralight_renderer
     /// Create a new View.
     ///
     /// @param  width   The initial width, in device coordinates.
-    /// 
+    ///
     /// @param  height  The initial height, in device coordinates.
     ///
     /// @param  transparent  Whether or not the view background is transparent.
@@ -69,11 +69,11 @@ endclass
 class ultralight_monitor
     DATA pObj HIDDEN
     /// Get the DPI scale (1.0 = 100%)
-    ACCESS scale() 
+    ACCESS scale()
     /// Get the width of the monitor.
-    ACCESS width() 
+    ACCESS width()
     /// Get the height of the monitor.
-    ACCESS height() 
+    ACCESS height()
 endclass
 
 /// Window class, represents a platform window.
@@ -136,12 +136,12 @@ class ultralight_overlay
     ///
     /// @param  y       The y-position (offset from the top of the Window), in
     ///                 device coordinates.
-    ///    
+    ///
     CONSTRUCTOR Create(window, width, height, x,y)
     /// Get the underlying View.
     ACCESS view()
     /// Get the width (in device coordinates).
-    ACCESS width() 
+    ACCESS width()
     /// Get the height (in device coordinates).
     ACCESS height()
     /// Get the x-position (offset from the left of the Window), in device
@@ -158,13 +158,13 @@ class ultralight_overlay
     METHOD Hide() INLINE ::hidden := .T.
     /// Whether or not this overlay has keyboard focus.
     /// Grant this overlay exclusive keyboard focus.
-    /// Remove keyboard focus.  
+    /// Remove keyboard focus.
     METHOD focus() SETGET
     /// Move the overlay to a new position (in device coordinates).
     METHOD moveTo(x,y)
     /// Resize the overlay (and underlying View), dimensions should be
     /// specified in device coordinates.
-    METHOD Resize(width,height)  
+    METHOD Resize(width,height)
 endclass
 
 /// A View is similar to a tab in a browser-- you load web content into
@@ -192,10 +192,10 @@ class ultralight_View
     /// @param caller this ultralight_view
     /// @param nSource ulMessageSource_*
     /// @param nLevel ulMessageLevel_*
-    /// @param cMessage 
+    /// @param cMessage
     /// @param nLine
-    /// @param nColumn 
-    /// @param cSource 
+    /// @param nColumn
+    /// @param cSource
     DATA bOnAddConsoleMessage
 
     /// Called when the page begins loading new URL into main frame
@@ -216,21 +216,21 @@ class ultralight_View
     /// Get the title of the current page loaded into this View, if any.
     ACCESS title()
     /// Check if the main frame of the page is currently loading.
-    ACCESS is_loading() 
+    ACCESS is_loading()
     /// Get the RenderTarget for the View.
     //METHOD render_target()
     /// Check if bitmap is dirty (has changed since last call to View::bitmap)
     //METHOD is_bitmap_dirty()
     /// Get the bitmap for the View (calling this resets the dirty state).
-    METHOD bitmap()
+    //METHOD bitmap()
     /// Load a raw string of HTML, the View will navigate to it as a new page.
     METHOD LoadHTML(cHTML)
     /// Load a URL, the View will navigate to it as a new page.
     METHOD LoadURL(cURL)
     /// Resize View to a certain size.
-    METHOD Resize(width,height)  
+    METHOD Resize(width,height)
     /// Get the page's JSContext for use with the JavaScriptCore API
-    METHOD js_context()  
+    METHOD LockJSContext()
     /// Evaluate a raw string of JavaScript and return results as a native
     /// JavaScriptCore JSValueRef (@see <JavaScriptCore/JSValueRef.h>)
     //METHOD EvaluateScript(cScript)
@@ -285,7 +285,7 @@ class ultralight_Bitmap
   ///
   /// Get the width in pixels.
   ///
-  //ACCESS width() 
+  //ACCESS width()
 
   ///
   /// Get the height in pixels.
@@ -324,7 +324,7 @@ class ultralight_Bitmap
   //ACCESS owns_pixels()
 
   ///
-  /// Lock the pixel buffer for reading/writing. 
+  /// Lock the pixel buffer for reading/writing.
   ///
   /// @return  A pointer to the pixel buffer.
   ///
@@ -369,9 +369,9 @@ class ultralight_Bitmap
   /// @param  src_rect    The source rectangle, relative to src bitmap.
   ///
   /// @param  dest_rect   The destination rectangle, relative to this bitmap.
-  /// 
+  ///
   /// @param  src         The source bitmap.
-  /// 
+  ///
   /// @param  pad_repeat  Whether or not we should pad the drawn bitmap by one
   ///                     pixel of repeated edge pixels from the source bitmap.
   ///
@@ -396,6 +396,6 @@ func ultralight_getHB(ptr)
     endif
 retur nil
 
-func ultralight_setHB(ptr,val) 
+func ultralight_setHB(ptr,val)
     hb_HSet(ULHash,ptr,val)
 return val

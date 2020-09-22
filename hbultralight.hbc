@@ -2,6 +2,7 @@ description=Ultralight binding
 
 incpaths=.
 libpaths=ultralight/bin
+libpaths=ultralight/lib
 
 libs=${_HB_DYNPREF}${hb_name}${_HB_DYNSUFF}
 libs=${_HB_DYNPREF}AppCore${_HB_DYNSUFF}

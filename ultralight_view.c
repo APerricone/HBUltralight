@@ -4,14 +4,14 @@ OBJDATA ultralight_view;
 /*
     //METHOD url()
     //METHOD title()
-    ACCESS is_loading() 
+    ACCESS is_loading()
     //METHOD render_target()
     //METHOD is_bitmap_dirty()
     METHOD bitmap()
     METHOD LoadHTML(cHTML)
     METHOD LoadURL(cURL)
-    //METHOD Resize(width,height)  
-    METHOD js_context()  
+    //METHOD Resize(width,height)
+    METHOD js_context()
     //METHOD EvaluateScript(cScript)
     METHOD CanGoBack()
     METHOD CanGoForward()
@@ -43,10 +43,10 @@ static void hbOnChangeURLCallback(void* user_data, ULView caller, ULString url);
 static void hbOnChangeTooltipCallback(void* user_data, ULView caller, ULString tooltip);
 static void hbOnChangeCursorCallback(void* user_data, ULView caller, ULCursor cursor);
 static void hbOnAddConsoleMessageCallback(void* user_data, ULView caller, ULMessageSource source, ULMessageLevel level,ULString message, unsigned int line_number,unsigned int column_number,ULString source_id);
-static void hbOnBeginLoadingCallback(void* user_data, ULView caller);
-static void hbOnFinishLoadingCallback(void* user_data, ULView caller);
+static void hbOnBeginLoadingCallback(void* user_data, ULView caller, unsigned long long frame_id, bool is_main_frame, ULString url);
+static void hbOnFinishLoadingCallback(void* user_data, ULView caller,unsigned long long frame_id, bool is_main_frame, ULString url);
 static void hbOnUpdateHistoryCallback(void* user_data, ULView caller);
-static void hbOnDOMReadyCallback(void* user_data, ULView caller);
+static void hbOnDOMReadyCallback(void* user_data, ULView caller, unsigned long long frame_id, bool is_main_frame, ULString url);
 
 HB_FUNC_EXTERN( ULTRALIGHT_VIEW );
 static void SetupView(ULView view) {
@@ -131,21 +131,21 @@ HB_FUNC( ULTRALIGHT_VIEW_RESIZE ) {
     hb_ret();
 }
 
-HB_FUNC_EXTERN( ULTRALIGHT_BITMAP );
-HB_FUNC( ULTRALIGHT_VIEW_BITMAP ) {
-    PHB_ITEM pRet;
-	ULView view = SELF_VIEW();
-    ULBitmap bitmap = ulViewGetBitmap(view);
-    HB_FUNC_EXEC(ULTRALIGHT_BITMAP);
-    setupOBJDATA("ULTRALIGHT_BITMAP", &ultralight_bitmap);
-    hb_clsAssociate(  ultralight_bitmap.classId );
-    pRet = hb_stackReturnItem();
-    hb_itemArrayPut(pRet, ultralight_bitmap.ptrObj, hb_itemPutPtr(0, bitmap)); 
-}
+//HB_FUNC_EXTERN( ULTRALIGHT_BITMAP );
+//HB_FUNC( ULTRALIGHT_VIEW_BITMAP ) {
+//    PHB_ITEM pRet;
+//	ULView view = SELF_VIEW();
+//    ULBitmap bitmap = ulViewGetBitmap(view);
+//    HB_FUNC_EXEC(ULTRALIGHT_BITMAP);
+//    setupOBJDATA("ULTRALIGHT_BITMAP", &ultralight_bitmap);
+//    hb_clsAssociate(  ultralight_bitmap.classId );
+//    pRet = hb_stackReturnItem();
+//    hb_itemArrayPut(pRet, ultralight_bitmap.ptrObj, hb_itemPutPtr(0, bitmap));
+//}
 
-HB_FUNC( ULTRALIGHT_VIEW_JS_CONTEXT ) {
+HB_FUNC( ULTRALIGHT_VIEW_LOCKJSCONTEXT ) {
 	ULView view = SELF_VIEW();
-    JSContextRef ctx = ulViewGetJSContext(view);
+    JSContextRef ctx = ulViewLockJSContext(view);
     hb_retptr((void*)ctx);
 }
 
@@ -231,11 +231,13 @@ void hbOnChangeTooltipCallback(void* user_data, ULView caller, ULString tooltip)
 }
 
 void hbOnChangeCursorCallback(void* user_data, ULView caller, ULCursor cursor) {
-    PHB_ITEM pItemView = itemFromView(caller);    
+    PHB_ITEM pItemView = itemFromView(caller);
     PHB_ITEM pCallback = hb_itemArrayGet(pItemView, ptr_bOnChangeCursor);
     HB_SYMBOL_UNUSED(user_data);
     if(!HB_IS_EVALITEM( pCallback )) return;
-    hb_evalBlock(pCallback, pItemView, hb_itemPutNI(0, (int)cursor),  NULL );
+    PHB_ITEM pCursor = hb_itemPutNI(0, (int)cursor);
+    hb_evalBlock(pCallback, pItemView, pCursor,  NULL );
+    hb_itemRelease(pCursor);
 }
 
 void hbOnAddConsoleMessageCallback(void* user_data, ULView caller, ULMessageSource source, ULMessageLevel level,
@@ -244,29 +246,51 @@ void hbOnAddConsoleMessageCallback(void* user_data, ULView caller, ULMessageSour
     PHB_ITEM pCallback = hb_itemArrayGet(pItemView, ptr_bOnAddConsoleMessage);
     HB_SYMBOL_UNUSED(user_data);
     if(!HB_IS_EVALITEM( pCallback )) return;
+    PHB_ITEM pSource = hb_itemPutNI(0, (int)source);
+    PHB_ITEM pLevel = hb_itemPutNI(0, (int)level);
     PHB_ITEM pMessage = hb_itemPutStrLenU16( 0, HB_CDP_ENDIAN_NATIVE,ulStringGetData(message), ulStringGetLength(message) );
+    PHB_ITEM pLineNumber = hb_itemPutNI(0, (int)line_number);
+    PHB_ITEM pColumnNumber = hb_itemPutNI(0, (int)column_number);
     PHB_ITEM pSourceId = hb_itemPutStrLenU16( 0, HB_CDP_ENDIAN_NATIVE,ulStringGetData(source_id), ulStringGetLength(source_id) );
-    hb_evalBlock(pCallback, pItemView, hb_itemPutNI(0, (int)source), hb_itemPutNI(0, (int)level), 
-        pMessage, hb_itemPutNI(0, (int)line_number), hb_itemPutNI(0, (int)column_number), 
-        pSourceId, NULL );   
+    hb_evalBlock(pCallback, pItemView, pSource, pLevel,
+        pMessage, pLineNumber, pColumnNumber, pSourceId, NULL );
+    hb_itemRelease(pSource);
+    hb_itemRelease(pLevel);
     hb_itemRelease(pMessage);
+    hb_itemRelease(pLineNumber);
+    hb_itemRelease(pColumnNumber);
     hb_itemRelease(pSourceId);
 }
 
-void hbOnBeginLoadingCallback(void* user_data, ULView caller) {
+void hbOnBeginLoadingCallback(void* user_data, ULView caller,
+  unsigned long long frame_id, bool is_main_frame, ULString url) {
+
     PHB_ITEM pItemView = itemFromView(caller);
     PHB_ITEM pCallback = hb_itemArrayGet(pItemView, ptr_bOnBeginLoading);
     HB_SYMBOL_UNUSED(user_data);
     if(!HB_IS_EVALITEM( pCallback )) return;
-    hb_evalBlock(pCallback, pItemView, NULL );
+    PHB_ITEM pFrameId = hb_itemPutNLL( 0, frame_id);
+    PHB_ITEM pIsMainFrame = hb_itemPutL( 0, is_main_frame? HB_TRUE : HB_FALSE );
+    PHB_ITEM pUrl = hb_itemPutStrLenU16( 0, HB_CDP_ENDIAN_NATIVE,ulStringGetData(url), ulStringGetLength(url) );
+    hb_evalBlock(pCallback, pItemView, pFrameId, pIsMainFrame, pUrl, NULL);
+    hb_itemRelease(pFrameId);
+    hb_itemRelease(pIsMainFrame);
+    hb_itemRelease(pUrl);
 }
 
-void hbOnFinishLoadingCallback(void* user_data, ULView caller) {
+void hbOnFinishLoadingCallback(void* user_data, ULView caller,
+  unsigned long long frame_id, bool is_main_frame, ULString url) {
     PHB_ITEM pItemView = itemFromView(caller);
     PHB_ITEM pCallback = hb_itemArrayGet(pItemView, ptr_bOnFinishLoading);
     HB_SYMBOL_UNUSED(user_data);
     if(!HB_IS_EVALITEM( pCallback )) return;
-    hb_evalBlock(pCallback, pItemView, NULL );
+    PHB_ITEM pFrameId = hb_itemPutNLL(NULL, frame_id);
+    PHB_ITEM pIsMainFrame = hb_itemPutL(NULL, is_main_frame? HB_TRUE : HB_FALSE );
+    PHB_ITEM pUrl = hb_itemPutStrLenU16( 0, HB_CDP_ENDIAN_NATIVE,ulStringGetData(url), ulStringGetLength(url) );
+    hb_evalBlock(pCallback, pItemView, pFrameId, pIsMainFrame, pUrl, NULL);
+    hb_itemRelease(pFrameId);
+    hb_itemRelease(pIsMainFrame);
+    hb_itemRelease(pUrl);
 }
 
 void hbOnUpdateHistoryCallback(void* user_data, ULView caller) {
@@ -277,7 +301,9 @@ void hbOnUpdateHistoryCallback(void* user_data, ULView caller) {
     hb_evalBlock(pCallback, pItemView, NULL );
 }
 
-void hbOnDOMReadyCallback(void* user_data, ULView caller) {
+void hbOnDOMReadyCallback(void* user_data, ULView caller,
+  unsigned long long frame_id, bool is_main_frame, ULString url) {
+
     PHB_ITEM pItemView = itemFromView(caller);
 	//int type = HB_ITEM_TYPE(user_data);
 	//int claId = hb_objGetClass(user_data);
@@ -286,6 +312,12 @@ void hbOnDOMReadyCallback(void* user_data, ULView caller) {
 
     HB_SYMBOL_UNUSED(user_data);
     if(!HB_IS_EVALITEM( pCallback )) return;
+    PHB_ITEM pFrameId = hb_itemPutNLL( 0, frame_id);
+    PHB_ITEM pIsMainFrame = hb_itemPutL( 0, is_main_frame? HB_TRUE : HB_FALSE );
+    PHB_ITEM pUrl = hb_itemPutStrLenU16( 0, HB_CDP_ENDIAN_NATIVE,ulStringGetData(url), ulStringGetLength(url) );
     hb_evalBlock(pCallback, pItemView, NULL );
+    hb_itemRelease(pFrameId);
+    hb_itemRelease(pIsMainFrame);
+    hb_itemRelease(pUrl);
 }
 
