@@ -9,7 +9,7 @@ class ultralight_refCounted
     //DESTRUCTOR Delete()
 endclass
 
-class ultralight_app INHERIT ultralight_refCounted
+class ultralight_app inherit ultralight_refCounted
     // this callback is not defined because an internal version calls hb_idle
     //DATA bOnUpdate
 
@@ -89,8 +89,9 @@ class ultralight_renderer
     //METHOD PurgeMemory()
 endclass
 */
-class ultralight_monitor
-    DATA pObj HIDDEN
+
+/// Monitor class, represents a platform monitor.
+class ultralight_monitor inherit ultralight_refCounted
     /// Get the DPI scale (1.0 = 100%)
     ACCESS scale()
     /// Get the width of the monitor.
@@ -98,50 +99,49 @@ class ultralight_monitor
     /// Get the height of the monitor.
     ACCESS height()
 endclass
-/*
+
 /// Window class, represents a platform window.
-class ultralight_window
-    DATA pObj HIDDEN
+class ultralight_window inherit ultralight_refCounted
     /// Called when the Window is closed.
     DATA bOnClose
     /// Called when the Window is resized.
-    /// @param  width   The new width (in device coordinates).
-    /// @param  height  The new height (in device coordinates).
+    /// @param  width   The new width (in pixels).
+    /// @param  height  The new height (in pixels).
     DATA bOnResize
 
     /// Create a new Window.
-    ///
     /// @param  monitor       The monitor to create the Window on.
-    ///
     /// @param  width         The width (in device coordinates).
-    ///
     /// @param  height        The height (in device coordinates).
-    ///
     /// @param  fullscreen    Whether or not the window is fullscreen.
-    ///
     /// @param  window_flags  Various window flags. (ulWindowFlags_* on ultralight.ch)
     CONSTRUCTOR Create(monitor, width, height, fullscreen, window_flags)
-    /// Get the window width (in device coordinates).
+    /// Get the window width (in pixels).
     ACCESS width()
-    /// Get the window height (in device coordinates).
+    /// Get the window height (in pixels).
     ACCESS height()
     /// Whether or not the window is fullscreen.
-    //ACCESS is_fullscreen()
+    ACCESS is_fullscreen()
     /// The DPI scale of the window.
     ACCESS scale()
     /// Set the window title.
-    METHOD SetTitle(cTile)
+    ASSIGN title()
     /// Set the cursor.
-    METHOD SetCursor(nCursor)
+    ASSIGN cursor()
     /// Close the window.
-    //METHOD Close()
+    METHOD Close()
 
     /// Convert device coordinates to pixels using the current DPI scale.
-    //METHOD DeviceToPixels(nVal)
-    /// Convert pixels to device coordinates using the current DPI scale.
-    //METHOD PixelsToDevice(nVal)
-endclass
+    METHOD DeviceToPixels(val)
 
+    /// Convert pixels to device coordinates using the current DPI scale.
+    METHOD PixelsToDevice(val)
+
+    /// Draw a surface directly to window, used only by CPU renderer
+    //METHOD DrawSurface(x, y, surface)
+
+endclass
+/*
 class ultralight_overlay
     DATA pObj HIDDEN
     ///

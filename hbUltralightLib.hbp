@@ -19,7 +19,7 @@ ultralight_monitor.cpp
 #ultralight_overlay.c
 #ultralight_renderer.c
 #ultralight_view.c
-#ultralight_window.c
+ultralight_window.cpp
 
 # Ultralight C
 -Iultralight/include
