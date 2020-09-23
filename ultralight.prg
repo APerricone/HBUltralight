@@ -141,25 +141,22 @@ class ultralight_window inherit ultralight_refCounted
     //METHOD DrawSurface(x, y, surface)
 
 endclass
-/*
-class ultralight_overlay
-    DATA pObj HIDDEN
-    ///
+
+class ultralight_overlay inherit ultralight_refCounted
     /// Create a new Overlay.
-    ///
+    /// @param  window  The window to create the Overlay in. (we currently only support one window per application)
+    /// @param  width   The width in device coordinates.
+    /// @param  height  The height in device coordinates.
+    /// @param  x       The x-position (offset from the left of the Window), in
+    ///                 pixels.
+    /// @param  y       The y-position (offset from the top of the Window), in
+    ///                 pixels.
+    /// ** OR **
     /// @param  window  The window to create the Overlay in. (we currently only
     ///                 support one window per application)
-    ///
-    /// @param  width   The width in device coordinates.
-    ///
-    /// @param  height  The height in device coordinates.
-    ///
-    /// @param  x       The x-position (offset from the left of the Window), in
-    ///                 device coordinates.
-    ///
-    /// @param  y       The y-position (offset from the top of the Window), in
-    ///                 device coordinates.
-    ///
+    /// @param  view    The View to wrap (will use its width and height).
+    /// @param  x       The x-position (offset from the left of the Window), in pixels.
+    /// @param  y       The y-position (offset from the top of the Window), in pixels.
     CONSTRUCTOR Create(window, width, height, x,y)
     /// Get the underlying View.
     ACCESS view()
@@ -174,22 +171,31 @@ class ultralight_overlay
     /// coordinates.
     ACCESS y()
     /// Whether or not the overlay is hidden (not drawn)
-    /// Hide the overlay (will no longer be drawn)
-    /// Show the overlay.
+    /// It is the union of 3 methods: is_hidden, Hide and Show
     METHOD hidden() SETGET
-    METHOD Show() INLINE ::hidden := .F.
+    /// Hide the overlay (will no longer be drawn)
     METHOD Hide() INLINE ::hidden := .T.
+    /// Show the overlay.
+    METHOD Show() INLINE ::hidden := .F.
     /// Whether or not this overlay has keyboard focus.
+    /// It is the union of 3 methods: has_focus, Focus and Unfocus
+    METHOD has_focus() SETGET
     /// Grant this overlay exclusive keyboard focus.
+    METHOD Focus() INLINE ::focus := .T.
     /// Remove keyboard focus.
-    METHOD focus() SETGET
-    /// Move the overlay to a new position (in device coordinates).
+    METHOD Unfocus() INLINE ::focus := .F.
+
+    /// Move the overlay to a new position (in pixels).
     METHOD moveTo(x,y)
     /// Resize the overlay (and underlying View), dimensions should be
-    /// specified in device coordinates.
+    /// specified in pixels.
     METHOD Resize(width,height)
+    /// Whether or not this Overlay needs repaint (either it has moved, resized,
+    /// or the internal View needs repaint).
+    ACCESS needsRepaint()
 endclass
 
+/*
 /// A View is similar to a tab in a browser-- you load web content into
 ///	it and display it however you want. @see Renderer::CreateView
 class ultralight_View

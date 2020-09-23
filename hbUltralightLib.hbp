@@ -16,7 +16,7 @@ ultralight_app.cpp
 #ultralight_bitmap.c
 #ultralight_HBJS.c
 ultralight_monitor.cpp
-#ultralight_overlay.c
+ultralight_overlay.cpp
 #ultralight_renderer.c
 #ultralight_view.c
 ultralight_window.cpp

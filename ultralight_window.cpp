@@ -7,6 +7,15 @@ HB_USHORT windowClassId = 0;
 HB_SIZE ibOnCloseIdx = 0;
 HB_SIZE ibOnResizeIdx = 0;
 
+HB_FUNC_EXTERN( ULTRALIGHT_WINDOW );
+HB_USHORT getWindowClassId() {
+    if(windowClassId!=0) return windowClassId;
+	windowClassId = hb_clsFindClass("ULTRALIGHT_MONITOR", NULL);
+    if(windowClassId!=0) return windowClassId;
+    HB_FUNC_EXEC(ULTRALIGHT_WINDOW);
+    windowClassId = hb_clsFindClass("ULTRALIGHT_MONITOR", NULL);
+    return windowClassId;
+}
 /*
     DATA bOnClose
     DATA bOnResize
@@ -59,16 +68,6 @@ public:
 
 };
 
-HB_FUNC_EXTERN( ULTRALIGHT_WINDOW );
-HB_USHORT getWindowClassId() {
-    if(windowClassId!=0) return windowClassId;
-	windowClassId = hb_clsFindClass("ULTRALIGHT_MONITOR", NULL);
-    if(windowClassId!=0) return windowClassId;
-    HB_FUNC_EXEC(ULTRALIGHT_WINDOW);
-    windowClassId = hb_clsFindClass("ULTRALIGHT_MONITOR", NULL);
-    return windowClassId;
-}
-
 void SetupWindow(PHB_ITEM pItem, Ref<Window>& window) {
     HBWindowListener* listener = new HBWindowListener(pItem,window);
     window->set_listener(listener);
@@ -77,7 +76,7 @@ void SetupWindow(PHB_ITEM pItem, Ref<Window>& window) {
 HB_FUNC( ULTRALIGHT_WINDOW_CREATE ) {
 	Monitor *mon = (Monitor*)hb_parUltralight(1);
     Ref<Window> window = Window::Create(mon,hb_parni(2), hb_parni(3),hb_parldef(4,0)!=0,hb_parnidef(5,0));
-    hb_clsAssociate( windowClassId );
+    hb_clsAssociate( getWindowClassId() );
    	PHB_ITEM pSelf = hb_stackReturnItem();
     putHBUltralight(pSelf, window.ptr());
     SetupWindow(pSelf, window);
