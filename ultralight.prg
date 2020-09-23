@@ -1,26 +1,48 @@
 #include <hbclass.ch>
 static ULHash := {=>}
 
-class ultralight_app
-    DATA pObj HIDDEN
-    /// Create the App singleton.
-    CONSTRUCTOR Create()
-    /// Get the App singleton.
-    CONSTRUCTOR instance()
-    /// Set the main window. You must set this before calling Run.
-    METHOD window() SETGET
+class ultralight_refCounted
+    DATA pObj PROTECTED
 
-    //ACCESS is_running()
-    /// Get the main monitor (this is never NULL).
-    METHOD main_monitor()
-    /// Get the underlying Renderer instance.
-    METHOD renderer()
-    /// Run the main loop.
-    /// *NOTE* it calls hb_idle.
-    METHOD run()
-    //METHOD quit()
+    CONSTRUCTOR New(pObj)
+    DESTRUCTOR Delete()
 endclass
 
+class ultralight_app INHERIT ultralight_refCounted
+    // this callback is not defined because an internal version calls hb_idle
+    //DATA bOnUpdate
+
+    /// Create the App singleton.
+    CONSTRUCTOR Create()
+
+    /// Get the App singleton.
+    CONSTRUCTOR instance()
+
+    /// Get the settings this App was created with.
+    //ACCESS settings()
+
+    /// Set the main window. You must set this before calling Run.
+    /// Get the main window.
+    // It is the union of 2 methods: set_window and get_window
+    METHOD window() SETGET
+
+    /// Whether or not the App is running.
+    ACCESS is_running()
+
+    /// Get the main monitor (this is never NULL).
+    ACCESS main_monitor()
+
+    /// Get the underlying Renderer instance.
+    ACCESS renderer()
+
+    /// Run the main loop.
+    METHOD Run()
+
+    /// Quit the application.
+    METHOD Quit()
+
+endclass
+/*
 class ultralight_renderer
     DATA pObj HIDDEN
     ///
@@ -399,3 +421,10 @@ retur nil
 func ultralight_setHB(ptr,val)
     hb_HSet(ULHash,ptr,val)
 return val
+
+proc ultralight_delHB(ptr)
+    if hb_HHasKey(ULHash,ptr)
+        hb_HDel(ULHash,ptr)
+    endif
+return
+*/

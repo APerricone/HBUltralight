@@ -2,7 +2,7 @@
     "harbour.extraIncludePaths": [
         "c:\\harbour\\include",
         "ultralight\\include\\",
-        "."
+        ".", ".."
     ],
     "files.associations": {
         "*.h": "c",
@@ -14,5 +14,14 @@
     "editor.useTabStops": false,
     "editor.tabSize": 4,
     "editor.trimAutoWhitespace": true,
-    "terminal.integrated.shell.windows": "C:\\Windows\\System32\\cmd.exe"
+    "terminal.integrated.shell.windows": "C:\\Windows\\System32\\cmd.exe",
+    "files.exclude": {
+        "*.dll": true,
+        "*.exe": true,
+        "*.lib": true,
+        "*.so": true,
+        "*.a": true,
+        "*.pdb": true,
+        "*.7z": true,
+    }
 }
