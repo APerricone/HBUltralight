@@ -41,7 +41,7 @@ HB_FUNC( ULTRALIGHT_APP_INSTANCE ) {
     hb_retUltralight(App::instance());
 }
 
-extern HB_USHORT windowClassId;
+HB_USHORT getWindowClassId();
 HB_FUNC( ULTRALIGHT_APP_WINDOW ) {
     App* app = (App*)hb_selfUltralight();
     if(hb_pcount()>0) {
@@ -49,26 +49,36 @@ HB_FUNC( ULTRALIGHT_APP_WINDOW ) {
         hb_ret();
     } else {
         Window* wnd = app->window().get();
-        hb_retUltralight((RefCounted*)wnd,windowClassId);
+        hb_retUltralight((RefCounted*)wnd,getWindowClassId();
     }
 }
 
 
-extern HB_USHORT rendererClassId;
+HB_USHORT getRendererClassId();
 HB_FUNC( ULTRALIGHT_APP_RENDERER ) {
     App* app = (App*)hb_selfUltralight();
-    hb_retUltralight(app->renderer().ptr(),rendererClassId);
+    hb_retUltralight(app->renderer().ptr(),getRendererClassId());
 }
 
-extern HB_USHORT monitorClassId;
+HB_USHORT getMonitorClassId();
 HB_FUNC( ULTRALIGHT_APP_MAIN_MONITOR ) {
     App* app = (App*)hb_selfUltralight();
-    hb_retUltralight(app->renderer().ptr(),monitorClassId);
+    hb_retUltralight(app->renderer().ptr(),getMonitorClassId());
 }
-
 
 HB_FUNC( ULTRALIGHT_APP_RUN ) {
     App* app = (App*)hb_selfUltralight();
     app->Run();
+    hb_ret();
+}
+
+HB_FUNC( ULTRALIGHT_APP_IS_RUNNING ) {
+    App* app = (App*)hb_selfUltralight();
+    hb_retl(app->is_running());
+}
+
+HB_FUNC( ULTRALIGHT_APP_QUIT ) {
+    App* app = (App*)hb_selfUltralight();
+    app->Quit();
     hb_ret();
 }

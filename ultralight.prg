@@ -4,8 +4,9 @@ static ULHash := {=>}
 class ultralight_refCounted
     DATA pObj PROTECTED
 
-    CONSTRUCTOR New(pObj)
-    DESTRUCTOR Delete()
+    // used in tests
+    //CONSTRUCTOR New(pObj)
+    //DESTRUCTOR Delete()
 endclass
 
 class ultralight_app INHERIT ultralight_refCounted
@@ -87,7 +88,7 @@ class ultralight_renderer
     ///
     //METHOD PurgeMemory()
 endclass
-
+*/
 class ultralight_monitor
     DATA pObj HIDDEN
     /// Get the DPI scale (1.0 = 100%)
@@ -97,7 +98,7 @@ class ultralight_monitor
     /// Get the height of the monitor.
     ACCESS height()
 endclass
-
+/*
 /// Window class, represents a platform window.
 class ultralight_window
     DATA pObj HIDDEN
