@@ -5,10 +5,13 @@
         ".", ".."
     ],
     "files.associations": {
-        "*.h": "c",
+        "*.hbc": "ini",
+        "*.hbp": "ini",
+        "*.h": "cpp",
         "array": "cpp",
         "vector": "cpp",
-        "xstring": "cpp"
+        "xstring": "cpp",
+        "*.rh": "cpp"
     },
     "editor.detectIndentation": false,
     "editor.useTabStops": false,

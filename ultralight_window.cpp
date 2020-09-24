@@ -3,19 +3,11 @@
 
 using namespace ultralight;
 
-HB_USHORT windowClassId = 0;
 HB_SIZE ibOnCloseIdx = 0;
 HB_SIZE ibOnResizeIdx = 0;
 
-HB_FUNC_EXTERN( ULTRALIGHT_WINDOW );
-HB_USHORT getWindowClassId() {
-    if(windowClassId!=0) return windowClassId;
-	windowClassId = hb_clsFindClass("ULTRALIGHT_MONITOR", NULL);
-    if(windowClassId!=0) return windowClassId;
-    HB_FUNC_EXEC(ULTRALIGHT_WINDOW);
-    windowClassId = hb_clsFindClass("ULTRALIGHT_MONITOR", NULL);
-    return windowClassId;
-}
+DEFINE_GETCLASSID(WINDOW)
+
 /*
     DATA bOnClose
     DATA bOnResize
@@ -32,53 +24,58 @@ HB_USHORT getWindowClassId() {
     //METHOD DrawSurface(x, y, surface)
 */
 
-HB_USHORT getWindowClassId();
-
 class HBWindowListener : public WindowListener {
 private:
-    PHB_ITEM pWindow;
-    Ref<Window> window;
+    PHB_ITEM pItem;
 public:
-    HBWindowListener(PHB_ITEM pWindow, Ref<Window> window) : pWindow(pWindow), window(window){
-
+    HBWindowListener(PHB_ITEM pItem) : pItem(pItem) {
     }
+
+    PHB_ITEM getItem() const { return pItem; }
+
     void OnClose() {
         if(ibOnCloseIdx==0) {
-            getWindowClassId();
-            ibOnCloseIdx = hb_clsGetVarIndex(windowClassId,hb_dynsymGet("bOnClose"));
+            ibOnCloseIdx = hb_clsGetVarIndex(getWINDOWClassId(),hb_dynsymGet("bOnClose"));
         }
-        PHB_ITEM pCallback = hb_itemArrayGet(pWindow, ibOnCloseIdx);
+        PHB_ITEM pCallback = hb_itemArrayGet(pItem, ibOnCloseIdx);
         if(!HB_IS_EVALITEM( pCallback )) return;
-        hb_evalBlock(pCallback, pWindow, NULL );
+        hb_evalBlock(pCallback, pItem, NULL );
     }
 
     void OnResize(uint32_t width, uint32_t height) {
         if(ibOnResizeIdx==0) {
-            getWindowClassId();
-            ibOnResizeIdx = hb_clsGetVarIndex(windowClassId,hb_dynsymGet("bOnResize"));
+            ibOnResizeIdx = hb_clsGetVarIndex(getWINDOWClassId(),hb_dynsymGet("bOnResize"));
         }
-        PHB_ITEM pCallback = hb_itemArrayGet(pWindow, ibOnResizeIdx);
+        PHB_ITEM pCallback = hb_itemArrayGet(pItem, ibOnResizeIdx);
         if(!HB_IS_EVALITEM( pCallback )) return;
         PHB_ITEM pWidth = hb_itemPutNI(0,width);
         PHB_ITEM pHeight = hb_itemPutNI(0,height);
-        hb_evalBlock(pCallback, pWindow, pWidth, pHeight, NULL );
+        hb_evalBlock(pCallback, pItem, pWidth, pHeight, NULL );
         hb_itemRelease(pWidth);
         hb_itemRelease(pHeight);
     }
 
 };
 
-void SetupWindow(PHB_ITEM pItem, Ref<Window>& window) {
-    HBWindowListener* listener = new HBWindowListener(pItem,window);
+void SetupWindow(PHB_ITEM pItem,const  RefPtr<Window>& window) {
+    HBWindowListener* listener = new HBWindowListener(pItem);
     window->set_listener(listener);
+}
+
+void hb_retWindow(ultralight::Window* pObj) {
+    HBWindowListener* listener = (HBWindowListener*)pObj->listener();
+    if(listener) {
+        hb_itemCopy(hb_stackReturnItem(), listener->getItem());
+    }
+    initUltralightObj(pObj, getWINDOWClassId());
+    SetupWindow(hb_stackReturnItem(), pObj);
 }
 
 HB_FUNC( ULTRALIGHT_WINDOW_CREATE ) {
 	Monitor *mon = (Monitor*)hb_parUltralight(1);
-    Ref<Window> window = Window::Create(mon,hb_parni(2), hb_parni(3),hb_parldef(4,0)!=0,hb_parnidef(5,0));
-    hb_clsAssociate( getWindowClassId() );
-   	PHB_ITEM pSelf = hb_stackReturnItem();
-    putHBUltralight(pSelf, window.ptr());
+    RefPtr<Window> window = Window::Create(mon,hb_parni(2), hb_parni(3),hb_parldef(4,0)!=0,hb_parnidef(5,0));
+    initUltralightObj(window.get(), getWINDOWClassId());
+   	PHB_ITEM pSelf = hb_stackSelfItem();
     SetupWindow(pSelf, window);
 }
 

@@ -2,17 +2,7 @@
 #include <AppCore/Overlay.h>
 using namespace ultralight;
 
-HB_USHORT overlayClassId = 0;
-
-HB_FUNC_EXTERN( ULTRALIGHT_OVERLAY );
-HB_USHORT getOverlayClassId() {
-    if(overlayClassId!=0) return overlayClassId;
-	overlayClassId = hb_clsFindClass("ULTRALIGHT_MONITOR", NULL);
-    if(overlayClassId!=0) return overlayClassId;
-    HB_FUNC_EXEC(ULTRALIGHT_OVERLAY);
-    overlayClassId = hb_clsFindClass("ULTRALIGHT_MONITOR", NULL);
-    return overlayClassId;
-}
+DEFINE_GETCLASSID(OVERLAY)
 
 /*
     CONSTRUCTOR Create(window, width, height, x,y)
@@ -37,15 +27,13 @@ HB_FUNC( ULTRALIGHT_OVERLAY_CREATE ) {
     else
         overlay = (Overlay::Create(*win,hb_parni(2), hb_parni(3),hb_parni(4), hb_parni(5))).ptr();
 
-    hb_clsAssociate( getOverlayClassId() );
-   	PHB_ITEM pSelf = hb_stackReturnItem();
-    putHBUltralight(pSelf, overlay);
+    initUltralightObj(overlay, getOVERLAYClassId());
 }
 
-HB_USHORT getViewClassId();
+FORWARD_GETCLASSID(VIEW)
 HB_FUNC( ULTRALIGHT_OVERLAY_VIEW ) {
     Overlay* overlay = (Overlay*)hb_selfUltralight();
-    hb_retUltralight((RefCounted*)overlay->view().ptr(),getViewClassId());
+    hb_retUltralight((RefCounted*)overlay->view().ptr(),getVIEWClassId());
 }
 
 HB_FUNC( ULTRALIGHT_OVERLAY_WIDTH ) {

@@ -1,12 +1,10 @@
 #include <hbclass.ch>
-static ULHash := {=>}
 
 class ultralight_refCounted
     DATA pObj PROTECTED
 
-    // used in tests
     //CONSTRUCTOR New(pObj)
-    //DESTRUCTOR Delete()
+    DESTRUCTOR Delete()
 endclass
 
 class ultralight_app inherit ultralight_refCounted
@@ -43,52 +41,70 @@ class ultralight_app inherit ultralight_refCounted
     METHOD Quit()
 
 endclass
-/*
-class ultralight_renderer
-    DATA pObj HIDDEN
+
+class ultralight_renderer inherit ultralight_refCounted
+
+    /// Create the Ultralight Renderer directly.
     ///
-    /// Create the Renderer singleton. You should set up all your Platform config,
-    /// file-system, and drivers before calling this function. @see Platform
-    ///
-    /// @note  You should only create one Renderer per application lifetime.
+    /// Unlike App::Create(), this does not use any native windows for drawing
+    /// and allows you to manage your own runloop and painting. This method is
+    /// recommended for those wishing to integrate the library into a game.
     CONSTRUCTOR Create()
 
+    /// Create a Session to store local data in (such as cookies, local storage,
+    /// application cache, indexed db, etc).
     ///
+    /// @note  A default, persistent Session is already created for you. You
+    ///        only need to call this if you want to create private, in-memory
+    ///        session or use a separate session for each View.
+    ///
+    /// @param  is_persistent  Whether or not to store the session on disk.
+    ///                        Persistent sessions will be written to the path
+    ///                        set in Config::cache_path
+    ///
+    /// @param  name  A unique name for this session, this will be used to
+    ///               generate a unique disk path for persistent sessions.
+    ///
+    METHOD CreateSession(is_persistent,name)
+
+    /// Get the default Session. This session is persistent (backed to disk) and
+    /// has the name "default".
+    ///
+    METHOD default_session();
+
     /// Create a new View.
     ///
-    /// @param  width   The initial width, in device coordinates.
+    /// @param  width   The initial width, in pixels.
     ///
-    /// @param  height  The initial height, in device coordinates.
+    /// @param  height  The initial height, in pixels.
     ///
     /// @param  transparent  Whether or not the view background is transparent.
     ///
-    /// @note  The device coordinates are scaled to pixels by multiplying them
-    ///        with the current DPI scale (@see Config::device_scale_hint) and
-    ///        rounding to the nearest integer value.
-    ///
-    METHOD CreateView(nWidth,nHeight,lransparent)
+    /// @param  session  The session to store local data in. Pass a nullptr to
+    ///                  use the default session.
+    METHOD CreateView(nWidth,nHeight,lransparent,session)
 
-    ///
     /// Update timers and dispatch internal callbacks. You should call this often
     /// from your main application loop.
-    ///
     METHOD Update()
 
+    /// Render all active views to their respective render-targets/surfaces.
     ///
-    /// Render all active views to display lists and dispatch calls to GPUDriver.
-    ///
-    /// @note  If you're using the default, offscreen GL driver, this updates the
-    ///        internal bitmap of each View (@see View::bitmap).
-    ///
+    /// You should call this once per frame (usually in synchrony with the
+    /// monitor's refresh rate).
     METHOD Render()
 
-    ///
     /// Attempt to release as much memory as possible. Don't call this from any
     /// callbacks or driver code.
     ///
-    //METHOD PurgeMemory()
+    METHOD PurgeMemory()
+
+    /// Print detailed memory usage statistics to the log.
+    /// (@see Platform:set_logger())
+    METHOD  LogMemoryUsage();
+
 endclass
-*/
+
 
 /// Monitor class, represents a platform monitor.
 class ultralight_monitor inherit ultralight_refCounted
@@ -418,20 +434,4 @@ class ultralight_Bitmap
   ///
   METHOD WritePNG(cPath)
 endclass
-
-func ultralight_getHB(ptr)
-    if hb_HHasKey(ULHash,ptr)
-        return ULHash[ptr]
-    endif
-retur nil
-
-func ultralight_setHB(ptr,val)
-    hb_HSet(ULHash,ptr,val)
-return val
-
-proc ultralight_delHB(ptr)
-    if hb_HHasKey(ULHash,ptr)
-        hb_HDel(ULHash,ptr)
-    endif
-return
 */

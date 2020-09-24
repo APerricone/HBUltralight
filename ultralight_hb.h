@@ -13,13 +13,31 @@
 
 namespace ultralight {
     class RefCounted;
+    class String;
 }
 
 
-ultralight::RefCounted* hb_selfUltralight(PHB_ITEM pItem=0);
-// put an ultralight pointer in a harbour class
-void putHBUltralight(PHB_ITEM pSelf,ultralight::RefCounted* refCnt );
-// get the pointer of ultralight
+// called from constructors methods
+void initUltralightObj(ultralight::RefCounted* refCnt, HB_USHORT classId );
+// get ultralight from an item or form self
+ultralight::RefCounted* hb_selfUltralight(PHB_ITEM pSelf=0);
+// get ultralight parameter
 ultralight::RefCounted* hb_parUltralight(int n);
-// return true if the stack return is setted, otherwise a new class must be created
-void hb_retUltralight(ultralight::RefCounted* pObj,HB_USHORT classId=0);
+// Returns a ultralight object
+void hb_retUltralight(ultralight::RefCounted* pObj,HB_USHORT classId);
+
+PHB_ITEM hb_itemPutULString(PHB_ITEM pItem,ultralight::String& str);
+
+#define FORWARD_GETCLASSID(objName) HB_USHORT get ## objName ## ClassId();
+
+#define DEFINE_GETCLASSID(objName) \
+    HB_FUNC_EXTERN(ULTRALIGHT_ ## objName); \
+    HB_USHORT objName ## ClassId = 0; \
+    HB_USHORT get ## objName ## ClassId() { \
+        if(objName ## ClassId) return objName ## ClassId; \
+	    objName ## ClassId = hb_clsFindClass("ULTRALIGHT_ ## objName", NULL); \
+        if(objName ## ClassId) return objName ## ClassId; \
+        HB_FUNC_EXEC(ULTRALIGHT_ ## objName); \
+        objName ## ClassId = hb_clsFindClass("ULTRALIGHT_ ## objName", NULL); \
+        return objName ## ClassId; \
+    }

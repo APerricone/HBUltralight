@@ -27,13 +27,11 @@ class HBAppListener : public AppListener {
 
 PHB_ITEM appInstance;
 HB_FUNC( ULTRALIGHT_APP_CREATE ) {
-	Ref<App> app = App::Create();
     if(appClassId==0) {
-		appClassId = hb_clsFindClass("ULTRALIGHT_REFCOUNTED", NULL);
+		appClassId = hb_clsFindClass("ULTRALIGHT_APP", NULL);
     }
-    hb_clsAssociate( appClassId );
-   	PHB_ITEM pSelf = hb_stackReturnItem();
-    putHBUltralight(pSelf,app.ptr());
+	RefPtr<App> app = App::Create();
+    initUltralightObj(app.get(),appClassId);
     app->set_listener(&s_appListener);
 }
 
@@ -41,8 +39,8 @@ HB_FUNC( ULTRALIGHT_APP_INSTANCE ) {
     hb_retUltralight(App::instance(), appClassId);
 }
 
-HB_USHORT getWindowClassId();
-void SetupWindow(PHB_ITEM pItem, Ref<Window>& window);
+FORWARD_GETCLASSID(WINDOW);
+void SetupWindow(PHB_ITEM pItem,const RefPtr<Window>& window);
 HB_FUNC( ULTRALIGHT_APP_WINDOW ) {
     App* app = (App*)hb_selfUltralight();
     if(hb_pcount()>0) {
@@ -50,22 +48,22 @@ HB_FUNC( ULTRALIGHT_APP_WINDOW ) {
         hb_ret();
     } else {
         Window* wnd = app->window().get();
-        hb_retUltralight((RefCounted*)wnd,getWindowClassId());
-        SetupWindow(hb_stackReturnItem() ,Ref<Window>(*wnd));
+        hb_retUltralight((RefCounted*)wnd,getWINDOWClassId());
+        SetupWindow(hb_stackReturnItem(), wnd);
     }
 }
 
 
-HB_USHORT getRendererClassId();
+FORWARD_GETCLASSID(RENDERER);
 HB_FUNC( ULTRALIGHT_APP_RENDERER ) {
     App* app = (App*)hb_selfUltralight();
-    hb_retUltralight(app->renderer().ptr(),getRendererClassId());
+    hb_retUltralight(app->renderer().ptr(),getRENDERERClassId());
 }
 
-HB_USHORT getMonitorClassId();
+FORWARD_GETCLASSID(MONITOR);
 HB_FUNC( ULTRALIGHT_APP_MAIN_MONITOR ) {
     App* app = (App*)hb_selfUltralight();
-    hb_retUltralight(app->renderer().ptr(),getMonitorClassId());
+    hb_retUltralight(app->renderer().ptr(),getMONITORClassId());
 }
 
 HB_FUNC( ULTRALIGHT_APP_RUN ) {
