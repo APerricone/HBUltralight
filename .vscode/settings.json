@@ -11,7 +11,10 @@
         "array": "cpp",
         "vector": "cpp",
         "xstring": "cpp",
-        "*.rh": "cpp"
+        "*.rh": "cpp",
+        "thread": "cpp",
+        "system_error": "cpp",
+        "xlocale": "cpp"
     },
     "editor.detectIndentation": false,
     "editor.useTabStops": false,

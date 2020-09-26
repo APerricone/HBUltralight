@@ -7,6 +7,7 @@ class ultralight_refCounted
     DESTRUCTOR Delete()
 endclass
 
+/// Main application class.
 class ultralight_app inherit ultralight_refCounted
     // this callback is not defined because an internal version calls hb_idle
     //DATA bOnUpdate
@@ -42,6 +43,8 @@ class ultralight_app inherit ultralight_refCounted
 
 endclass
 
+/// This singleton manages the lifetime of all Views (@see View) and
+/// coordinates painting, network requests, and event dispatch.
 class ultralight_renderer inherit ultralight_refCounted
 
     /// Create the Ultralight Renderer directly.
@@ -158,6 +161,7 @@ class ultralight_window inherit ultralight_refCounted
 
 endclass
 
+/// Web-content overlay. Displays a web-page within an area of the main window.
 class ultralight_overlay inherit ultralight_refCounted
     /// Create a new Overlay.
     /// @param  window  The window to create the Overlay in. (we currently only support one window per application)
@@ -197,9 +201,9 @@ class ultralight_overlay inherit ultralight_refCounted
     /// It is the union of 3 methods: has_focus, Focus and Unfocus
     METHOD has_focus() SETGET
     /// Grant this overlay exclusive keyboard focus.
-    METHOD Focus() INLINE ::focus := .T.
+    METHOD Focus() INLINE ::has_focus := .T.
     /// Remove keyboard focus.
-    METHOD Unfocus() INLINE ::focus := .F.
+    METHOD Unfocus() INLINE ::has_focus := .F.
 
     /// Move the overlay to a new position (in pixels).
     METHOD moveTo(x,y)
@@ -211,99 +215,190 @@ class ultralight_overlay inherit ultralight_refCounted
     ACCESS needsRepaint()
 endclass
 
-/*
-/// A View is similar to a tab in a browser-- you load web content into
-///	it and display it however you want. @see Renderer::CreateView
-class ultralight_View
-    DATA pObj HIDDEN
+/// A Session stores local data such as cookies, local storage,
+/// and application cache for one or more Views.
+class ultralight_session inherit ultralight_refCounted
+  /// Whether or not this session is written to disk.
+  METHOD is_persistent()
+  /// A unique name identifying this session.
+  METHOD name()
 
-    /// Called when the page title changes
-    /// @param caller this ultralight_view
-    /// @param cTitle the new title
-    DATA bOnChangeTitle
-    /// Called when the page URL changes
-    /// @param caller this ultralight_view
-    /// @param cURL the new url
-    DATA bOnChangeURL
-    /// Called when the tooltip changes (usually as result of a mouse hover)
-    /// @param caller this ultralight_view
-    /// @param cTooltip the new tooltip
-    DATA bOnChangeTooltip
-    /// Called when the mouse cursor changes
-    /// @param caller this ultralight_view
-    /// @param nCursor ulCursor_*
-    DATA bOnChangeCursor
-    /// Called when a message is added to the console (useful for errors / debug)
-    /// @param caller this ultralight_view
-    /// @param nSource ulMessageSource_*
-    /// @param nLevel ulMessageLevel_*
-    /// @param cMessage
-    /// @param nLine
-    /// @param nColumn
-    /// @param cSource
-    DATA bOnAddConsoleMessage
+  /// A unique numeric ID identifying this session.
+  METHOD id()
 
-    /// Called when the page begins loading new URL into main frame
-    /// @param caller this ultralight_view
-    DATA bOnBeginLoading
-    /// Called when the page finishes loading URL into main frame
-    /// @param caller this ultralight_view
-    DATA bOnFinishLoading
-    /// Called when the history (back/forward state) is modified
-    /// @param caller this ultralight_view
-    DATA bOnUpdateHistory
-    /// Called when all JavaScript has been parsed and the document is ready.
-    /// This is the best time to make any initial JavaScript calls to your page.
-    DATA bOnDOMReady
+  /// The disk path of this session (only valid for persistent sessions).
+  METHOD disk_path()
 
-    /// Get the URL of the current page loaded into this View, if any.
-    ACCESS url()
-    /// Get the title of the current page loaded into this View, if any.
-    ACCESS title()
-    /// Check if the main frame of the page is currently loading.
-    ACCESS is_loading()
-    /// Get the RenderTarget for the View.
-    //METHOD render_target()
-    /// Check if bitmap is dirty (has changed since last call to View::bitmap)
-    //METHOD is_bitmap_dirty()
-    /// Get the bitmap for the View (calling this resets the dirty state).
-    //METHOD bitmap()
-    /// Load a raw string of HTML, the View will navigate to it as a new page.
-    METHOD LoadHTML(cHTML)
-    /// Load a URL, the View will navigate to it as a new page.
-    METHOD LoadURL(cURL)
-    /// Resize View to a certain size.
-    METHOD Resize(width,height)
-    /// Get the page's JSContext for use with the JavaScriptCore API
-    METHOD LockJSContext()
-    /// Evaluate a raw string of JavaScript and return results as a native
-    /// JavaScriptCore JSValueRef (@see <JavaScriptCore/JSValueRef.h>)
-    //METHOD EvaluateScript(cScript)
-    /// Whether or not we can navigate backwards in history
-    METHOD CanGoBack()
-    /// Whether or not we can navigate forwards in history
-    METHOD CanGoForward()
-    /// Navigate backwards in history
-    METHOD GoBack()
-    /// Navigate forwards in history
-    METHOD GoForward()
-    /// Navigate to an arbitrary offset in history
-    //METHOD GoToHistoryOffset(offset)
-    /// Reload current page
-    METHOD Reload()
-    /// Stop all page loads
-    METHOD Stop()
-    /// Fire a keyboard event
-    //METHOD FireKeyEvent(evt)
-    /// Fire a mouse event
-    //METHOD FireMouseEvent(evt)
-    /// Fire a scroll event
-    //METHOD FireScrollEvent( evt)
-    /// Set or get whether or not this View should be repainted during the next
-    /// call to Renderer::Render
-    //METHOD needs_paint() SETGET
 endclass
 
+/// The View class is used to load and display web content.
+class ultralight_View inherit ultralight_refCounted
+    /// *** ViewListener ***
+    /// *** Interface for View-related events ***
+
+    /// Called when the page title changes
+    DATA bOnChangeTitle // (oView,cTitle)
+
+    /// Called when the page URL changes
+    DATA bOnChangeURL //(oView, cUrl)
+
+    /// Called when the tooltip changes (usually as result of a mouse hover)
+    DATA bOnChangeTooltip //(oView, cTooltip)
+
+    /// Called when the mouse cursor changes
+    DATA bOnChangeCursor //(oView, iCursor) // see defines ulCursor_*
+
+    /// Called when a message is added to the console (useful for errors / debug)
+    DATA bOnAddConsoleMessage //(oView,iSource,iLevel,cMessage,iLine_number,iColumn_number,cSource_id)
+                              //  see defines ulMessageSource_* and ulMessageLevel_*
+
+    /// Called when the page wants to create a new View.
+    ///
+    /// This is usually the result of a user clicking a link with target="_blank"
+    /// or by JavaScript calling window.open(url).
+    ///
+    /// To allow creation of these new Views, you should create a new View in
+    /// this callback (eg, Renderer:CreateView()), resize it to your container,
+    /// and return it. You are responsible for displaying the returned View.
+    DATA bOnCreateChildView // (oView,cOpener_url,cTarget_url,lIs_popup,aPopup_rect {left, top, right, bottom}) -> new oView
+
+    /// *** LoadListener ***
+    /// *** Interface for Load-related events ***
+
+    /// Called when the page begins loading a new URL into a frame.
+    DATA bOnBeginLoading //(oView, iFrame_id, lIs_main_frame, cUrl)
+
+    /// Called when the page finishes loading a URL into a frame.
+    DATA bOnFinishLoading //(oView, iFrame_id, lIs_main_frame, cUurl)
+
+    /// Called when an error occurs while loading a URL into a frame.
+    DATA bOnFailLoading //(oView, iFrame_id, lIs_main_frame, cUrl, cDescription, cError_domain,iError_code)
+
+    /// Called when the JavaScript window object is reset for a new page load.
+    /// If you need to make any JavaScript calls that are dependent on DOM elements
+    /// or scripts on the page, use OnDOMReady instead.
+    DATA bOnWindowObjectReady //(oView,iFrame_id,lIs_main_frame,cUrl)
+
+    /// Called when all JavaScript has been parsed and the document is ready.
+    DATA bOnDOMReady //(oView, iFrame_id,lIs_main_frame,cUrl)
+
+    /// Called when the session history (back/forward state) is modified.
+    DATA bOnUpdateHistory //(oView
+
+    /// *** VIEW PART ***
+    /// Get the URL of the current page loaded into this View, if any.
+    ACCESS url()
+
+    /// Get the title of the current page loaded into this View, if any.
+    ACCESS title()
+
+    /// Get the width of the View, in pixels.
+    ACCESS width()
+
+    /// Get the height of the View, in pixels.
+    ACCESS height()
+
+    /// Check if the main frame of the page is currently loading.
+    ACCESS is_loading()
+
+    /// Get the offscreen RenderTarget for the View.
+    //METHOD  render_target()
+
+    /// Get the offscreen Surface for the View (pixel-buffer container).
+    //METHOD surface();
+
+    /// Load a raw string of HTML, the View will navigate to it as a new page.
+    /// @param  html  The raw HTML string to load.
+    /// @param  url   An optional URL for this load
+    /// @param  add_to_history  Whether or not this load should be added to the session's history (back/forward list).
+    METHOD  LoadHTML(cHtml,cUrl,lAdd_to_history)
+
+    /// Load a URL, the View will navigate to it as a new page.
+    METHOD LoadURL(url)
+
+    /// Resize View to a certain size.
+    METHOD Resize(width,height)
+
+    /// Acquire the page's JSContext for use with the JavaScriptCore API
+    //METHOD LockJSContext();
+
+    /// Helper function to evaluate a raw string of JavaScript and return the
+    /// result as a String.
+    /// @param  script     A string of JavaScript to evaluate in the main frame.
+    /// @param  exception  (@)A string to store the exception in, if any. Pass a nullptr if you don't care about exceptions.
+    /// @return  Returns the JavaScript result typecast to a String.
+    METHOD EvaluateScript(script, exception)
+
+    /// Whether or not we can navigate backwards in history
+    ACCESS CanGoBack()
+
+    /// Whether or not we can navigate forwards in history
+    ACCESS CanGoForward()
+
+    /// Navigate backwards in history
+    METHOD GoBack()
+
+    /// Navigate forwards in history
+    METHOD GoForward()
+
+    /// Navigate to an arbitrary offset in history
+    METHOD GoToHistoryOffset(offset)
+
+    /// Reload current page
+    METHOD Reload()
+
+    /// Stop all page loads
+    METHOD Stop()
+
+    /// Whether or not the View has focus.
+    /// It is the union of 3 methods: hasFocus, Focus and Unfocus
+    METHOD hasFocus() SETGET
+    /// Grant this overlay exclusive keyboard focus.
+    METHOD Focus() INLINE ::focus := .T.
+    /// Remove keyboard focus.
+    METHOD Unfocus() INLINE ::focus := .F.
+
+    /// Whether or not the View has an input element with visible keyboard focus
+    /// (indicated by a blinking caret).
+    /// You can use this to decide whether or not the View should consume
+    /// keyboard input events (useful in games with mixed UI and key handling).
+    ACCESS HasInputFocus()
+
+    /// Fire a keyboard event
+    //METHOD FireKeyEvent(evt)
+
+    /// Fire a mouse event
+    //METHOD FireMouseEvent(evt)
+
+    /// Fire a scroll event
+    //METHOD FireScrollEvent(evt)
+
+    /// Set a ViewListener to receive callbacks for View-related events.
+    /// NEVER IMPLEMENTED SEE block DATA
+    //virtual void set_view_listener(ViewListener* listener) = 0;
+    /// Get the active ViewListener, if any
+    /// NEVER IMPLEMENTED SEE block DATA
+    //virtual ViewListener* view_listener() const = 0;
+
+    /// Set a LoadListener to receive callbacks for Load-related events.
+    /// NEVER IMPLEMENTED SEE block DATA
+    //virtual void set_load_listener(LoadListener* listener) = 0;
+    /// Get the active LoadListener, if any
+    /// NEVER IMPLEMENTED SEE block DATA
+    //virtual LoadListener* load_listener() const = 0;
+
+    /// Set whether or not this View should be repainted during the next
+    /// Whether or not this View should be repainted during the next call to Renderer::Render.
+    /// It is the union of 3 methods: get_needs_paint and needs_paint
+    METHOD needs_paint() SETGET
+
+    /// Get the inspector for this View, this is useful for debugging and
+    /// inspecting pages locally. This will only succeed if you have the
+    /// inspector assets in your filesystem-- the inspector will look for
+    /// file:///inspector/Main.html when it first loads.
+    METHOD inspector()
+endclass
+/*
 class ultralight_Bitmap
     DATA pObj HIDDEN
 

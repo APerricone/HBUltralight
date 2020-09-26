@@ -1,3 +1,9 @@
+#pragma once
+
+#ifdef _MSC_VER
+#pragma warning( disable : 4100 4201 )
+#endif
+
 #include <hbapi.h>
 #include <hbapicls.h>
 #include <hbapiitm.h>
@@ -26,7 +32,8 @@ ultralight::RefCounted* hb_parUltralight(int n);
 // Returns a ultralight object
 void hb_retUltralight(ultralight::RefCounted* pObj,HB_USHORT classId);
 
-PHB_ITEM hb_itemPutULString(PHB_ITEM pItem,ultralight::String& str);
+PHB_ITEM hb_itemPutULString(PHB_ITEM pItem,const ultralight::String& str);
+void hb_retULString(const ultralight::String& str);
 
 #define FORWARD_GETCLASSID(objName) HB_USHORT get ## objName ## ClassId();
 

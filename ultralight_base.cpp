@@ -1,8 +1,11 @@
 #include "ultralight_hb.h"
 #include <Ultralight/RefPtr.h>
+#include <Ultralight/String.h>
+#include <Ultralight/String16.h>
 
 namespace ultralight {
     class Window;
+    class View;
 }
 using namespace ultralight;
 
@@ -30,6 +33,7 @@ HB_FUNC( ULTRALIGHT_REFCOUNTED_DELETE ) {
 
 RefCounted* hb_selfUltralight(PHB_ITEM pSelf) {
     if(!pSelf) pSelf = hb_stackSelfItem();
+    if(!HB_IS_OBJECT(pSelf)) return 0;
     return (RefCounted*)hb_arrayGetPtr(pSelf,getObjIdx());
 }
 
@@ -41,15 +45,32 @@ RefCounted* hb_parUltralight(int n) {
 
 FORWARD_GETCLASSID(WINDOW);
 void hb_retWindow(ultralight::Window* pObj);
+FORWARD_GETCLASSID(VIEW);
+void hb_retView(ultralight::View* pObj);
 
 void hb_retUltralight(RefCounted* refCnt, HB_USHORT classId) {
-    // classes witch callback are special
+    // classes with callback are special
     if(classId==getWINDOWClassId()) {
         hb_retWindow((Window*)refCnt);
+        return;
+    }
+    if(classId==getVIEWClassId()) {
+        hb_retView((View*)refCnt);
         return;
     }
     hb_clsAssociate( classId );
    	PHB_ITEM pSelf = hb_stackReturnItem();
     hb_arraySetPtr(pSelf, iObjIdx, refCnt);
     refCnt->AddRef();
+}
+
+
+PHB_ITEM hb_itemPutULString(PHB_ITEM pItem,const ultralight::String& str) {
+    const String16& str16 = str.utf16();
+    return hb_itemPutStrLenU16(pItem, HB_CDP_ENDIAN_NATIVE,
+        str16.data(), str16.length());
+}
+
+void hb_retULString(const ultralight::String& str) {
+    hb_itemPutULString(hb_stackReturnItem(), str);
 }

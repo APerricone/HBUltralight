@@ -18,7 +18,8 @@ ultralight_app.cpp
 ultralight_monitor.cpp
 ultralight_overlay.cpp
 ultralight_renderer.cpp
-#ultralight_view.c
+ultralight_session.cpp
+ultralight_view.cpp
 ultralight_window.cpp
 
 # Ultralight C

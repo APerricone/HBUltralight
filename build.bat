@@ -1,4 +1,5 @@
 @echo off
+xcopy ultralight\bin . /EIY
 :start
 hbmk2 %1 %2 %3 %4 %5 %6 %7 %8 %9
 IF %ERRORLEVEL% GTR 1000 goto setup
