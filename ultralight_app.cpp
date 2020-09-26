@@ -25,7 +25,6 @@ class HBAppListener : public AppListener {
     }
 } s_appListener;
 
-PHB_ITEM appInstance;
 HB_FUNC( ULTRALIGHT_APP_CREATE ) {
     if(appClassId==0) {
 		appClassId = hb_clsFindClass("ULTRALIGHT_APP", NULL);
@@ -40,7 +39,7 @@ HB_FUNC( ULTRALIGHT_APP_INSTANCE ) {
 }
 
 FORWARD_GETCLASSID(WINDOW);
-void SetupWindow(PHB_ITEM pItem,const RefPtr<Window>& window);
+void SetupWindow(PHB_ITEM pItem,Window* window);
 HB_FUNC( ULTRALIGHT_APP_WINDOW ) {
     App* app = (App*)hb_selfUltralight();
     if(hb_pcount()>0) {
@@ -61,9 +60,10 @@ HB_FUNC( ULTRALIGHT_APP_RENDERER ) {
 }
 
 FORWARD_GETCLASSID(MONITOR);
+void hb_retMonitor(Monitor*);
 HB_FUNC( ULTRALIGHT_APP_MAIN_MONITOR ) {
     App* app = (App*)hb_selfUltralight();
-    hb_retUltralight(app->renderer().ptr(),getMONITORClassId());
+    hb_retMonitor(app->main_monitor());
 }
 
 HB_FUNC( ULTRALIGHT_APP_RUN ) {

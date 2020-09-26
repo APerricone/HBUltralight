@@ -39,7 +39,7 @@ proc main()
     ///
     /// Set the title of our window.
     ///
-    window:SetTitle("HBUltralight Sample 2 - Basic App")
+    window:title := "HBUltralight Sample 2 - Basic App"
     ///
     /// Tell our app to use 'window' as our main window.
     ///

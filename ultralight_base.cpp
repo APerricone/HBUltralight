@@ -23,12 +23,24 @@ void initUltralightObj(RefCounted* refCnt, HB_USHORT classId) {
     PHB_ITEM pSelf = hb_stackSelfItem();
     hb_arraySetPtr(pSelf, getObjIdx(), refCnt);
     refCnt->AddRef();
+    hb_itemCopy(hb_stackReturnItem(),hb_stackSelfItem());
 }
 
 HB_FUNC( ULTRALIGHT_REFCOUNTED_DELETE ) {
     PHB_ITEM pSelf = hb_stackSelfItem();
     RefCounted* refCnt = (RefCounted*)hb_arrayGetPtr(pSelf,getObjIdx());
-    refCnt->Release();
+    if(refCnt) {
+        refCnt->Release();
+        //hb_arraySet(pSelf, getObjIdx(), hb_itemNew(0));
+    }
+}
+
+HB_FUNC( ULTRALIGHT_REFCOUNTED_COPY ) {
+	PHB_ITEM pItem = hb_param(1, HB_IT_OBJECT);
+    PHB_ITEM pSelf = hb_stackSelfItem();
+    RefCounted* ptr = (RefCounted*)hb_arrayGetPtr(pSelf,getObjIdx());
+    hb_arraySetPtr(pItem, getObjIdx(), ptr);
+    ptr->AddRef();
 }
 
 RefCounted* hb_selfUltralight(PHB_ITEM pSelf) {
@@ -44,24 +56,23 @@ RefCounted* hb_parUltralight(int n) {
 }
 
 FORWARD_GETCLASSID(WINDOW);
-void hb_retWindow(ultralight::Window* pObj);
+void SetupWindow(PHB_ITEM pItem,Window* view);
 FORWARD_GETCLASSID(VIEW);
-void hb_retView(ultralight::View* pObj);
+void SetupView(PHB_ITEM pItem,View* view);
 
 void hb_retUltralight(RefCounted* refCnt, HB_USHORT classId) {
     // classes with callback are special
-    if(classId==getWINDOWClassId()) {
-        hb_retWindow((Window*)refCnt);
-        return;
-    }
-    if(classId==getVIEWClassId()) {
-        hb_retView((View*)refCnt);
-        return;
-    }
     hb_clsAssociate( classId );
    	PHB_ITEM pSelf = hb_stackReturnItem();
-    hb_arraySetPtr(pSelf, iObjIdx, refCnt);
+    hb_arraySetPtr(pSelf, getObjIdx(), refCnt);
     refCnt->AddRef();
+
+    if(classId==getVIEWClassId()) {
+        SetupView(pSelf,(View*)refCnt);
+    }
+    if(classId==getWINDOWClassId()) {
+        SetupWindow(pSelf,(Window*)refCnt);
+    }
 }
 
 

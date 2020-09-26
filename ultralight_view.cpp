@@ -47,19 +47,10 @@ DEFINE_GETCLASSID(VIEW)
     METHOD inspector()
 */
 
-void SetupView(PHB_ITEM pItem,const  RefPtr<View>& view) {
+void SetupView(PHB_ITEM pItem, View* view) {
     HBViewListener* listener = new HBViewListener(pItem);
     view->set_load_listener((LoadListener*)listener);
     view->set_view_listener((ViewListener*)listener);
-}
-void hb_retView(View* pObj) {
-    HBViewListener* listener = (HBViewListener*)pObj->load_listener();
-    if(listener) {
-        hb_itemCopy(hb_stackReturnItem(), listener->getItem());
-        return;
-    }
-    initUltralightObj(pObj, getVIEWClassId());
-    SetupView(hb_stackReturnItem(), pObj);
 }
 
 HB_FUNC( ULTRALIGHT_VIEW_URL ) {

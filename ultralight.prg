@@ -5,6 +5,8 @@ class ultralight_refCounted
 
     //CONSTRUCTOR New(pObj)
     DESTRUCTOR Delete()
+
+    METHOD COPY OPERATOR ":="
 endclass
 
 /// Main application class.
@@ -109,8 +111,9 @@ class ultralight_renderer inherit ultralight_refCounted
 endclass
 
 
-/// Monitor class, represents a platform monitor.
-class ultralight_monitor inherit ultralight_refCounted
+/// Monitor class, represents a platform monitor. *** IT IS NOT REFCOUNTED
+class ultralight_monitor
+    DATA pObj PROTECTED
     /// Get the DPI scale (1.0 = 100%)
     ACCESS scale()
     /// Get the width of the monitor.

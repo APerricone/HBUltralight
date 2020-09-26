@@ -21,13 +21,13 @@ DEFINE_GETCLASSID(OVERLAY)
 HB_FUNC( ULTRALIGHT_OVERLAY_CREATE ) {
  	Window *win = (Window*)hb_parUltralight(1);
     View *view = (View*)hb_parUltralight(2);
-    Overlay* overlay;
+    RefPtr<Overlay> overlay;
     if(view)
-        overlay = (Overlay::Create(*win,*view,hb_parni(3), hb_parni(4))).ptr();
+        overlay = (Overlay::Create(*win,*view,hb_parni(3), hb_parni(4)));
     else
-        overlay = (Overlay::Create(*win,hb_parni(2), hb_parni(3),hb_parni(4), hb_parni(5))).ptr();
+        overlay = (Overlay::Create(*win,hb_parni(2), hb_parni(3),hb_parni(4), hb_parni(5)));
 
-    initUltralightObj(overlay, getOVERLAYClassId());
+    initUltralightObj(overlay.get(), getOVERLAYClassId());
 }
 
 FORWARD_GETCLASSID(VIEW)

@@ -22,27 +22,18 @@ DEFINE_GETCLASSID(WINDOW)
 */
 class HBWindowListener;
 
-void SetupWindow(PHB_ITEM pItem,const  RefPtr<Window>& window) {
+void SetupWindow(PHB_ITEM pItem,Window* window) {
     HBWindowListener* listener = new HBWindowListener(pItem);
     window->set_listener(listener);
 }
 
-void hb_retWindow(ultralight::Window* pObj) {
-    HBWindowListener* listener = (HBWindowListener*)pObj->listener();
-    if(listener) {
-        hb_itemCopy(hb_stackReturnItem(), listener->getItem());
-        return;
-    }
-    initUltralightObj(pObj, getWINDOWClassId());
-    SetupWindow(hb_stackReturnItem(), pObj);
-}
-
+Monitor* hb_parMonitor(int);
 HB_FUNC( ULTRALIGHT_WINDOW_CREATE ) {
-	Monitor *mon = (Monitor*)hb_parUltralight(1);
+	Monitor *mon = hb_parMonitor(1);
     RefPtr<Window> window = Window::Create(mon,hb_parni(2), hb_parni(3),hb_parldef(4,0)!=0,hb_parnidef(5,0));
     initUltralightObj(window.get(), getWINDOWClassId());
    	PHB_ITEM pSelf = hb_stackSelfItem();
-    SetupWindow(pSelf, window);
+    SetupWindow(pSelf, window.get());
 }
 
 HB_FUNC( ULTRALIGHT_WINDOW_WIDTH ) {

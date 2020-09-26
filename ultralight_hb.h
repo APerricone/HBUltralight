@@ -41,10 +41,10 @@ void hb_retULString(const ultralight::String& str);
     HB_FUNC_EXTERN(ULTRALIGHT_ ## objName); \
     HB_USHORT objName ## ClassId = 0; \
     HB_USHORT get ## objName ## ClassId() { \
-        if(objName ## ClassId) return objName ## ClassId; \
-	    objName ## ClassId = hb_clsFindClass("ULTRALIGHT_ ## objName", NULL); \
-        if(objName ## ClassId) return objName ## ClassId; \
+        if(objName ## ClassId) { return objName ## ClassId; } \
+	    objName ## ClassId = hb_clsFindClass("ULTRALIGHT_" # objName, NULL); \
+        if(objName ## ClassId) { return objName ## ClassId; } \
         HB_FUNC_EXEC(ULTRALIGHT_ ## objName); \
-        objName ## ClassId = hb_clsFindClass("ULTRALIGHT_ ## objName", NULL); \
+        objName ## ClassId = hb_clsFindClass("ULTRALIGHT_"  # objName, NULL); \
         return objName ## ClassId; \
     }

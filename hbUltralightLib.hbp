@@ -37,3 +37,4 @@ ultralight_window.cpp
 # VC debugger
 #-debug
 #-cflag=/Od
+#-gc3
