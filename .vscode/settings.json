@@ -4,6 +4,7 @@
         "ultralight\\include\\",
         ".", ".."
     ],
+    "harbour.warningLevel": 2,
     "files.associations": {
         "*.hbc": "ini",
         "*.hbp": "ini",

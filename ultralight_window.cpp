@@ -101,7 +101,7 @@ public:
 void ManageWindowCodeBlockGetSet(PHB_ITEM HBWindowListener::*pOnMember) {
     Window* window = (Window*)hb_selfUltralight();
     HBWindowListener* listener = (HBWindowListener*)window->listener();
-    if(hb_pcount()>0) {
+    if(hb_pcount()==0) {
         if(listener) {
             hb_itemCopy(hb_stackReturnItem(), listener->*pOnMember);
             return;
@@ -112,7 +112,7 @@ void ManageWindowCodeBlockGetSet(PHB_ITEM HBWindowListener::*pOnMember) {
                 listener = new HBWindowListener();
                 window->set_listener(listener);
             }
-            listener->*pOnMember = hb_param(1, HB_IT_EVALITEM);
+            listener->*pOnMember = hb_itemNew(hb_param(1, HB_IT_EVALITEM));
         }
     }
     hb_ret();

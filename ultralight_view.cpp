@@ -304,7 +304,7 @@ public:
 void ManageViewCodeBlockGetSet(PHB_ITEM HBViewListener::*pOnMember) {
     View* view = (View*)hb_selfUltralight();
     HBViewListener* listener = (HBViewListener*)view->view_listener();
-    if(hb_pcount()>0) {
+    if(hb_pcount()==0) {
         if(listener) {
             hb_itemCopy(hb_stackReturnItem(), listener->*pOnMember);
             return;
@@ -316,7 +316,7 @@ void ManageViewCodeBlockGetSet(PHB_ITEM HBViewListener::*pOnMember) {
                 view->set_view_listener(listener);
                 view->set_load_listener(listener);
             }
-            listener->*pOnMember = hb_param(1, HB_IT_EVALITEM);
+            listener->*pOnMember = hb_itemNew(hb_param(1, HB_IT_EVALITEM));
         }
     }
     hb_ret();

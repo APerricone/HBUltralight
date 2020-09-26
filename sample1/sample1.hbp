@@ -1,7 +1,7 @@
-sample1.prg
+main.prg
 -osample1
 -workdir=obj
--w3
+-w1
 -es2
 -inc
 #-cflag=/FC

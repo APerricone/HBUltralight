@@ -1,9 +1,9 @@
-sample3.prg
+main.prg
 -osample3
 -workdir=obj
--w3 
+-w3
 -es2
--inc 
+-inc
 -cflag=/FC
 
 ../hbultralight.hbc
@@ -16,3 +16,4 @@ sample3.prg
 # VC debugger
 #-debug
 #-cflag=/Od
+#-gc3
