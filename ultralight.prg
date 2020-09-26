@@ -12,7 +12,7 @@ endclass
 /// Main application class.
 class ultralight_app inherit ultralight_refCounted
     // this callback is not defined because an internal version calls hb_idle
-    //DATA bOnUpdate
+    //METHOD bOnUpdate() SETGET
 
     /// Create the App singleton.
     CONSTRUCTOR Create()
@@ -125,11 +125,11 @@ endclass
 /// Window class, represents a platform window.
 class ultralight_window inherit ultralight_refCounted
     /// Called when the Window is closed.
-    DATA bOnClose
+    METHOD bOnClose() SETGET
     /// Called when the Window is resized.
     /// @param  width   The new width (in pixels).
     /// @param  height  The new height (in pixels).
-    DATA bOnResize
+    METHOD bOnResize() SETGET
 
     /// Create a new Window.
     /// @param  monitor       The monitor to create the Window on.
@@ -240,19 +240,19 @@ class ultralight_View inherit ultralight_refCounted
     /// *** Interface for View-related events ***
 
     /// Called when the page title changes
-    DATA bOnChangeTitle // (oView,cTitle)
+    METHOD bOnChangeTitle() SETGET // (oView,cTitle)
 
     /// Called when the page URL changes
-    DATA bOnChangeURL //(oView, cUrl)
+    METHOD bOnChangeURL() SETGET //(oView, cUrl)
 
     /// Called when the tooltip changes (usually as result of a mouse hover)
-    DATA bOnChangeTooltip //(oView, cTooltip)
+    METHOD bOnChangeTooltip() SETGET //(oView, cTooltip)
 
     /// Called when the mouse cursor changes
-    DATA bOnChangeCursor //(oView, iCursor) // see defines ulCursor_*
+    METHOD bOnChangeCursor() SETGET //(oView, iCursor) // see defines ulCursor_*
 
     /// Called when a message is added to the console (useful for errors / debug)
-    DATA bOnAddConsoleMessage //(oView,iSource,iLevel,cMessage,iLine_number,iColumn_number,cSource_id)
+    METHOD bOnAddConsoleMessage() SETGET //(oView,iSource,iLevel,cMessage,iLine_number,iColumn_number,cSource_id)
                               //  see defines ulMessageSource_* and ulMessageLevel_*
 
     /// Called when the page wants to create a new View.
@@ -263,30 +263,30 @@ class ultralight_View inherit ultralight_refCounted
     /// To allow creation of these new Views, you should create a new View in
     /// this callback (eg, Renderer:CreateView()), resize it to your container,
     /// and return it. You are responsible for displaying the returned View.
-    DATA bOnCreateChildView // (oView,cOpener_url,cTarget_url,lIs_popup,aPopup_rect {left, top, right, bottom}) -> new oView
+    METHOD bOnCreateChildView() SETGET // (oView,cOpener_url,cTarget_url,lIs_popup,aPopup_rect {left, top, right, bottom}) -> new oView
 
     /// *** LoadListener ***
     /// *** Interface for Load-related events ***
 
     /// Called when the page begins loading a new URL into a frame.
-    DATA bOnBeginLoading //(oView, iFrame_id, lIs_main_frame, cUrl)
+    METHOD bOnBeginLoading() SETGET //(oView, iFrame_id, lIs_main_frame, cUrl)
 
     /// Called when the page finishes loading a URL into a frame.
-    DATA bOnFinishLoading //(oView, iFrame_id, lIs_main_frame, cUurl)
+    METHOD bOnFinishLoading() SETGET //(oView, iFrame_id, lIs_main_frame, cUurl)
 
     /// Called when an error occurs while loading a URL into a frame.
-    DATA bOnFailLoading //(oView, iFrame_id, lIs_main_frame, cUrl, cDescription, cError_domain,iError_code)
+    METHOD bOnFailLoading() SETGET //(oView, iFrame_id, lIs_main_frame, cUrl, cDescription, cError_domain,iError_code)
 
     /// Called when the JavaScript window object is reset for a new page load.
     /// If you need to make any JavaScript calls that are dependent on DOM elements
     /// or scripts on the page, use OnDOMReady instead.
-    DATA bOnWindowObjectReady //(oView,iFrame_id,lIs_main_frame,cUrl)
+    METHOD bOnWindowObjectReady() SETGET //(oView,iFrame_id,lIs_main_frame,cUrl)
 
     /// Called when all JavaScript has been parsed and the document is ready.
-    DATA bOnDOMReady //(oView, iFrame_id,lIs_main_frame,cUrl)
+    METHOD bOnDOMReady() SETGET //(oView, iFrame_id,lIs_main_frame,cUrl)
 
     /// Called when the session history (back/forward state) is modified.
-    DATA bOnUpdateHistory //(oView
+    METHOD bOnUpdateHistory() SETGET //(oView
 
     /// *** VIEW PART ***
     /// Get the URL of the current page loaded into this View, if any.

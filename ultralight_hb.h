@@ -29,6 +29,8 @@ void initUltralightObj(ultralight::RefCounted* refCnt, HB_USHORT classId );
 ultralight::RefCounted* hb_selfUltralight(PHB_ITEM pSelf=0);
 // get ultralight parameter
 ultralight::RefCounted* hb_parUltralight(int n);
+// create an item from an utralight object
+PHB_ITEM hb_itemUltralight(ultralight::RefCounted* refCnt, HB_USHORT classId);
 // Returns a ultralight object
 void hb_retUltralight(ultralight::RefCounted* pObj,HB_USHORT classId);
 

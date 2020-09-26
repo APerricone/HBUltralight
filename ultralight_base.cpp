@@ -55,10 +55,15 @@ RefCounted* hb_parUltralight(int n) {
 	return 0;
 }
 
-FORWARD_GETCLASSID(WINDOW);
-void SetupWindow(PHB_ITEM pItem,Window* view);
-FORWARD_GETCLASSID(VIEW);
-void SetupView(PHB_ITEM pItem,View* view);
+PHB_ITEM hb_itemUltralight(RefCounted* refCnt, HB_USHORT classId) {
+    hb_clsAssociate( classId );
+    PHB_ITEM pItem = hb_itemNew( hb_stackReturnItem() );
+    hb_ret();
+    hb_arraySetPtr(pItem, getObjIdx(), refCnt);
+    refCnt->AddRef();
+    return pItem;
+
+}
 
 void hb_retUltralight(RefCounted* refCnt, HB_USHORT classId) {
     // classes with callback are special
@@ -66,13 +71,6 @@ void hb_retUltralight(RefCounted* refCnt, HB_USHORT classId) {
    	PHB_ITEM pSelf = hb_stackReturnItem();
     hb_arraySetPtr(pSelf, getObjIdx(), refCnt);
     refCnt->AddRef();
-
-    if(classId==getVIEWClassId()) {
-        SetupView(pSelf,(View*)refCnt);
-    }
-    if(classId==getWINDOWClassId()) {
-        SetupWindow(pSelf,(Window*)refCnt);
-    }
 }
 
 

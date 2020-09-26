@@ -39,7 +39,6 @@ HB_FUNC( ULTRALIGHT_APP_INSTANCE ) {
 }
 
 FORWARD_GETCLASSID(WINDOW);
-void SetupWindow(PHB_ITEM pItem,Window* window);
 HB_FUNC( ULTRALIGHT_APP_WINDOW ) {
     App* app = (App*)hb_selfUltralight();
     if(hb_pcount()>0) {
@@ -48,7 +47,6 @@ HB_FUNC( ULTRALIGHT_APP_WINDOW ) {
     } else {
         Window* wnd = app->window().get();
         hb_retUltralight((RefCounted*)wnd,getWINDOWClassId());
-        SetupWindow(hb_stackReturnItem(), wnd);
     }
 }
 

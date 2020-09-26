@@ -34,7 +34,7 @@ proc main()
     /// The window's size (400 by 400) is in virtual device coordinates, the
     /// actual size in pixels is automatically determined by the monitor's DPI.
     ///
-    LOCAL window := ultralight_window():Create(app:main_Monitor,300,300,.F.,ulWindowFlags_Titled)
+    LOCAL window := ultralight_window():Create(app:main_Monitor,900,600,.F.,ulWindowFlags_Titled)
     LOCAL overlay
     ///
     /// Set the title of our window.

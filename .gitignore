@@ -21,3 +21,4 @@ ultralight_old
 release/**
 
 test/**
+resources/cacert.pem
