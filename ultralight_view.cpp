@@ -1,6 +1,7 @@
 #include "ultralight_hb.h"
 #include <ultralight/View.h>
 #include <ultralight/Listener.h>
+#include "hb_smartApi.h"
 
 using namespace ultralight;
 DEFINE_GETCLASSID(VIEW)
@@ -178,51 +179,34 @@ public:
 
     /// View Listener
     PHB_ITEM pOnChangeTitle;
-    virtual void OnChangeTitle(ultralight::View* caller,
+    virtual void OnChangeTitle(View* caller,
                                 const String& title) {
         if(!pOnChangeTitle) return;
-        PHB_ITEM pCaller = hb_itemUltralight(caller, getVIEWClassId());
-        PHB_ITEM pTitle = hb_itemPutULString(0,title);
-        hb_evalBlock(pOnChangeTitle, pCaller, pTitle, NULL );
-        hb_itemRelease(pCaller);
-        hb_itemRelease(pTitle);
+        hb_evalBlock(pOnChangeTitle, SmartItem(caller, getVIEWClassId()), SmartItem(title), NULL );
     }
 
     PHB_ITEM pOnChangeURL;
-    virtual void OnChangeURL(ultralight::View* caller,
+    virtual void OnChangeURL(View* caller,
                             const String& url) {
         if(!pOnChangeURL) return;
-        PHB_ITEM pCaller = hb_itemUltralight(caller, getVIEWClassId());
-        PHB_ITEM pUrl = hb_itemPutULString(0,url);
-        hb_evalBlock(pOnChangeURL, pCaller, pUrl, NULL );
-        hb_itemRelease(pCaller);
-        hb_itemRelease(pUrl);
+        hb_evalBlock(pOnChangeURL, SmartItem(caller, getVIEWClassId()), SmartItem(url), NULL );
     }
 
     PHB_ITEM pOnChangeTooltip;
-    virtual void OnChangeTooltip(ultralight::View* caller,
-                               const String& tooltip) {
+    virtual void OnChangeTooltip(View* caller, const String& tooltip) {
         if(!pOnChangeTooltip) return;
-        PHB_ITEM pCaller = hb_itemUltralight(caller, getVIEWClassId());
-        PHB_ITEM pTooltip = hb_itemPutULString(0,tooltip);
-        hb_evalBlock(pOnChangeTooltip, pCaller, pTooltip, NULL );
-        hb_itemRelease(pCaller);
-        hb_itemRelease(pTooltip);
+        hb_evalBlock(pOnChangeTooltip, SmartItem(caller, getVIEWClassId()), SmartItem(tooltip), NULL );
     }
 
     PHB_ITEM pOnChangeCursor;
-    virtual void OnChangeCursor(ultralight::View* caller,
+    virtual void OnChangeCursor(View* caller,
                                 Cursor cursor) {
         if(!pOnChangeCursor) return;
-        PHB_ITEM pCaller = hb_itemUltralight(caller, getVIEWClassId());
-        PHB_ITEM pCursor = hb_itemPutNI(0,(int)cursor);
-        hb_evalBlock(pOnChangeCursor, pCaller, pCursor, NULL );
-        hb_itemRelease(pCaller);
-        hb_itemRelease(pCursor);
+        hb_evalBlock(pOnChangeCursor, SmartItem(caller, getVIEWClassId()), SmartItem((int)cursor), NULL );
     }
 
     PHB_ITEM pOnAddConsoleMessage;
-    virtual void OnAddConsoleMessage(ultralight::View* caller,
+    virtual void OnAddConsoleMessage(View* caller,
                                    MessageSource source,
                                    MessageLevel level,
                                    const String& message,
@@ -230,86 +214,49 @@ public:
                                    uint32_t column_number,
                                    const String& source_id) {
         if(!pOnAddConsoleMessage) return;
-        PHB_ITEM pCaller = hb_itemUltralight(caller, getVIEWClassId());
-        PHB_ITEM pSource = hb_itemPutNI(0,(int)source);
-        PHB_ITEM pLevel = hb_itemPutNI(0,(int)level);
-        PHB_ITEM pMessage = hb_itemPutULString(0,message);
-        PHB_ITEM pLineNumber = hb_itemPutNI(0,line_number);
-        PHB_ITEM pColumnNumber = hb_itemPutNI(0,column_number);
-        PHB_ITEM pSourceId = hb_itemPutULString(0,source_id);
-        hb_evalBlock(pOnAddConsoleMessage, pCaller, pSource, pLevel, pMessage, pLineNumber, pColumnNumber, pSourceId, NULL );
-        hb_itemRelease(pCaller);
-        hb_itemRelease(pSource);
-        hb_itemRelease(pLevel);
-        hb_itemRelease(pMessage);
-        hb_itemRelease(pLineNumber);
-        hb_itemRelease(pColumnNumber);
-        hb_itemRelease(pSourceId);
+        hb_evalBlock(pOnAddConsoleMessage,
+            SmartItem(caller, getVIEWClassId()), SmartItem(source), SmartItem(level),
+            SmartItem(message), SmartItem((int)line_number),
+            SmartItem((int)column_number), SmartItem(source_id), NULL );
     }
 
     PHB_ITEM pOnCreateChildView;
-    virtual RefPtr<View> OnCreateChildView(ultralight::View* caller,
+    virtual RefPtr<View> OnCreateChildView(View* caller,
                                          const String& opener_url,
                                          const String& target_url,
                                          bool is_popup,
                                          const IntRect& popup_rect) {
         if(!pOnCreateChildView) return nullptr;
-        PHB_ITEM pCaller = hb_itemUltralight(caller, getVIEWClassId());
-        PHB_ITEM pOpenerURL = hb_itemPutULString(0,opener_url);
-        PHB_ITEM pTargetURL = hb_itemPutULString(0,target_url);
-        PHB_ITEM pIsPopup = hb_itemPutL(0,is_popup? HB_TRUE : HB_FALSE);
-        PHB_ITEM pRect = hb_itemArrayNew(4); //{left, top, right, bottom}
-        hb_arraySetNI(pRect,1, popup_rect.left);
-        hb_arraySetNI(pRect,2, popup_rect.top);
-        hb_arraySetNI(pRect,3, popup_rect.right);
-        hb_arraySetNI(pRect,4, popup_rect.bottom);
-        hb_evalBlock(pOnCreateChildView, pCaller, pOpenerURL, pTargetURL, pIsPopup, pRect, NULL );
-        hb_itemRelease(pCaller);
-        hb_itemRelease(pOpenerURL);
-        hb_itemRelease(pTargetURL);
-        hb_itemRelease(pIsPopup);
-        hb_itemRelease(pRect);
+        hb_evalBlock(pOnCreateChildView, SmartItem(caller, getVIEWClassId()), SmartItem(opener_url),
+                                         SmartItem(target_url), SmartItem(is_popup),
+                                         SmartItem(popup_rect), NULL );
         RefPtr<View> retView = (View*)hb_selfUltralight(hb_stackReturnItem());
         return retView;
     }
 
     /// Load Listener
     PHB_ITEM pOnBeginLoading;
-    virtual void OnBeginLoading(ultralight::View* caller,
+    virtual void OnBeginLoading(View* caller,
                               uint64_t frame_id,
                               bool is_main_frame,
                               const String& url) {
         if(!pOnBeginLoading) return;
-        PHB_ITEM pCaller = hb_itemUltralight(caller, getVIEWClassId());
-        PHB_ITEM pFrameID = hb_itemPutNLL(0,frame_id);
-        PHB_ITEM pIsMain = hb_itemPutL(0,is_main_frame);
-        PHB_ITEM pUrl = hb_itemPutULString(0, url);
-        hb_evalBlock(pOnBeginLoading, pCaller, pFrameID, pIsMain, pUrl, NULL );
-        hb_itemRelease( pCaller );
-        hb_itemRelease( pFrameID );
-        hb_itemRelease( pIsMain );
-        hb_itemRelease( pUrl );
+        hb_evalBlock(pOnBeginLoading, SmartItem(caller, getVIEWClassId()), SmartItem((HB_LONGLONG)frame_id),
+            SmartItem(is_main_frame), SmartItem(url), NULL );
     }
 
     PHB_ITEM pOnFinishLoading;
-    virtual void OnFinishLoading(ultralight::View* caller,
+    virtual void OnFinishLoading(View* caller,
                                uint64_t frame_id,
                                bool is_main_frame,
                                const String& url) {
         if(!pOnFinishLoading) return;
-        PHB_ITEM pCaller = hb_itemUltralight(caller, getVIEWClassId());
-        PHB_ITEM pFrameID = hb_itemPutNLL(0,frame_id);
-        PHB_ITEM pIsMain = hb_itemPutL(0,is_main_frame);
-        PHB_ITEM pUrl = hb_itemPutULString(0, url);
-        hb_evalBlock(pOnFinishLoading, pCaller, pFrameID, pIsMain, pUrl, NULL );
-        hb_itemRelease( pCaller );
-        hb_itemRelease( pFrameID );
-        hb_itemRelease( pIsMain );
-        hb_itemRelease( pUrl );
+        hb_evalBlock(pOnFinishLoading, SmartItem(caller, getVIEWClassId()), SmartItem((HB_LONGLONG)frame_id),
+            SmartItem(is_main_frame), SmartItem(url), NULL );
     }
 
     PHB_ITEM pOnFailLoading;
-    virtual void OnFailLoading(ultralight::View* caller,
+    virtual void OnFailLoading(View* caller,
                              uint64_t frame_id,
                              bool is_main_frame,
                              const String& url,
@@ -317,63 +264,35 @@ public:
                              const String& error_domain,
                              int error_code) {
         if(!pOnFailLoading) return;
-        PHB_ITEM pCaller = hb_itemUltralight(caller, getVIEWClassId());
-        PHB_ITEM pFrameID = hb_itemPutNLL(0,frame_id);
-        PHB_ITEM pIsMain = hb_itemPutL(0,is_main_frame);
-        PHB_ITEM pUrl = hb_itemPutULString(0, url);
-        PHB_ITEM pDescription = hb_itemPutULString(0, description);
-        PHB_ITEM pErrorDomain = hb_itemPutULString(0, error_domain);
-        PHB_ITEM pErrorCode = hb_itemPutNI(0, error_code);
-        hb_evalBlock(pOnFailLoading, pCaller, pFrameID, pIsMain, pUrl, pDescription, pErrorDomain, pErrorCode, NULL );
-        hb_itemRelease( pCaller );
-        hb_itemRelease( pFrameID );
-        hb_itemRelease( pIsMain );
-        hb_itemRelease( pUrl );
-        hb_itemRelease( pDescription );
-        hb_itemRelease( pErrorDomain );
-        hb_itemRelease( pErrorCode );
+        hb_evalBlock(pOnFailLoading, SmartItem(caller, getVIEWClassId()), SmartItem((HB_LONGLONG)frame_id),
+                SmartItem(is_main_frame), SmartItem(url), SmartItem(description),
+                SmartItem(error_domain), SmartItem(error_code), NULL );
     }
 
     PHB_ITEM pOnWindowObjectReady;
-    virtual void OnWindowObjectReady(ultralight::View* caller,
+    virtual void OnWindowObjectReady(View* caller,
                                    uint64_t frame_id,
                                    bool is_main_frame,
                                    const String& url) {
         if(!pOnWindowObjectReady) return;
-        PHB_ITEM pCaller = hb_itemUltralight(caller, getVIEWClassId());
-        PHB_ITEM pFrameID = hb_itemPutNLL(0,frame_id);
-        PHB_ITEM pIsMain = hb_itemPutL(0,is_main_frame);
-        PHB_ITEM pUrl = hb_itemPutULString(0, url);
-        hb_evalBlock(pOnWindowObjectReady, pCaller, pFrameID, pIsMain, pUrl, NULL );
-        hb_itemRelease( pCaller );
-        hb_itemRelease( pFrameID );
-        hb_itemRelease( pIsMain );
-        hb_itemRelease( pUrl );
+        hb_evalBlock(pOnWindowObjectReady, SmartItem(caller, getVIEWClassId()), SmartItem((HB_LONGLONG)frame_id),
+            SmartItem(is_main_frame), SmartItem(url), NULL );
     }
 
     PHB_ITEM pOnDOMReady;
-    virtual void OnDOMReady(ultralight::View* caller,
+    virtual void OnDOMReady(View* caller,
                           uint64_t frame_id,
                           bool is_main_frame,
                           const String& url) {
         if(!pOnDOMReady) return;
-        PHB_ITEM pCaller = hb_itemUltralight(caller, getVIEWClassId());
-        PHB_ITEM pFrameID = hb_itemPutNLL(0,frame_id);
-        PHB_ITEM pIsMain = hb_itemPutL(0,is_main_frame);
-        PHB_ITEM pUrl = hb_itemPutULString(0, url);
-        hb_evalBlock(pOnDOMReady, pCaller, pFrameID, pIsMain, pUrl, NULL );
-        hb_itemRelease( pCaller );
-        hb_itemRelease( pFrameID );
-        hb_itemRelease( pIsMain );
-        hb_itemRelease( pUrl );
+        hb_evalBlock(pOnDOMReady, SmartItem(caller, getVIEWClassId()), SmartItem((HB_LONGLONG)frame_id),
+            SmartItem(is_main_frame), SmartItem(url), NULL );
     }
 
     PHB_ITEM pOnUpdateHistory;
-    virtual void OnUpdateHistory(ultralight::View* caller) {
+    virtual void OnUpdateHistory(View* caller) {
         if(!pOnUpdateHistory) return;
-        PHB_ITEM pCaller = hb_itemUltralight(caller, getVIEWClassId());
-        hb_evalBlock(pOnUpdateHistory, pCaller, NULL );
-        hb_itemRelease( pCaller );
+        hb_evalBlock(pOnUpdateHistory, SmartItem(caller, getVIEWClassId()), NULL );
     }
 
     HBViewListener() :
@@ -382,7 +301,7 @@ public:
         pOnFailLoading(0), pOnWindowObjectReady(0), pOnDOMReady(0), pOnUpdateHistory(0) {};
 };
 
-void ManageBlockGetSet(PHB_ITEM HBViewListener::*pOnMember) {
+void ManageViewCodeBlockGetSet(PHB_ITEM HBViewListener::*pOnMember) {
     View* view = (View*)hb_selfUltralight();
     HBViewListener* listener = (HBViewListener*)view->view_listener();
     if(hb_pcount()>0) {
@@ -403,15 +322,15 @@ void ManageBlockGetSet(PHB_ITEM HBViewListener::*pOnMember) {
     hb_ret();
 }
 
-HB_FUNC( ULTRALIGHT_VIEW_BONCHANGETITLE ) { ManageBlockGetSet(&HBViewListener::pOnChangeTitle); }
-HB_FUNC( ULTRALIGHT_VIEW_BONCHANGEURL ) { ManageBlockGetSet(&HBViewListener::pOnChangeURL); }
-HB_FUNC( ULTRALIGHT_VIEW_BONCHANGETOOLTIP ) { ManageBlockGetSet(&HBViewListener::pOnChangeTooltip); }
-HB_FUNC( ULTRALIGHT_VIEW_BONCHANGECURSOR ) { ManageBlockGetSet(&HBViewListener::pOnChangeCursor); }
-HB_FUNC( ULTRALIGHT_VIEW_BONADDCONSOLEMESSAGE ) { ManageBlockGetSet(&HBViewListener::pOnAddConsoleMessage); }
-HB_FUNC( ULTRALIGHT_VIEW_BONCREATECHILDVIEW ) { ManageBlockGetSet(&HBViewListener::pOnCreateChildView); }
-HB_FUNC( ULTRALIGHT_VIEW_BONBEGINLOADING ) { ManageBlockGetSet(&HBViewListener::pOnBeginLoading); }
-HB_FUNC( ULTRALIGHT_VIEW_BONFINISHLOADING ) { ManageBlockGetSet(&HBViewListener::pOnFinishLoading); }
-HB_FUNC( ULTRALIGHT_VIEW_BONFAILLOADING ) { ManageBlockGetSet(&HBViewListener::pOnFailLoading); }
-HB_FUNC( ULTRALIGHT_VIEW_BONWINDOWOBJECTREADY ) { ManageBlockGetSet(&HBViewListener::pOnWindowObjectReady); }
-HB_FUNC( ULTRALIGHT_VIEW_BONDOMREADY ) { ManageBlockGetSet(&HBViewListener::pOnDOMReady); }
-HB_FUNC( ULTRALIGHT_VIEW_BONUPDATEHISTORY ) { ManageBlockGetSet(&HBViewListener::pOnUpdateHistory); }
+HB_FUNC( ULTRALIGHT_VIEW_BONCHANGETITLE ) { ManageViewCodeBlockGetSet(&HBViewListener::pOnChangeTitle); }
+HB_FUNC( ULTRALIGHT_VIEW_BONCHANGEURL ) { ManageViewCodeBlockGetSet(&HBViewListener::pOnChangeURL); }
+HB_FUNC( ULTRALIGHT_VIEW_BONCHANGETOOLTIP ) { ManageViewCodeBlockGetSet(&HBViewListener::pOnChangeTooltip); }
+HB_FUNC( ULTRALIGHT_VIEW_BONCHANGECURSOR ) { ManageViewCodeBlockGetSet(&HBViewListener::pOnChangeCursor); }
+HB_FUNC( ULTRALIGHT_VIEW_BONADDCONSOLEMESSAGE ) { ManageViewCodeBlockGetSet(&HBViewListener::pOnAddConsoleMessage); }
+HB_FUNC( ULTRALIGHT_VIEW_BONCREATECHILDVIEW ) { ManageViewCodeBlockGetSet(&HBViewListener::pOnCreateChildView); }
+HB_FUNC( ULTRALIGHT_VIEW_BONBEGINLOADING ) { ManageViewCodeBlockGetSet(&HBViewListener::pOnBeginLoading); }
+HB_FUNC( ULTRALIGHT_VIEW_BONFINISHLOADING ) { ManageViewCodeBlockGetSet(&HBViewListener::pOnFinishLoading); }
+HB_FUNC( ULTRALIGHT_VIEW_BONFAILLOADING ) { ManageViewCodeBlockGetSet(&HBViewListener::pOnFailLoading); }
+HB_FUNC( ULTRALIGHT_VIEW_BONWINDOWOBJECTREADY ) { ManageViewCodeBlockGetSet(&HBViewListener::pOnWindowObjectReady); }
+HB_FUNC( ULTRALIGHT_VIEW_BONDOMREADY ) { ManageViewCodeBlockGetSet(&HBViewListener::pOnDOMReady); }
+HB_FUNC( ULTRALIGHT_VIEW_BONUPDATEHISTORY ) { ManageViewCodeBlockGetSet(&HBViewListener::pOnUpdateHistory); }

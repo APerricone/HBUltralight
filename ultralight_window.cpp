@@ -1,4 +1,5 @@
 #include "ultralight_hb.h"
+#include "hb_smartApi.h"
 #include <AppCore/Window.h>
 
 using namespace ultralight;
@@ -25,7 +26,6 @@ HB_FUNC( ULTRALIGHT_WINDOW_CREATE ) {
 	Monitor *mon = hb_parMonitor(1);
     RefPtr<Window> window = Window::Create(mon,hb_parni(2), hb_parni(3),hb_parldef(4,0)!=0,hb_parnidef(5,0));
     initUltralightObj(window.get(), getWINDOWClassId());
-   	PHB_ITEM pSelf = hb_stackSelfItem();
 }
 
 HB_FUNC( ULTRALIGHT_WINDOW_WIDTH ) {
@@ -93,21 +93,17 @@ public:
 
     void OnResize(uint32_t width, uint32_t height) {
         if(!pOnResize) return;
-        PHB_ITEM pWidth = hb_itemPutNI(0,width);
-        PHB_ITEM pHeight = hb_itemPutNI(0,height);
-        hb_evalBlock(pOnResize, pWidth, pHeight, NULL );
-        hb_itemRelease(pWidth);
-        hb_itemRelease(pHeight);
+        hb_evalBlock(pOnResize, SmartItem((int)width), SmartItem((int)height), NULL );
     }
 
 };
 
-HB_FUNC( ULTRALIGHT_WINDOW_BONCLOSE ) {
+void ManageWindowCodeBlockGetSet(PHB_ITEM HBWindowListener::*pOnMember) {
     Window* window = (Window*)hb_selfUltralight();
     HBWindowListener* listener = (HBWindowListener*)window->listener();
     if(hb_pcount()>0) {
         if(listener) {
-            hb_itemCopy(hb_stackReturnItem(), listener->pOnClose);
+            hb_itemCopy(hb_stackReturnItem(), listener->*pOnMember);
             return;
         }
     } else {
@@ -116,28 +112,11 @@ HB_FUNC( ULTRALIGHT_WINDOW_BONCLOSE ) {
                 listener = new HBWindowListener();
                 window->set_listener(listener);
             }
-            listener->pOnClose =hb_param(1, HB_IT_EVALITEM);
+            listener->*pOnMember = hb_param(1, HB_IT_EVALITEM);
         }
     }
     hb_ret();
 }
 
-HB_FUNC( ULTRALIGHT_WINDOW_BONRESIZE ) {
-    Window* window = (Window*)hb_selfUltralight();
-    HBWindowListener* listener = (HBWindowListener*)window->listener();
-    if(hb_pcount()>0) {
-        if(listener) {
-            hb_itemCopy(hb_stackReturnItem(), listener->pOnResize);
-            return;
-        }
-    } else {
-        if(HB_ISEVALITEM(1)) {
-            if(!listener) {
-                listener = new HBWindowListener();
-                window->set_listener(listener);
-            }
-            listener->pOnResize =hb_param(1, HB_IT_EVALITEM);
-        }
-    }
-    hb_ret();
-}
+HB_FUNC( ULTRALIGHT_WINDOW_BONCLOSE ) { ManageWindowCodeBlockGetSet(&HBWindowListener::pOnClose); }
+HB_FUNC( ULTRALIGHT_WINDOW_BONRESIZE ) { ManageWindowCodeBlockGetSet(&HBWindowListener::pOnResize); }
