@@ -92,10 +92,10 @@ HB_FUNC( ULTRALIGHT_VIEW_RESIZE ) {
     view->Resize(hb_parnidef(1,view->width()),hb_parnidef(2,view->height()));
 }
 
-//HB_FUNC( ULTRALIGHT_VIEW_LOCKJSCONTEXT ) {
-//    View* view = (View*)hb_selfUltralight();
-//    view->LockJSContext
-//}
+HB_FUNC( ULTRALIGHT_VIEW_LOCKJSCONTEXT ) {
+    View* view = (View*)hb_selfUltralight();
+    hb_retptr((void*)view->LockJSContext()->ctx());
+}
 
 HB_FUNC( ULTRALIGHT_VIEW_EVALUATESCRIPT ) {
     View* view = (View*)hb_selfUltralight();

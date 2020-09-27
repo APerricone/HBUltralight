@@ -4,14 +4,13 @@ Harbour binding for Ultralight UI https://ultralig.ht/
 ## Quick start
 From this piece of code:
 ```
-#include <hbclass.ch>
 #include "ultralight.ch"
 
 proc main()
     LOCAL app := ultralight_app():Create()
     LOCAL window := ultralight_window():Create(app:main_Monitor,300,300,.F.,ulWindowFlags_Titled)
     LOCAL overlay
-    window:SetTitle("Basic App")
+    window:title := "Basic App"
     app:window := window
     overlay:=ultralight_overlay():Create(window,window:width(),window:height(),0,0)
     overlay:view():LoadHTML("<center>Hello World!</center>")

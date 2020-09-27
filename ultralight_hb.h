@@ -15,7 +15,6 @@
 #ifdef _WINDOWS_
 #include <windows.h>
 #endif
-//#include <Ultralight/CAPI.h>
 
 namespace ultralight {
     class RefCounted;

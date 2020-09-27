@@ -1,9 +1,9 @@
 sample4.prg
 -osample4
 -workdir=obj
--w3 
+-w3
 -es2
--inc 
+-inc
 -gui
 #-cflag=/FC
 

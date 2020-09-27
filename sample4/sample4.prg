@@ -4,12 +4,12 @@ proc main()
     LOCAL app := ultralight_app():Create()
     LOCAL window := ultralight_window():Create(app:main_Monitor,300,300,.F.,ulWindowFlags_Titled)
     LOCAL overlay, cHTML, v
-    window:SetTitle("Tutorial 4 - JavaScript")
+    window:title := "Tutorial 4 - JavaScript"
     app:window := window
     overlay:=ultralight_overlay():Create(window,window:width(),window:height(),0,0)
     v := overlay:view()
-    v:bOnDOMReady = {|caller| OnDOMReady(caller) }
-    v:bOnChangeCursor := {|c,nCursor| HB_SYMBOL_UNUSED(c), window:SetCursor(nCursor) }
+    v:bOnDOMReady = @OnDOMReady()
+    v:bOnChangeCursor := {|view,nCursor| HB_SYMBOL_UNUSED(view), window:cursor := nCursor }
     v:bOnAddConsoleMessage = @Console()
     #pragma __text |    cHTML+=%s+e"\r\n" |    v:LoadHTML(cHTML) |    cHtml:=""
   <html>
@@ -54,7 +54,7 @@ proc OnDOMReady(caller)
     ///
     /// Set our View's JSContext as the one to use in subsequent JSHelper calls
     ///
-    SetJSContext(caller:js_context())
+    SetJSContext(caller:LockJSContext())
     global := JSGlobalObject()
     // they are both ok
     global["GetMessage"] := @GetMessage()

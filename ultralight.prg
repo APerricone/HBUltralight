@@ -323,7 +323,7 @@ class ultralight_View inherit ultralight_refCounted
     METHOD Resize(width,height)
 
     /// Acquire the page's JSContext for use with the JavaScriptCore API
-    //METHOD LockJSContext();
+    METHOD LockJSContext();
 
     /// Helper function to evaluate a raw string of JavaScript and return the
     /// result as a String.

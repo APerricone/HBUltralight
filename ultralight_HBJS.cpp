@@ -1,5 +1,9 @@
 #include "ultralight_hb.h"
+#include <JavaScriptCore/JavaScript.h>
+#include <JavaScriptCore/JSStringRef.h>
 #include <hbjson.h>
+
+using namespace ultralight;
 
 //forward decl
 JSValueRef HB_toJS(PHB_ITEM);
@@ -11,78 +15,94 @@ JSStringRef HB_TOJSString(PHB_ITEM);
 PHB_ITEM hb_FromJS(PHB_ITEM, JSValueRef, int lObject);
 JSObjectRef HB_CreateJSCallback(PHB_ITEM);
 
+//DEFINE_GETCLASSID(JSVALUE)
+HB_FUNC_EXTERN(JSVALUE);
+HB_USHORT JSVALUEClassId = 0;
+HB_USHORT getJSVALUEClassId() {
+    if(JSVALUEClassId) { return JSVALUEClassId; }
+    JSVALUEClassId = hb_clsFindClass("JSVALUE", NULL);
+    if(JSVALUEClassId) { return JSVALUEClassId; }
+    HB_FUNC_EXEC(JSVALUE);
+    JSVALUEClassId = hb_clsFindClass("JSVALUE", NULL);
+    return JSVALUEClassId;
+}
+
+HB_SIZE pValueIdx = 0;
+
+HB_SIZE getValueIdx() {
+    if(pValueIdx) return pValueIdx;
+    pValueIdx = hb_clsGetVarIndex(getJSVALUEClassId(),hb_dynsymGet("pValue"));
+    return pValueIdx;
+}
+
 static JSContextRef ctx;
-HB_FUNC(SETJSCONTEXT) { ctx = hb_parptr(1); }
+HB_FUNC(SETJSCONTEXT) { ctx = (JSContextRef)hb_parptr(1); }
 HB_FUNC(GETJSCONTEXT) { hb_retptr((void*)ctx); }
 
-static HB_USHORT HB_JSValueClassId = 0;
-static HB_SIZE HB_JSValue_ValuePtr = 0;
-//static HB_SIZE HB_JSValue_ObjectPtr = 0;
-
-HB_FUNC_EXTERN(JSVALUE);
-void InitJSValueClass() {
-	if(HB_JSValueClassId!=0) return;
-	HB_JSValueClassId = hb_clsFindClass("JSVALUE", NULL);
-	if(HB_JSValueClassId==0) {
-		HB_FUNC_EXEC(JSVALUE);
-		HB_JSValueClassId = hb_clsFindClass("JSVALUE", NULL);
-	}
-	HB_JSValue_ValuePtr = hb_clsGetVarIndex(HB_JSValueClassId,hb_dynsymGet("pValue"));
-	//HB_JSValue_ObjectPtr = hb_clsGetVarIndex(HB_JSValueClassId,hb_dynsymGet("pObject"));
+JSValueRef hb_selfJSValue(PHB_ITEM pSelf = 0) {
+    if(!pSelf) pSelf = hb_stackSelfItem();
+    if(!HB_IS_OBJECT(pSelf)) return 0;
+    return (JSValueRef)hb_arrayGetPtr(pSelf,getValueIdx());
 }
-#define SELF_VALUE() (JSValueRef)hb_itemGetPtr( hb_itemArrayGet(hb_stackSelfItem(),HB_JSValue_ValuePtr) )
 
-JSObjectRef SELF_OBJECT() {
-	JSValueRef value = SELF_VALUE();
+JSObjectRef hb_selfJSObject() {
+	JSValueRef value = hb_selfJSValue();
 	if(!JSValueIsObject(ctx,value)) {
     	return 0;
 	}
   	return JSValueToObject(ctx, value, 0);
 }
 
-HB_FUNC( JSVALUE_ISNULL )       { hb_retl(JSValueIsNull(ctx,SELF_VALUE())); }
-HB_FUNC( JSVALUE_ISUNDEFINED )  { hb_retl(JSValueIsUndefined(ctx,SELF_VALUE())); }
-HB_FUNC( JSVALUE_ISBOOLEAN )    { hb_retl(JSValueIsBoolean(ctx,SELF_VALUE())); }
-HB_FUNC( JSVALUE_ISNUMBER )     { hb_retl(JSValueIsNumber(ctx,SELF_VALUE())); }
-HB_FUNC( JSVALUE_ISSTRING )     { hb_retl(JSValueIsString(ctx,SELF_VALUE())); }
-HB_FUNC( JSVALUE_ISOBJECT )     { hb_retl(JSValueIsObject(ctx,SELF_VALUE())); }
-HB_FUNC( JSVALUE_ISARRAY )      { hb_retl(JSValueIsArray(ctx,SELF_VALUE())); }
+HB_FUNC( JSVALUE_ISNULL )       { hb_retl(JSValueIsNull(ctx,hb_selfJSValue())); }
+HB_FUNC( JSVALUE_ISUNDEFINED )  { hb_retl(JSValueIsUndefined(ctx,hb_selfJSValue())); }
+HB_FUNC( JSVALUE_ISBOOLEAN )    { hb_retl(JSValueIsBoolean(ctx,hb_selfJSValue())); }
+HB_FUNC( JSVALUE_ISNUMBER )     { hb_retl(JSValueIsNumber(ctx,hb_selfJSValue())); }
+HB_FUNC( JSVALUE_ISSTRING )     { hb_retl(JSValueIsString(ctx,hb_selfJSValue())); }
+HB_FUNC( JSVALUE_ISOBJECT )     { hb_retl(JSValueIsObject(ctx,hb_selfJSValue())); }
+HB_FUNC( JSVALUE_ISARRAY )      { hb_retl(JSValueIsArray(ctx,hb_selfJSValue())); }
 
 HB_FUNC( JSVALUE_ISFUNCTION ) {
-  	JSObjectRef obj = SELF_OBJECT();
+  	JSObjectRef obj = hb_selfJSObject();
 	hb_retl(obj && JSObjectIsFunction(ctx, obj));
 }
 
 HB_FUNC( JSVALUE_NEW ) {
-	JSValueRef v = HB_toJS(hb_param(1,HB_IT_ANY));
-	PHB_ITEM pSelf;
-	InitJSValueClass();
-    hb_clsAssociate( HB_JSValueClassId );
-   	pSelf = hb_stackReturnItem();
-    hb_itemArrayPut(pSelf, HB_JSValue_ValuePtr, hb_itemPutPtr(0, (void*)v)); 
-	JSValueProtect(ctx,v);
+    JSValueRef v = HB_toJS(hb_param(1,HB_IT_ANY));
+    hb_clsAssociate(getJSVALUEClassId());
+    PHB_ITEM pSelf = hb_stackSelfItem();
+    hb_arraySetPtr(pSelf, getValueIdx(), (void*)v);
+    JSValueProtect(ctx, v);
+    hb_itemCopy(hb_stackReturnItem(),hb_stackSelfItem());
+}
+
+HB_FUNC( JSVALUE_COPY ) {
+	PHB_ITEM pItem = hb_param(1, HB_IT_OBJECT);
+    JSValueRef v = hb_selfJSValue();
+    hb_arraySetPtr(pItem, getValueIdx(), (void*)v);
+    JSValueProtect(ctx, v);
 }
 
 HB_FUNC( JSVALUE_DESTROY ) {
-	JSValueUnprotect(ctx,SELF_VALUE());
+    JSValueRef v = hb_selfJSValue();
+    if(v) JSValueUnprotect(ctx,hb_selfJSValue());
 }
 
 HB_FUNC( JSVALUE_TOVALUE ) {
-	hb_FromJS(hb_stackReturnItem(), SELF_VALUE(), 2);
+	hb_FromJS(hb_stackReturnItem(), hb_selfJSValue(), 2);
 }
 
-//CONSTRUCTOR FromJSON(cJSON) 
+//CONSTRUCTOR FromJSON(cJSON)
 //METHOD ToJSON()
 
 HB_FUNC( JSVALUE_ATTRIBUTE ) {
 	PHB_ITEM pSelf  = hb_stackSelfItem();
    	PHB_ITEM pIndex = hb_param( 1, HB_IT_ANY );
-	JSObjectRef obj = SELF_OBJECT();
+	JSObjectRef obj = hb_selfJSObject();
 	if(!obj) {
 		hb_errRT_BASE(EG_ARG, 10, "Operator[] allowed only on object type", "[]", 2, pSelf, pIndex);
 		return;
 	}
-   	if( hb_pcount() == 2 )  { /* ASSIGN */ 
+   	if( hb_pcount() == 2 )  { /* ASSIGN */
 		PHB_ITEM pValue = hb_param( 2, HB_IT_ANY );
 		if(HB_IS_NUMINT(pIndex))
 			JSObjectSetPropertyAtIndex(ctx, obj, hb_itemGetNI(pIndex), HB_toJS(pValue), 0);
@@ -114,7 +134,7 @@ HB_FUNC( JSVALUE_ATTRIBUTE ) {
 }
 
 HB_FUNC( JSVALUE_HASPROPERTY ) {
-  	JSObjectRef obj = SELF_OBJECT();	  
+  	JSObjectRef obj = hb_selfJSObject();
 	PHB_ITEM pIndex = hb_param(1, HB_IT_STRING);
 	if(!obj || !pIndex) {
 		hb_retl(HB_FALSE);
@@ -126,7 +146,7 @@ HB_FUNC( JSVALUE_HASPROPERTY ) {
 }
 
 HB_FUNC( JSVALUE_DELETEPROPERTY ) {
-  	JSObjectRef obj = SELF_OBJECT();	  
+  	JSObjectRef obj = hb_selfJSObject();
 	PHB_ITEM pIndex = hb_param(1, HB_IT_STRING);
 	if(!obj || !pIndex) {
 		hb_retl(HB_FALSE);
@@ -138,7 +158,7 @@ HB_FUNC( JSVALUE_DELETEPROPERTY ) {
 }
 
 void ValueCall(bool thisObjParam) {
-	JSObjectRef obj = SELF_OBJECT();
+	JSObjectRef obj = hb_selfJSObject();
     JSObjectRef thisObj;
     JSValueRef result, *args;
     int s=1,i;
@@ -180,10 +200,9 @@ HB_FUNC( JSGLOBALOBJECT ) {
 	JSObjectRef obj = JSContextGetGlobalObject(ctx);
 	JSValueRef v = obj; //JSObjectToValue
 	PHB_ITEM pRet;
-	InitJSValueClass();
-    hb_clsAssociate( HB_JSValueClassId );
+    hb_clsAssociate( getJSVALUEClassId() );
    	pRet = hb_stackReturnItem();
-    hb_itemArrayPut(pRet, HB_JSValue_ValuePtr, hb_itemPutPtr(0, (void*)v)); 
+    hb_arraySetPtr(pRet, getValueIdx(), (void*)v);
 	JSValueProtect(ctx,v);
 }
 
@@ -230,12 +249,12 @@ JSValueRef HB_toJS(PHB_ITEM v) {
 	case HB_IT_ARRAY:     //0x08000
 	{
 		HB_USHORT clsId = hb_objGetClass(v);
-		if(clsId>0 && clsId!=HB_JSValueClassId) break; //Error
+		if(clsId>0 && clsId!=getJSVALUEClassId()) break; //Error
 		if(clsId==0) {
 			return HB_toJS_JSON(v); // TODO better
 		} else {
 			// from JSValue HBobj
-			return hb_itemArrayGet(v,HB_JSValue_ValuePtr);
+			return (JSValueRef)hb_itemArrayGet(v,getValueIdx());
 		}
 	}
 	//case HB_IT_OBJECT:    //HB_IT_ARRAY
@@ -248,7 +267,7 @@ JSValueRef HB_toJS(PHB_ITEM v) {
 	//case HB_IT_DATE:      //0x00020 JSObjectMakeDate
 	//case HB_IT_TIMESTAMP: //0x00040 JSObjectMakeDate
 	//case HB_IT_ALIAS:     //0x00200
-	//case HB_IT_ENUM:      //0x10000 
+	//case HB_IT_ENUM:      //0x10000
 	//case HB_IT_EXTREF:    //0x20000
 	//case HB_IT_DEFAULT:   //0x40000
 	//case HB_IT_RECOVER:   //0x80000
@@ -270,7 +289,7 @@ JSStringRef HB_TOJSString(PHB_ITEM v) {
 PHB_ITEM HB_FromJS_JSON(PHB_ITEM dest,JSValueRef src) {
 	JSStringRef json = JSValueCreateJSONString(ctx,src,0,0);
 	size_t dim = JSStringGetMaximumUTF8CStringSize(json);
-	char* hb_json = hb_xalloc(dim);
+	char* hb_json = (char*)hb_xalloc(dim);
 	JSStringGetUTF8CString(json,hb_json,dim);
     if(!dest) dest=hb_itemNew(0);
 	hb_jsonDecodeCP(hb_json,dest,hb_cdpFind("UTF8"));
@@ -303,7 +322,7 @@ PHB_ITEM hb_FromJSArray(PHB_ITEM dest,JSValueRef src) {
 // 0 return a JSValue HBObj in case of object
 // 1 returns a JSValue HBObj every time
 // 2 never returns a JSValue HBObj
-PHB_ITEM hb_FromJS(PHB_ITEM dest, JSValueRef src, int lObject) {	
+PHB_ITEM hb_FromJS(PHB_ITEM dest, JSValueRef src, int lObject) {
 	JSType type;
 	if(lObject!=1) {
 		type = JSValueGetType(ctx,src);
@@ -319,7 +338,7 @@ PHB_ITEM hb_FromJS(PHB_ITEM dest, JSValueRef src, int lObject) {
                 size_t len = JSStringGetLength(strValue);
 				dest = hb_itemPutStrLenU16(dest, HB_CDP_ENDIAN_NATIVE, (HB_WCHAR*)u16Str,len);
 				JSStringRelease(strValue);
-				return dest;			
+				return dest;
 			}
 			case kJSTypeObject:
 			{
@@ -344,24 +363,24 @@ PHB_ITEM hb_FromJS(PHB_ITEM dest, JSValueRef src, int lObject) {
 	}
 	if(lObject==1) {
         if(dest==hb_stackReturnItem()) {
-            hb_clsAssociate( HB_JSValueClassId );    
+            hb_clsAssociate( getJSVALUEClassId() );
         } else
         {
             PHB_ITEM pTemp = hb_itemNew(hb_stackReturnItem()); // temp with actual return
-            hb_clsAssociate( HB_JSValueClassId );              // class in return
+            hb_clsAssociate( getJSVALUEClassId() );              // class in return
             if(!dest) dest = hb_itemNew(hb_stackReturnItem());
                 else  hb_itemCopy(dest, hb_stackReturnItem()); // class in dest
             hb_itemCopy(hb_stackReturnItem(), pTemp);          // restore old return value
 			hb_itemRelease(pTemp);                             // remove old
         }
-    	hb_itemArrayPut(dest, HB_JSValue_ValuePtr, hb_itemPutPtr(0, (void*)src)); 
+    	hb_itemArrayPut(dest, getValueIdx(), hb_itemPutPtr(0, (void*)src));
 		JSValueProtect(ctx,src);
 	}
     return dest;
 }
 
-JSValueRef hb_functionCallback(JSContextRef ctx_, JSObjectRef function, 
-		JSObjectRef thisObject, size_t argumentCount, 
+JSValueRef hb_functionCallback(JSContextRef ctx_, JSObjectRef function,
+		JSObjectRef thisObject, size_t argumentCount,
 		const JSValueRef arguments[], JSValueRef* exception) {
 	PHB_ITEM pCallback = JSObjectGetPrivate(function);
 	PHB_ITEM pThis, pArgs, tmp;
@@ -404,7 +423,7 @@ JSClassRef HB_FunctionClass() {
 }
 
 JSObjectRef HB_CreateJSCallback(PHB_ITEM src) {
-	
+
 	JSObjectRef	fnObj;
 	//JSStringRef name = 0;
 	if(!HB_IS_EVALITEM( src )) return 0;

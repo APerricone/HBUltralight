@@ -14,7 +14,7 @@ ultralight_JS.prg
 ultralight_base.cpp
 ultralight_app.cpp
 #ultralight_bitmap.c
-#ultralight_HBJS.c
+ultralight_HBJS.cpp
 ultralight_monitor.cpp
 ultralight_overlay.cpp
 ultralight_renderer.cpp
