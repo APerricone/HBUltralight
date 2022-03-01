@@ -7,7 +7,7 @@ proc main()
     b:Run()
 
 //browser.h
-class Browser 
+class Browser
     DATA app, window, ui
 
     CONSTRUCTOR New()
@@ -19,7 +19,7 @@ METHOD New() CLASS Browser
     ::app := ultralight_app():Create()
     ::window := ultralight_window():Create(::app:main_Monitor,1024,768,.F.,;
         ulWindowFlags_Resizable + ulWindowFlags_Titled + ulWindowFlags_Maximizable )
-    ::window:SetTitle("HBUltralight Sample - Browser")
+    ::window:title := "HBUltralight Sample - Browser"
     ::app:window := ::window
     ::ui := ui():New(::window)
 return self

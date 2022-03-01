@@ -1,5 +1,5 @@
 main.prg
--osample1
+-o../out/sample1
 -workdir=obj
 -w1
 -es2

@@ -8,7 +8,7 @@ class UI
     DATA overlay
     DATA active_tab_id, tabs
     DATA tab_id_counter INIT 1
-    DATA ui_height, tab_height, scale    
+    DATA ui_height, tab_height, scale
 
     CONSTRUCTOR NEW(window)
     //~UI();
@@ -16,10 +16,10 @@ class UI
     ACCESS view() INLINE ::overlay:view
     ACCESS active_tab() INLINE iif(!Empty(::tabs) .and. hb_HHasKey(::tabs,::active_tab_id),::tabs[::active_tab_id],nil)
 
-    METHOD CreateNewTab() 
+    METHOD CreateNewTab()
     METHOD UpdateTabTitle(id, cTitle) INLINE ::updateTab:CallNoThis(id, ctitle, "")
-    METHOD UpdateTabURL(id, cUrl) inline IIF(id=::active_tab_id,::SetUrl(cUrl),) 
-    METHOD UpdateTabNavigation(id,is_loading,can_go_back,can_go_forward) 
+    METHOD UpdateTabURL(id, cUrl) inline IIF(id=::active_tab_id,::SetUrl(cUrl),)
+    METHOD UpdateTabNavigation(id,is_loading,can_go_back,can_go_forward)
 
     METHOD OnResize(width, height)
 
@@ -27,9 +27,9 @@ class UI
     METHOD SetCanGoBack(can_go_back) INLINE ::updateBack:CallNoThis(can_go_back)
     METHOD SetCanGoForward(can_go_forward) INLINE ::updateForward:CallNoThis(can_go_forward)
     METHOD SetURL(cUrl) INLINE ::updateURL:CallNoThis(cUrl)
-    METHOD SetCursor(nCursor) INLINE ultralight_app():Instance():window:SetCursor(nCursor)
+    METHOD SetCursor(nCursor) INLINE ultralight_app():Instance():window:cursor := Cursor
 
-    METHOD OnDOMReady(caller) 
+    METHOD OnDOMReady(caller)
     METHOD OnRequestTabClose(obj,args)
     METHOD OnActiveTabChange(obj,args)
     METHOD OnRequestChangeURL(obj,args)
@@ -41,7 +41,7 @@ class UI
     DATA updateTab
     DATA closeTab
 
-endclass 
+endclass
 
 METHOD New(window) CLASS UI
     LOCAL v
@@ -59,7 +59,7 @@ METHOD OnResize(width, height) CLASS UI
     LOCAL tab_height := height - UI_HEIGHT
     ::overlay:Resize(width, UI_HEIGHT)
     aEval(hb_HValues(::tabs), {|tab| tab:resize(width, tab_height) })
-return nil  
+return nil
 
 METHOD OnDOMReady(caller) CLASS UI
   LOCAL global
@@ -131,7 +131,7 @@ METHOD OnActiveTabChange(obj, args)
             tab:overlay():Hide()
             tab:overlay():Focus := .F.
 
-       
+
             if tab:ready_to_close()
                 ::tabs[id]:reset()
                 hb_HDel(::tabs,::active_tab)
@@ -141,7 +141,7 @@ METHOD OnActiveTabChange(obj, args)
         tab = ::active_tab
         tab:overlay:Show()
         tab:overlay:Focus := .T.
-      
+
         tab_view := tab:view()
         ::SetLoading(tab_view:is_loading())
         ::SetCanGoBack(tab_view:CanGoBack())
@@ -164,9 +164,9 @@ METHOD CreateNewTab() CLASS UI
     ::tabs[id] := Tab():New(Self, id, ::window:width, ::window:height - UI_HEIGHT, 0, UI_HEIGHT)
     ::tabs[id]:view:LoadURL("file:///new_tab_page.html")
     ::active_tab_id := id
-  
+
     ::addTab:CallNoThis(id, "New Tab", "")
-return nil  
+return nil
 
 METHOD UpdateTabNavigation(id,is_loading,can_go_back,can_go_forward) CLASS UI
     IF valtype(id)=="C"

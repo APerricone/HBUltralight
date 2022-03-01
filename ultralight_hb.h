@@ -36,16 +36,17 @@ void hb_retUltralight(ultralight::RefCounted* pObj,HB_USHORT classId);
 PHB_ITEM hb_itemPutULString(PHB_ITEM pItem,const ultralight::String& str);
 void hb_retULString(const ultralight::String& str);
 
-#define FORWARD_GETCLASSID(objName) HB_USHORT get ## objName ## ClassId();
+#define FORWARD_GETCLASSID(objName) HB_USHORT get ## objName ## _ClassId();
+#define GETCLASSID(objName) get ## objName ## _ClassId()
 
 #define DEFINE_GETCLASSID(objName) \
     HB_FUNC_EXTERN(ULTRALIGHT_ ## objName); \
-    HB_USHORT objName ## ClassId = 0; \
-    HB_USHORT get ## objName ## ClassId() { \
-        if(objName ## ClassId) { return objName ## ClassId; } \
-	    objName ## ClassId = hb_clsFindClass("ULTRALIGHT_" # objName, NULL); \
-        if(objName ## ClassId) { return objName ## ClassId; } \
+    HB_USHORT objName ## _ClassId = 0; \
+    HB_USHORT get ## objName ## _ClassId() { \
+        if(objName ## _ClassId) { return objName ## _ClassId; } \
+	    objName ## _ClassId = hb_clsFindClass("ULTRALIGHT_" # objName, NULL); \
+        if(objName ## _ClassId) { return objName ## _ClassId; } \
         HB_FUNC_EXEC(ULTRALIGHT_ ## objName); \
-        objName ## ClassId = hb_clsFindClass("ULTRALIGHT_"  # objName, NULL); \
-        return objName ## ClassId; \
+        objName ## _ClassId = hb_clsFindClass("ULTRALIGHT_"  # objName, NULL); \
+        return objName ## _ClassId; \
     }

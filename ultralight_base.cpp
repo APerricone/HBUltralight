@@ -14,7 +14,7 @@ HB_SIZE iObjIdx = 0;
 
 HB_SIZE getObjIdx() {
     if(iObjIdx) return iObjIdx;
-    iObjIdx = hb_clsGetVarIndex(getREFCOUNTEDClassId(),hb_dynsymGet("pObj"));
+    iObjIdx = hb_clsGetVarIndex(GETCLASSID(REFCOUNTED),hb_dynsymGet("pObj"));
     return iObjIdx;
 }
 

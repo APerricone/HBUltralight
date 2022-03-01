@@ -21,7 +21,6 @@
     "editor.useTabStops": false,
     "editor.tabSize": 4,
     "editor.trimAutoWhitespace": true,
-    "terminal.integrated.shell.windows": "C:\\Windows\\System32\\cmd.exe",
     "files.exclude": {
         "*.dll": true,
         "*.exe": true,

@@ -27,13 +27,13 @@ HB_FUNC( ULTRALIGHT_OVERLAY_CREATE ) {
     else
         overlay = (Overlay::Create(*win,hb_parni(2), hb_parni(3),hb_parni(4), hb_parni(5)));
 
-    initUltralightObj(overlay.get(), getOVERLAYClassId());
+    initUltralightObj(overlay.get(), GETCLASSID(OVERLAY));
 }
 
 FORWARD_GETCLASSID(VIEW)
 HB_FUNC( ULTRALIGHT_OVERLAY_VIEW ) {
     Overlay* overlay = (Overlay*)hb_selfUltralight();
-    hb_retUltralight((RefCounted*)overlay->view().ptr(),getVIEWClassId());
+    hb_retUltralight((RefCounted*)overlay->view().ptr(),GETCLASSID(VIEW));
 }
 
 HB_FUNC( ULTRALIGHT_OVERLAY_WIDTH ) {

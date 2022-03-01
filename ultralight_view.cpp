@@ -171,7 +171,7 @@ HB_FUNC( ULTRALIGHT_VIEW_NEEDS_PAINT ) {
 
 HB_FUNC( ULTRALIGHT_VIEW_INSPECTOR ) {
     View* view = (View*)hb_selfUltralight();
-    hb_retUltralight(view->inspector().get(), getVIEWClassId());
+    hb_retUltralight(view->inspector().get(), GETCLASSID(VIEW));
 }
 
 class HBViewListener : public ViewListener, public LoadListener {
@@ -182,27 +182,27 @@ public:
     virtual void OnChangeTitle(View* caller,
                                 const String& title) {
         if(!pOnChangeTitle) return;
-        hb_evalBlock(pOnChangeTitle, SmartItem(caller, getVIEWClassId()), SmartItem(title), NULL );
+        hb_evalBlock(pOnChangeTitle, SmartItem(caller, GETCLASSID(VIEW)), SmartItem(title), NULL );
     }
 
     PHB_ITEM pOnChangeURL;
     virtual void OnChangeURL(View* caller,
                             const String& url) {
         if(!pOnChangeURL) return;
-        hb_evalBlock(pOnChangeURL, SmartItem(caller, getVIEWClassId()), SmartItem(url), NULL );
+        hb_evalBlock(pOnChangeURL, SmartItem(caller, GETCLASSID(VIEW)), SmartItem(url), NULL );
     }
 
     PHB_ITEM pOnChangeTooltip;
     virtual void OnChangeTooltip(View* caller, const String& tooltip) {
         if(!pOnChangeTooltip) return;
-        hb_evalBlock(pOnChangeTooltip, SmartItem(caller, getVIEWClassId()), SmartItem(tooltip), NULL );
+        hb_evalBlock(pOnChangeTooltip, SmartItem(caller, GETCLASSID(VIEW)), SmartItem(tooltip), NULL );
     }
 
     PHB_ITEM pOnChangeCursor;
     virtual void OnChangeCursor(View* caller,
                                 Cursor cursor) {
         if(!pOnChangeCursor) return;
-        hb_evalBlock(pOnChangeCursor, SmartItem(caller, getVIEWClassId()), SmartItem((int)cursor), NULL );
+        hb_evalBlock(pOnChangeCursor, SmartItem(caller, GETCLASSID(VIEW)), SmartItem((int)cursor), NULL );
     }
 
     PHB_ITEM pOnAddConsoleMessage;
@@ -215,7 +215,7 @@ public:
                                    const String& source_id) {
         if(!pOnAddConsoleMessage) return;
         hb_evalBlock(pOnAddConsoleMessage,
-            SmartItem(caller, getVIEWClassId()), SmartItem(source), SmartItem(level),
+            SmartItem(caller, GETCLASSID(VIEW)), SmartItem(source), SmartItem(level),
             SmartItem(message), SmartItem((int)line_number),
             SmartItem((int)column_number), SmartItem(source_id), NULL );
     }
@@ -227,7 +227,7 @@ public:
                                          bool is_popup,
                                          const IntRect& popup_rect) {
         if(!pOnCreateChildView) return nullptr;
-        hb_evalBlock(pOnCreateChildView, SmartItem(caller, getVIEWClassId()), SmartItem(opener_url),
+        hb_evalBlock(pOnCreateChildView, SmartItem(caller, GETCLASSID(VIEW)), SmartItem(opener_url),
                                          SmartItem(target_url), SmartItem(is_popup),
                                          SmartItem(popup_rect), NULL );
         RefPtr<View> retView = (View*)hb_selfUltralight(hb_stackReturnItem());
@@ -241,7 +241,7 @@ public:
                               bool is_main_frame,
                               const String& url) {
         if(!pOnBeginLoading) return;
-        hb_evalBlock(pOnBeginLoading, SmartItem(caller, getVIEWClassId()), SmartItem((HB_LONGLONG)frame_id),
+        hb_evalBlock(pOnBeginLoading, SmartItem(caller, GETCLASSID(VIEW)), SmartItem((HB_LONGLONG)frame_id),
             SmartItem(is_main_frame), SmartItem(url), NULL );
     }
 
@@ -251,7 +251,7 @@ public:
                                bool is_main_frame,
                                const String& url) {
         if(!pOnFinishLoading) return;
-        hb_evalBlock(pOnFinishLoading, SmartItem(caller, getVIEWClassId()), SmartItem((HB_LONGLONG)frame_id),
+        hb_evalBlock(pOnFinishLoading, SmartItem(caller, GETCLASSID(VIEW)), SmartItem((HB_LONGLONG)frame_id),
             SmartItem(is_main_frame), SmartItem(url), NULL );
     }
 
@@ -264,7 +264,7 @@ public:
                              const String& error_domain,
                              int error_code) {
         if(!pOnFailLoading) return;
-        hb_evalBlock(pOnFailLoading, SmartItem(caller, getVIEWClassId()), SmartItem((HB_LONGLONG)frame_id),
+        hb_evalBlock(pOnFailLoading, SmartItem(caller, GETCLASSID(VIEW)), SmartItem((HB_LONGLONG)frame_id),
                 SmartItem(is_main_frame), SmartItem(url), SmartItem(description),
                 SmartItem(error_domain), SmartItem(error_code), NULL );
     }
@@ -275,7 +275,7 @@ public:
                                    bool is_main_frame,
                                    const String& url) {
         if(!pOnWindowObjectReady) return;
-        hb_evalBlock(pOnWindowObjectReady, SmartItem(caller, getVIEWClassId()), SmartItem((HB_LONGLONG)frame_id),
+        hb_evalBlock(pOnWindowObjectReady, SmartItem(caller, GETCLASSID(VIEW)), SmartItem((HB_LONGLONG)frame_id),
             SmartItem(is_main_frame), SmartItem(url), NULL );
     }
 
@@ -285,14 +285,14 @@ public:
                           bool is_main_frame,
                           const String& url) {
         if(!pOnDOMReady) return;
-        hb_evalBlock(pOnDOMReady, SmartItem(caller, getVIEWClassId()), SmartItem((HB_LONGLONG)frame_id),
+        hb_evalBlock(pOnDOMReady, SmartItem(caller, GETCLASSID(VIEW)), SmartItem((HB_LONGLONG)frame_id),
             SmartItem(is_main_frame), SmartItem(url), NULL );
     }
 
     PHB_ITEM pOnUpdateHistory;
     virtual void OnUpdateHistory(View* caller) {
         if(!pOnUpdateHistory) return;
-        hb_evalBlock(pOnUpdateHistory, SmartItem(caller, getVIEWClassId()), NULL );
+        hb_evalBlock(pOnUpdateHistory, SmartItem(caller, GETCLASSID(VIEW)), NULL );
     }
 
     HBViewListener() :

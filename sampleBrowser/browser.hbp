@@ -1,11 +1,12 @@
 browser.prg
 ui.prg
 tab.prg
--obrowser
+-oassets/browser
 -workdir=obj
 -w3 
 -es2
--inc 
+-inc
+-gui 
 #-cflag=/FC
 
 ../hbultralight.hbc

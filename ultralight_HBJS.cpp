@@ -15,7 +15,7 @@ JSStringRef HB_TOJSString(PHB_ITEM);
 PHB_ITEM hb_FromJS(PHB_ITEM, JSValueRef, int lObject);
 JSObjectRef HB_CreateJSCallback(PHB_ITEM);
 
-//DEFINE_GETCLASSID(JSVALUE)
+//DEFINE_GETCLASSID(JSVALUE) JSVALUE has no the Ultralight prefix
 HB_FUNC_EXTERN(JSVALUE);
 HB_USHORT JSVALUEClassId = 0;
 HB_USHORT getJSVALUEClassId() {

@@ -46,7 +46,7 @@ HB_FUNC( ULTRALIGHT_APP_WINDOW ) {
         hb_ret();
     } else {
         Window* wnd = app->window().get();
-        hb_retUltralight((RefCounted*)wnd,getWINDOWClassId());
+        hb_retUltralight((RefCounted*)wnd,GETCLASSID(WINDOW));
     }
 }
 
@@ -54,7 +54,7 @@ HB_FUNC( ULTRALIGHT_APP_WINDOW ) {
 FORWARD_GETCLASSID(RENDERER);
 HB_FUNC( ULTRALIGHT_APP_RENDERER ) {
     App* app = (App*)hb_selfUltralight();
-    hb_retUltralight(app->renderer().ptr(),getRENDERERClassId());
+    hb_retUltralight(app->renderer().ptr(),GETCLASSID(RENDERER));
 }
 
 FORWARD_GETCLASSID(MONITOR);

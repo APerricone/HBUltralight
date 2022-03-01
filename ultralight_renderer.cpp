@@ -18,25 +18,25 @@ DEFINE_GETCLASSID(RENDERER)
 */
 
 HB_FUNC( ULTRALIGHT_RENDERER_CREATE ) {
-    initUltralightObj((Renderer::Create()).ptr(), getRENDERERClassId());
+    initUltralightObj((Renderer::Create()).ptr(), GETCLASSID(RENDERER));
 }
 
 FORWARD_GETCLASSID(SESSION);
 HB_FUNC( ULTRALIGHT_RENDERER_CREATESESSION ) { //(is_persistent,name)
     Renderer* renderer = (Renderer*)hb_selfUltralight();
-    hb_retUltralight((renderer->CreateSession(hb_parnl(1), hb_parc(2))).ptr(), getSESSIONClassId());
+    hb_retUltralight((renderer->CreateSession(hb_parnl(1), hb_parc(2))).ptr(), GETCLASSID(SESSION));
 }
 
 HB_FUNC( ULTRALIGHT_RENDERER_DEFAULT_SESSION ) {
     Renderer* renderer = (Renderer*)hb_selfUltralight();
-    hb_retUltralight((renderer->default_session()).ptr(), getSESSIONClassId());
+    hb_retUltralight((renderer->default_session()).ptr(), GETCLASSID(SESSION));
 }
 
 FORWARD_GETCLASSID(VIEW);
 HB_FUNC( ULTRALIGHT_RENDERER_CREATEVIEW ) { //(nWidth,nHeight,lransparent)
     Renderer* renderer = (Renderer*)hb_selfUltralight();
     RefPtr<View> view = (renderer->CreateView(hb_parni(1), hb_parni(2), hb_parl(3), nullptr));
-    hb_retUltralight(view.get(), getVIEWClassId());
+    hb_retUltralight(view.get(), GETCLASSID(VIEW));
 }
 
 HB_FUNC( ULTRALIGHT_RENDERER_UPDATE ) { //()

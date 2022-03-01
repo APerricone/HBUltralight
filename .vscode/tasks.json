@@ -2,8 +2,6 @@
     // See https://go.microsoft.com/fwlink/?LinkId=733558
     // for the documentation about the tasks.json format
     "version": "2.0.0",
-    "type": "shell",
-    "command": "hbmk2",
     "problemMatcher": ["$harbour","$gcc",{
         "pattern":{
                 "regexp": "^([^\\(]+)\\((\\d+)\\):\\s(\\S+)\\s([^:]+):\\s(.+)$",
@@ -22,32 +20,44 @@
         {
             "label": "Library",
             "group": "build",
-            "args": ["hbUltralightLib.hbp"]
+            "input": "hbUltralightLib.hbp",
+            "type": "HBMK2",
+            "windows": {"setupBatch": "c:\\harbour\\start64.bat"}
         },
         {
             "label": "Sample1",
             "group": "build",
-            "args": ["sample1/sample1.hbp"]
+            "input": "sample1/sample1.hbp",
+            "type": "HBMK2",
+            "windows": {"setupBatch": "c:\\harbour\\start64.bat"}
         },
         {
             "label": "Sample2",
             "group": "build",
-            "args": ["sample2/sample2.hbp"]
+            "input": "sample2/sample2.hbp",
+            "type": "HBMK2",
+            "windows": {"setupBatch": "c:\\harbour\\start64.bat"}
         },
         {
             "label": "Sample3",
             "group": "build",
-            "args": ["sample3/sample3.hbp"]
+            "input": "sample3/sample3.hbp",
+            "type": "HBMK2",
+            "windows": {"setupBatch": "c:\\harbour\\start64.bat"}
         },
         {
             "label": "Sample4",
             "group": "build",
-            "args": ["sample4/sample4.hbp"]
+            "input": "sample4/sample4.hbp",
+            "type": "HBMK2",
+            "windows": {"setupBatch": "c:\\harbour\\start64.bat"}
         },
         {
             "label": "SampleBrowser",
             "group": "build",
-            "args": ["SampleBrowser/browser.hbp"]
+            "input": "SampleBrowser/browser.hbp",
+            "type": "HBMK2",
+            "windows": {"setupBatch": "c:\\harbour\\start64.bat"}
         }
     ]
 }

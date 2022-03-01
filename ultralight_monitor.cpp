@@ -14,12 +14,12 @@ HB_SIZE iObjIdxMonitor = 0;
 
 HB_SIZE getObjIdxMonitor() {
     if(iObjIdxMonitor) return iObjIdxMonitor;
-    iObjIdxMonitor = hb_clsGetVarIndex(getMONITORClassId(),hb_dynsymGet("pObj"));
+    iObjIdxMonitor = hb_clsGetVarIndex(GETCLASSID(MONITOR),hb_dynsymGet("pObj"));
     return iObjIdxMonitor;
 }
 
 void hb_retMonitor(Monitor* monitor) {
-    hb_clsAssociate( getMONITORClassId() );
+    hb_clsAssociate( GETCLASSID(MONITOR) );
    	PHB_ITEM pSelf = hb_stackReturnItem();
     hb_arraySetPtr(pSelf, getObjIdxMonitor(), monitor);
 }

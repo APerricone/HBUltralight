@@ -25,7 +25,7 @@ Monitor* hb_parMonitor(int);
 HB_FUNC( ULTRALIGHT_WINDOW_CREATE ) {
 	Monitor *mon = hb_parMonitor(1);
     RefPtr<Window> window = Window::Create(mon,hb_parni(2), hb_parni(3),hb_parldef(4,0)!=0,hb_parnidef(5,0));
-    initUltralightObj(window.get(), getWINDOWClassId());
+    initUltralightObj(window.get(), GETCLASSID(WINDOW));
 }
 
 HB_FUNC( ULTRALIGHT_WINDOW_WIDTH ) {
